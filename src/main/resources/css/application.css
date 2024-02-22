@@ -1,0 +1,78 @@
+.root {
+-fx-pref-width: 920;
+-fx-pref-height: 550;
+    -fx-background-color: "#9a989c";
+}
+
+.panel {
+    -fx-arc-width: 15;
+    -fx-arc-height: 15;
+    -fx-border-radius: 35px;
+    -fx-fill: "#1C8899";
+    -fx-stroke: Black;
+
+}
+
+.button {
+    -fx-background-color: "#BFB59E";
+    -fx-font-family: Arial;
+    -fx-font-size: 18;
+    -fx-border-color: black;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.button:armed {
+    -fx-background-color: "#9a989c";
+}
+
+.toggle {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-color: rgba(0,0,0,0);
+}
+
+.toggle:armed {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-graphic: "privacy.png";
+}
+
+.text-field{
+    -fx-font-family: Arial;
+    -fx-font-size: 18;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: "#56cee8";
+    -fx-border-color: Black;
+    -fx-padding: 10, 10, 5, 10;
+}
+
+.password-field {
+    -fx-font-family: Arial;
+    -fx-font-size: 18;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: "#56cee8";
+    -fx-border-color: Black;
+    -fx-padding: 10, 10, 5, 10;
+}
+
+
+
+.label {
+    -fx-font-family: Arial;
+    -fx-font-size: 18;
+}
+
+.warning {
+    -fx-text-fill: RED;
+    -fx-wrap-text: true;
+}
+
+.banner {
+    -fx-font-family: Georgia;
+    -fx-font-size: 72;
+}
+
+.hint {
+    -fx-font-size: 9;
+}
