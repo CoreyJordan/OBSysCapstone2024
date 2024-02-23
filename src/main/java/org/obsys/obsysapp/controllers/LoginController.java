@@ -10,10 +10,11 @@ public class LoginController {
     private Builder<AnchorPane> viewBuilder;
     private Interactor interactor;
 
+
     public LoginController() {
         PersonModel personModel = new PersonModel();
-        viewBuilder = new LoginViewBuilder(personModel);
         interactor = new Interactor(personModel);
+        viewBuilder = new LoginViewBuilder(personModel, interactor::lookupLogin);
     }
 
     public Region getView() {

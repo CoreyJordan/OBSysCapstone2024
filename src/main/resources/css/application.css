@@ -66,6 +66,7 @@
 .warning {
     -fx-text-fill: RED;
     -fx-wrap-text: true;
+    visibility: false;
 }
 
 .banner {

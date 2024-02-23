@@ -2,11 +2,9 @@ package org.obsys.obsysapp.views;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
@@ -15,12 +13,14 @@ import org.obsys.obsysapp.models.PersonModel;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class LoginViewBuilder implements Builder<AnchorPane> {
+public class LoginViewBuilder extends ViewBuilder implements Builder<AnchorPane> {
 
     private PersonModel personModel;
+    private Runnable loginHandler;
 
-    public LoginViewBuilder(PersonModel model) {
+    public LoginViewBuilder(PersonModel model, Runnable loginHandler) {
         this.personModel = model;
+        this.loginHandler = loginHandler;
     }
 
     @Override
@@ -32,66 +32,53 @@ public class LoginViewBuilder implements Builder<AnchorPane> {
         window.getChildren().addAll(loadImages());
         window.getChildren().addAll(createLabels());
         window.getChildren().addAll(createButtons());
-        window.getChildren().addAll(createFields());
+        window.getChildren().addAll(createTextFields());
+        window.getChildren().addAll(buildPasswordField());
 
         return window;
     }
 
-    private ArrayList<Node> createFields() {
+    private ArrayList<Node> createTextFields() {
         ArrayList<Node> fields = new ArrayList<>();
 
-        double layoutX = 150;
-        double layoutY = 340;
-        double width = 300;
-        double hintOffsetX = 20;
-        double hintOffsetY = 2;
-        double fieldSpacing = 50;
-
-        TextField txtUsername = new TextField();
-        txtUsername.setLayoutX(layoutX);
-        txtUsername.setLayoutY(layoutY);
-        txtUsername.setPrefWidth(width);
+        TextField txtUsername = obsysTextField(150, 340, 300);
+        txtUsername.textProperty().bindBidirectional(personModel.usernameProperty());
         fields.add(txtUsername);
-
-        Label lblUserName = new Label("USERNAME");
-        lblUserName.getStyleClass().add("hint");
-        lblUserName.setLayoutX(txtUsername.getLayoutX() + hintOffsetX);
-        lblUserName.setLayoutY(txtUsername.getLayoutY() + hintOffsetY);
-        fields.add(lblUserName);
-
-        PasswordField txtPassword = new PasswordField();
-        txtPassword.setLayoutX(layoutX);
-        txtPassword.setLayoutY(txtUsername.getLayoutY() + fieldSpacing);
-        txtPassword.setPrefWidth(width);
-        fields.add(txtPassword);
-
-        Label lblPassword = new Label("PASSWORD");
-        lblPassword.getStyleClass().add("hint");
-        lblPassword.setLayoutX(txtPassword.getLayoutX() + hintOffsetX);
-        lblPassword.setLayoutY(txtPassword.getLayoutY() + hintOffsetY);
-        fields.add(lblPassword);
-
-        Button btnPrivacy = new Button();
-        btnPrivacy.getStyleClass().add("toggle");
-        btnPrivacy.setGraphic(new ImageView(new Image("privacyOn.png")));
-        btnPrivacy.setLayoutX(txtPassword.getLayoutX() + width - fieldSpacing);
-        btnPrivacy.setLayoutY(txtPassword.getLayoutY());
-        fields.add(btnPrivacy);
+        fields.add(obsysLabel("USERNAME", 170, 342, "hint"));
 
         return fields;
+    }
+
+    private ArrayList<Node> buildPasswordField() {
+        ArrayList<Node> passwordNodes = new ArrayList<>();
+
+        PasswordField txtPassword = obsysPassword(150, 390, 300);
+        txtPassword.textProperty().bindBidirectional(personModel.passwordProperty());
+        passwordNodes.add(txtPassword);
+
+        TextField txtUnmasked = obsysTextField(txtPassword.getLayoutX(), txtPassword.getLayoutY(), txtPassword.getPrefWidth());
+        txtUnmasked.setVisible(false);
+        passwordNodes.add(txtUnmasked);
+
+        passwordNodes.add(obsysLabel("PASSWORD", 170, 392, "hint"));
+
+        Button btnPrivacy = obsysButton(new Image("privacyOn.png"), 400, 390, "toggle");
+        btnPrivacy.setOnMousePressed(evt -> showPassword(txtPassword, txtUnmasked));
+        btnPrivacy.setOnMouseReleased(ext -> hidePassword(txtPassword, txtUnmasked));
+        passwordNodes.add(btnPrivacy);
+
+        return passwordNodes;
     }
 
     private ArrayList<Node> createButtons() {
         ArrayList<Node> buttons = new ArrayList<>();
 
-        Button btnLogin = new Button("Login");
-        btnLogin.setLayoutX(400);
-        btnLogin.setLayoutY(457);
+        Button btnLogin = obsysButton("Login", 400, 457);
+        btnLogin.setOnAction(evt -> loginHandler.run());
         buttons.add(btnLogin);
 
-        Button btnCreateAcct = new Button("Create Account");
-        btnCreateAcct.setLayoutX(730);
-        btnCreateAcct.setLayoutY(457);
+        Button btnCreateAcct = obsysButton("Create Account", 730, 457);
+        // TODO add action event
         buttons.add(btnCreateAcct);
 
         return buttons;
@@ -100,29 +87,10 @@ public class LoginViewBuilder implements Builder<AnchorPane> {
     private ArrayList<Node> createLabels() {
         ArrayList<Node> labels = new ArrayList<>();
 
-        Label lblBanner = new Label("Welcome");
-        lblBanner.getStyleClass().add("banner");
-        lblBanner.setLayoutX(28);
-        lblBanner.setLayoutY(107);
-        labels.add(lblBanner);
-
-        Label lblNeedAccount = new Label("Don't have an account?");
-        lblNeedAccount.setLayoutX(516);
-        lblNeedAccount.setLayoutY(465);
-        labels.add(lblNeedAccount);
-
-        Label lblInstructions = new Label("Sign in to manage your accounts.");
-        lblInstructions.setLayoutX(120);
-        lblInstructions.setLayoutY(465);
-        labels.add(lblInstructions);
-
-        Label lblLoginFail = new Label("Invalid username and/or password.");
-        lblLoginFail.getStyleClass().add("warning");
-        lblLoginFail.setLayoutX(500);
-        lblLoginFail.setLayoutY(350);
-        lblLoginFail.setPrefWidth(200);
-        lblLoginFail.setVisible(false);
-        labels.add(lblLoginFail);
+        labels.add(obsysLabel("Welcome", 28, 107, "banner"));
+        labels.add(obsysLabel("Don't have an account?", 516, 465));
+        labels.add(obsysLabel("Sign in to manage your accounts.", 120, 465));
+        labels.add(obsysLabel("Invalid username and/or password.", 500, 350, 200, "warning"));
 
         return labels;
     }
@@ -130,26 +98,16 @@ public class LoginViewBuilder implements Builder<AnchorPane> {
     private ArrayList<Node> loadImages() {
         ArrayList<Node> images = new ArrayList<>();
 
-        ImageView imgBanner = new ImageView("dolphinLogin.png");
-        imgBanner.setLayoutX(5);
-        imgBanner.setLayoutY(90);
-        imgBanner.setFitWidth(910);
-        imgBanner.setFitHeight(180);
-        images.add(imgBanner);
-
-        ImageView imgLogo = new ImageView("dolphinLogoTan.png");
-        imgLogo.setLayoutX(imgBanner.getLayoutX() + imgBanner.getFitWidth() - 220);
-        imgLogo.setLayoutY(imgBanner.getLayoutY());
-        imgLogo.setFitWidth(220);
-        imgLogo.setFitHeight(imgBanner.getFitHeight());
-        images.add(imgLogo);
+        images.add(obsysImage("dolphinLogin.png", 5, 90, 910, 180));
+        images.add(obsysImage("dolphinLogoTan.png", 695, 90, 220, 180));
 
         return images;
     }
 
     private Rectangle createPanel() {
-        Rectangle panel = new Rectangle(109, 306, 379, 200);
-        panel.getStyleClass().add("panel");
-        return panel;
+        return obsysPanel(109,306,379,200, "panel");
     }
+
+
+
 }

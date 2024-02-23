@@ -8,4 +8,8 @@ public class Interactor {
     public Interactor(PersonModel personModel) {
         this.personModel = personModel;
     }
+
+    public void lookupLogin() {
+        System.out.println("Looking up login User: " + personModel.getUsername() + " Pass: " + personModel.getPassword());
+    }
 }
