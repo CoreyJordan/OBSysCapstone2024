@@ -1,7 +1,7 @@
 .root {
--fx-pref-width: 920;
--fx-pref-height: 550;
-    -fx-background-color: "#9a989c";
+    -fx-pref-width: 920;
+    -fx-pref-height: 550;
+    -fx-background-color: "#9A989C";
 }
 
 .panel {
@@ -17,32 +17,32 @@
     -fx-background-color: "#BFB59E";
     -fx-font-family: Arial;
     -fx-font-size: 18;
-    -fx-border-color: black;
+    -fx-border-color: BLACK;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
 }
 
 .button:armed {
-    -fx-background-color: "#9a989c";
+    -fx-background-color: "#9A989C";
 }
 
 .toggle {
-    -fx-background-color: rgba(0,0,0,0);
-    -fx-border-color: rgba(0,0,0,0);
+    -fx-background-color: rgba(0, 0, 0, 0);
+    -fx-border-color: rgba(0, 0, 0, 0);
 }
 
 .toggle:armed {
-    -fx-background-color: rgba(0,0,0,0);
+    -fx-background-color: rgba(0, 0, 0, 0);
     -fx-graphic: "privacy.png";
 }
 
-.text-field{
+.text-field {
     -fx-font-family: Arial;
     -fx-font-size: 18;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-background-color: "#56cee8";
-    -fx-border-color: Black;
+    -fx-background-color: "#56CEE8";
+    -fx-border-color: BLACK;
     -fx-padding: 10, 10, 5, 10;
 }
 
@@ -51,11 +51,10 @@
     -fx-font-size: 18;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-background-color: "#56cee8";
-    -fx-border-color: Black;
+    -fx-background-color: "#56CEE8";
+    -fx-border-color: BLACK;
     -fx-padding: 10, 10, 5, 10;
 }
-
 
 
 .label {
@@ -80,5 +79,14 @@
 
 .hyperlink {
     -fx-font-family: Arial;
-    -fx-font-size: 18;
+    -fx-font-size: 14;
+    -fx-border-color: rgba(0, 0, 0, 0);
+    -fx-text-fill: BLACK;
+    -fx-underline: TRUE;
 }
+
+.hyperlink:armed {
+    -fx-border-color: BLACK;
+    -fx-text-fill: CYAN;
+}
+

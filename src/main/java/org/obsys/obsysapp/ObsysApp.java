@@ -14,7 +14,7 @@ public class ObsysApp extends Application {
         stage.getIcons().add(new Image("/obsysIcon.png"));
         stage.setResizable(false);
         //stage.setScene(new Scene(new LoginController(stage).getView()));
-        stage.setScene(new Scene(new ErrorController(stage, new Exception("Oops")).getView()));
+        stage.setScene(new Scene(new ErrorController(stage, new Exception("Oops! An illegal operation has occurred")).getView()));
         stage.show();
     }
 

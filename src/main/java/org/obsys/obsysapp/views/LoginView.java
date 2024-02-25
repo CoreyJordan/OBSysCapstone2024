@@ -13,10 +13,10 @@ import org.obsys.obsysapp.models.LoginModel;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class LoginView extends ViewBuilder {
+public class LoginView extends ViewBuilder implements iObsysBuilder {
 
-    private LoginModel loginModel;
-    private Runnable loginHandler;
+    private final LoginModel loginModel;
+    private final Runnable loginHandler;
 
     public LoginView(LoginModel model, Runnable loginHandler) {
         this.loginModel = model;
@@ -28,7 +28,7 @@ public class LoginView extends ViewBuilder {
         AnchorPane window = new AnchorPane();
         window.getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
-        window.getChildren().add(createPanel());
+        window.getChildren().add(createPanels());
         window.getChildren().addAll(loadImages());
         window.getChildren().addAll(createLabels());
         window.getChildren().addAll(createButtons());
@@ -38,7 +38,8 @@ public class LoginView extends ViewBuilder {
         return window;
     }
 
-    private ArrayList<Node> createTextFields() {
+    @Override
+    public ArrayList<Node> createTextFields() {
         ArrayList<Node> fields = new ArrayList<>();
 
         TextField txtUsername = obsysTextField(150, 340, 300);
@@ -50,14 +51,16 @@ public class LoginView extends ViewBuilder {
         return fields;
     }
 
-    private ArrayList<Node> buildPasswordField() {
+    @Override
+    public ArrayList<Node> buildPasswordField() {
         ArrayList<Node> passwordNodes = new ArrayList<>();
 
         PasswordField txtPassword = obsysPassword(150, 390, 300);
         txtPassword.textProperty().bindBidirectional(loginModel.passwordProperty());
         passwordNodes.add(txtPassword);
 
-        TextField txtUnmasked = obsysTextField(txtPassword.getLayoutX(), txtPassword.getLayoutY(), txtPassword.getPrefWidth());
+        TextField txtUnmasked = obsysTextField(txtPassword.getLayoutX(),
+                txtPassword.getLayoutY(), txtPassword.getPrefWidth());
         txtUnmasked.setVisible(false);
         passwordNodes.add(txtUnmasked);
 
@@ -71,7 +74,8 @@ public class LoginView extends ViewBuilder {
         return passwordNodes;
     }
 
-    private ArrayList<Node> createButtons() {
+    @Override
+    public ArrayList<Node> createButtons() {
         ArrayList<Node> buttons = new ArrayList<>();
 
         Button btnLogin = obsysButton("Login", 400, 457);
@@ -85,7 +89,8 @@ public class LoginView extends ViewBuilder {
         return buttons;
     }
 
-    private ArrayList<Node> createLabels() {
+    @Override
+    public ArrayList<Node> createLabels() {
         ArrayList<Node> labels = new ArrayList<>();
 
         labels.add(obsysLabel("Welcome", 28, 107, "banner"));
@@ -99,7 +104,8 @@ public class LoginView extends ViewBuilder {
         return labels;
     }
 
-    private ArrayList<Node> loadImages() {
+    @Override
+    public ArrayList<Node> loadImages() {
         ArrayList<Node> images = new ArrayList<>();
 
         images.add(obsysImage("dolphinLogin.png", 5, 90, 910, 180));
@@ -108,10 +114,8 @@ public class LoginView extends ViewBuilder {
         return images;
     }
 
-    private Rectangle createPanel() {
-        return obsysPanel(109,306,379,200, "panel");
+    @Override
+    public Rectangle createPanels() {
+        return obsysPanel(109, 306, 379, 200, "panel");
     }
-
-
-
 }

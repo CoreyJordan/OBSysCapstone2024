@@ -1,12 +1,14 @@
 package org.obsys.obsysapp.views;
 
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import javafx.util.Builder;
+
+import java.util.ArrayList;
 
 public class ViewBuilder implements Builder<AnchorPane> {
 
@@ -122,6 +124,12 @@ public class ViewBuilder implements Builder<AnchorPane> {
         passwordField.positionCaret(passwordField.getLength());
     }
 
+    /**
+     * Creates a blank button.
+     * @param x The horizontal position of the upper left corner of the button.
+     * @param y The vertical position of the upper left corner of the button.
+     * @return A blank button at the specified location.
+     */
     protected Button obsysButton(double x, double y) {
         Button button = new Button();
         button.setLayoutX(x);
@@ -133,6 +141,21 @@ public class ViewBuilder implements Builder<AnchorPane> {
     protected Button obsysButton(String content, double x, double y) {
         Button button = obsysButton(x, y);
         button.setText(content);
+
+        return button;
+    }
+
+    /**
+     * Creates a button displaying text at a specified location with a specified width.
+     * @param content The text to be displayed in the button.
+     * @param x The horizontal position of the upper left corner of the button.
+     * @param y The vertical position of the upper left corner of the button.
+     * @param width The horizontal size of the button, regardless of content.
+     * @return The created button.
+     */
+    protected Button obsysButton(String content, double x, double y, double width) {
+        Button button = obsysButton(content, x, y);
+        button.setPrefWidth(width);
 
         return button;
     }
@@ -151,6 +174,28 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return button;
     }
 
+    /**
+     * Creates a button with both textual content and graphical content. The default setting is that the graphic is
+     * displayed left of the text.
+     * @param content The text to be displayed in the button.
+     * @param x The horizontal position of the upper left corner of the button.
+     * @param y The vertical position of the upper left corner of the button.
+     * @param width The preferred width of the button, regardless of content.
+     * @param graphic The icon or image to be displayed in the button.
+     * @return A graphical/textual button at a specified location within the window.
+     */
+    protected Button obsysButton(String content, double x, double y, double width, Image graphic) {
+        Button button = obsysButton(content, x, y, width);
+        ImageView icon = new ImageView(graphic);
+        icon.setFitHeight(25);
+        icon.setFitWidth(15);
+        button.setGraphic(icon);
+
+        return button;
+    }
+
+
+
     protected Rectangle obsysPanel(double x, double y, double width, double height, String css) {
         Rectangle panel = new Rectangle(x, y, width, height);
         panel.getStyleClass().add(css);
@@ -158,7 +203,13 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return panel;
     }
 
-
+    /**
+     * Creates a hyperlink at a specified location within the window.
+     * @param content The text to be displayed in the link.
+     * @param x The horizontal position of the upper left corner of the link.
+     * @param y The vertical position of the upper left corner of the link.
+     * @return A hyperlink at a specified location within the window.
+     */
     protected Hyperlink obsysLink(String content, double x, double y) {
         Hyperlink link = new Hyperlink(content);
         link.setLayoutX(x);
@@ -171,4 +222,5 @@ public class ViewBuilder implements Builder<AnchorPane> {
     public AnchorPane build() {
         return null;
     }
+
 }

@@ -51,7 +51,6 @@ public class LoginController {
             }
         } catch (SQLException e) {
             stage.setScene(new Scene(new ErrorController(stage, e).getView()));
-            System.out.println(e);
         }
     }
 
