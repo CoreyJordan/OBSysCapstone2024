@@ -9,6 +9,14 @@ import java.sql.SQLException;
 
 public class LoginDAO {
 
+    /**
+     * Queries the database for user login data by username. Values are defaulted to account for null username results.
+     *
+     * @param conn     A valid connection to the database.
+     * @param username The username to be queried.
+     * @return The Person ID(PK), password, and Admin status of the queried username.
+     * @throws SQLException Indicates a failed query attempt.
+     */
     public Login readPasswordByUsername(Connection conn, String username) throws SQLException {
         String password = "Not Found";
         boolean isAdmin = false;

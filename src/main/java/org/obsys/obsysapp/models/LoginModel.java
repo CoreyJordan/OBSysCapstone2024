@@ -5,6 +5,11 @@ import javafx.beans.property.*;
 public class LoginModel {
     private StringProperty username = new SimpleStringProperty("");
     private StringProperty password = new SimpleStringProperty("");
+
+    public void setPassword(String password) {
+        this.password.set(password);
+    }
+
     private final StringProperty invalidLogin = new SimpleStringProperty("");
 
 

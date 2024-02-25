@@ -13,7 +13,7 @@ import org.obsys.obsysapp.models.LoginModel;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class LoginView extends ViewBuilder implements iObsysBuilder {
+public class LoginView extends ViewBuilder implements IObsysBuilder {
 
     private final LoginModel loginModel;
     private final Runnable loginHandler;

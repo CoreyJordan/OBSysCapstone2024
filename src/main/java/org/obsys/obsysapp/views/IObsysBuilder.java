@@ -5,7 +5,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
-public interface iObsysBuilder {
+public interface IObsysBuilder {
     Rectangle createPanels();
 
     ArrayList<Node> loadImages();

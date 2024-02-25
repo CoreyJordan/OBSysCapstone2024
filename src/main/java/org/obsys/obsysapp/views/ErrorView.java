@@ -11,17 +11,18 @@ import org.obsys.obsysapp.models.ErrorModel;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ErrorView extends ViewBuilder implements iObsysBuilder {
+public class ErrorView extends ViewBuilder implements IObsysBuilder {
 
-    private ErrorModel error;
-    private Runnable exitHandler;
-    private Runnable logoutHandler;
+    private final ErrorModel error;
+    private final Runnable exitHandler;
+    private final Runnable logoutHandler;
+    private final Runnable returnHandler;
 
-    public ErrorView(ErrorModel errorModel, Runnable exitHandler, Runnable logoutHandler) {
-
+    public ErrorView(ErrorModel errorModel, Runnable exitHandler, Runnable logoutHandler, Runnable returnHandler) {
         error = errorModel;
         this.exitHandler = exitHandler;
         this.logoutHandler = logoutHandler;
+        this.returnHandler = returnHandler;
     }
 
     @Override
@@ -45,6 +46,7 @@ public class ErrorView extends ViewBuilder implements iObsysBuilder {
         buttons.add(hypLogout);
 
         Button btnBack = obsysButton("Back", 210, 400, 200, new Image("back.png"));
+        btnBack.setOnAction(evt -> returnHandler.run());
         buttons.add(btnBack);
 
         Button btnClose = obsysButton("Close Program", 210, 450, 200);

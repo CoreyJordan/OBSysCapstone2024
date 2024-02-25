@@ -6,7 +6,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.obsys.obsysapp.data.LoginDAO;
-import org.obsys.obsysapp.data.ObsysDb;
+import org.obsys.obsysapp.data.ObsysDbConnection;
 import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.models.LoginModel;
 import org.obsys.obsysapp.utils.LoginValidator;
@@ -33,24 +33,37 @@ public class LoginController {
         return viewBuilder.build();
     }
 
-    public void lookupLogin() {
+    private void lookupLogin() {
         LoginValidator validator = new LoginValidator(loginModel.getUsername(), loginModel.getPassword());
         if (!validator.okToLogin()) {
             loginModel.setInvalidLogin("Invalid username and/or password");
             return;
         }
 
-        try (Connection conn = ObsysDb.openDBConn()) {
+        try (Connection conn = ObsysDbConnection.openDBConn()) {
             Login checkedLogin = loginDao.readPasswordByUsername(conn, loginModel.getUsername());
 
             if (!passwordsMatch(checkedLogin)) {
                 loginModel.setInvalidLogin("Username or password matches no record");
-            } else {
-                System.out.println("Loading home page");
-                // TODO open next page
+                return;
             }
+
+            navigateToHomePage(checkedLogin);
+
         } catch (SQLException e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            // Erase password from model for security.
+            loginModel.setPassword("");
+            stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+        }
+    }
+
+    private static void navigateToHomePage(Login checkedLogin) {
+        if (checkedLogin.isAdmin()) {
+            // TODO open Admin Home Page
+            System.out.println("Loading Admin Home");
+        } else {
+            // TODO open User Home Page
+            System.out.println("Loading home page");
         }
     }
 

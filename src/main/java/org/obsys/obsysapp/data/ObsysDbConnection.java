@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ObsysDb {
+public class ObsysDbConnection {
 
     /**
      * Creates a connection to the Azure database with login credentials. NOT production worthy

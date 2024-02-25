@@ -13,6 +13,11 @@ public class LoginValidator extends ObsysValidator{
         return usernameIsValid() && passwordIsValid();
     }
 
+    /**
+     * Checks the username against the business rules for valid usernames. This does NOT indicate the database contains
+     * the given username.
+     * @return True if username passes all checks.
+     */
     public boolean passwordIsValid() {
         return !password.isEmpty() &&
                 // Check for whitespace prior to checking for symbol
@@ -24,6 +29,11 @@ public class LoginValidator extends ObsysValidator{
                 password.length() >= 6;
     }
 
+    /**
+     * Checks the password against the business rules for valid passwords. This does NOT indicate the database contains
+     * the given password.
+     * @return True if password passes all checks.
+     */
     public boolean usernameIsValid() {
         return !username.isEmpty() &&
                 !username.contains(" ") &&
