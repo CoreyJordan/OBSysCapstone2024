@@ -61,12 +61,12 @@
 .label {
     -fx-font-family: Arial;
     -fx-font-size: 18;
+    -fx-wrap-text: true;
 }
 
 .warning {
     -fx-text-fill: RED;
-    -fx-wrap-text: true;
-    visibility: false;
+
 }
 
 .banner {
@@ -76,4 +76,9 @@
 
 .hint {
     -fx-font-size: 9;
+}
+
+.hyperlink {
+    -fx-font-family: Arial;
+    -fx-font-size: 18;
 }

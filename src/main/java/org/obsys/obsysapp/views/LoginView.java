@@ -2,24 +2,24 @@ package org.obsys.obsysapp.views;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Builder;
-import org.obsys.obsysapp.models.PersonModel;
+import org.obsys.obsysapp.models.LoginModel;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class LoginViewBuilder extends ViewBuilder implements Builder<AnchorPane> {
+public class LoginView extends ViewBuilder {
 
-    private PersonModel personModel;
+    private LoginModel loginModel;
     private Runnable loginHandler;
 
-    public LoginViewBuilder(PersonModel model, Runnable loginHandler) {
-        this.personModel = model;
+    public LoginView(LoginModel model, Runnable loginHandler) {
+        this.loginModel = model;
         this.loginHandler = loginHandler;
     }
 
@@ -42,8 +42,9 @@ public class LoginViewBuilder extends ViewBuilder implements Builder<AnchorPane>
         ArrayList<Node> fields = new ArrayList<>();
 
         TextField txtUsername = obsysTextField(150, 340, 300);
-        txtUsername.textProperty().bindBidirectional(personModel.usernameProperty());
+        txtUsername.textProperty().bindBidirectional(loginModel.usernameProperty());
         fields.add(txtUsername);
+
         fields.add(obsysLabel("USERNAME", 170, 342, "hint"));
 
         return fields;
@@ -53,7 +54,7 @@ public class LoginViewBuilder extends ViewBuilder implements Builder<AnchorPane>
         ArrayList<Node> passwordNodes = new ArrayList<>();
 
         PasswordField txtPassword = obsysPassword(150, 390, 300);
-        txtPassword.textProperty().bindBidirectional(personModel.passwordProperty());
+        txtPassword.textProperty().bindBidirectional(loginModel.passwordProperty());
         passwordNodes.add(txtPassword);
 
         TextField txtUnmasked = obsysTextField(txtPassword.getLayoutX(), txtPassword.getLayoutY(), txtPassword.getPrefWidth());
@@ -90,7 +91,10 @@ public class LoginViewBuilder extends ViewBuilder implements Builder<AnchorPane>
         labels.add(obsysLabel("Welcome", 28, 107, "banner"));
         labels.add(obsysLabel("Don't have an account?", 516, 465));
         labels.add(obsysLabel("Sign in to manage your accounts.", 120, 465));
-        labels.add(obsysLabel("Invalid username and/or password.", 500, 350, 200, "warning"));
+
+        Label lblInvalidLogin = obsysLabel("", 500, 350, 200, "warning");
+        lblInvalidLogin.textProperty().bindBidirectional(loginModel.invalidLoginProperty());
+        labels.add(lblInvalidLogin);
 
         return labels;
     }

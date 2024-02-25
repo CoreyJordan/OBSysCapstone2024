@@ -1,15 +1,23 @@
 package org.obsys.obsysapp.views;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.util.Builder;
 
-public class ViewBuilder {
+public class ViewBuilder implements Builder<AnchorPane> {
 
+    /**
+     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Normal label css styles are applied.
+     * @param contents The message to be displayed in the label.
+     * @param x The horizontal position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the label.
+     * @return A string label at x,y.
+     */
     protected Label obsysLabel(String contents, double x, double y) {
         Label label = new Label(contents);
         label.setLayoutX(x);
@@ -18,6 +26,16 @@ public class ViewBuilder {
         return label;
     }
 
+    /**
+     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Sets a fixed field width for the label.
+     * Normal label css styles are applied.
+     * @param contents The message to be displayed in the label.
+     * @param x The horizontal position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the label.
+     * @param width The horizontal field width to contain the text.
+     * @return A string label at x,y.
+     */
     protected Label obsysLabel(String contents, double x, double y, double width) {
         Label label = obsysLabel(contents, x, y);
         label.setPrefWidth(width);
@@ -25,6 +43,15 @@ public class ViewBuilder {
         return label;
     }
 
+    /**
+     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Css styles are applied according to the parameter.
+     * @param contents The message to be displayed in the label.
+     * @param x The horizontal position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the label.
+     * @param css The style class name assigned to the label.
+     * @return A string label at x,y.
+     */
     protected Label obsysLabel(String contents, double x, double y, String css) {
         Label label = obsysLabel(contents, x, y);
         label.getStyleClass().add(css);
@@ -32,6 +59,17 @@ public class ViewBuilder {
         return label;
     }
 
+    /**
+     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Sets a fixed field width for the label.
+     * Css styles are applied according to the parameter.
+     * @param contents The message to be displayed in the label.
+     * @param x The horizontal position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the label.
+     * @param width The horizontal field width to contain the text.
+     * @param css The style class name assigned to the label.
+     * @return A string label at x,y.
+     */
     protected Label obsysLabel(String contents, double x, double y, double width, String css) {
         Label label = obsysLabel(contents, x, y, width);
         label.getStyleClass().add(css);
@@ -120,4 +158,17 @@ public class ViewBuilder {
         return panel;
     }
 
+
+    protected Hyperlink obsysLink(String content, double x, double y) {
+        Hyperlink link = new Hyperlink(content);
+        link.setLayoutX(x);
+        link.setLayoutY(y);
+
+        return link;
+    }
+
+    @Override
+    public AnchorPane build() {
+        return null;
+    }
 }
