@@ -1,6 +1,8 @@
 package org.obsys.obsysapp.views;
 
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
@@ -11,10 +13,15 @@ import java.util.Objects;
 
 public class ErrorView extends ViewBuilder implements iObsysBuilder {
 
-    ErrorModel error;
+    private ErrorModel error;
+    private Runnable exitHandler;
+    private Runnable logoutHandler;
 
-    public ErrorView(ErrorModel errorModel) {
+    public ErrorView(ErrorModel errorModel, Runnable exitHandler, Runnable logoutHandler) {
+
         error = errorModel;
+        this.exitHandler = exitHandler;
+        this.logoutHandler = logoutHandler;
     }
 
     @Override
@@ -33,9 +40,16 @@ public class ErrorView extends ViewBuilder implements iObsysBuilder {
     public ArrayList<Node> createButtons() {
         ArrayList<Node> buttons = new ArrayList<>();
 
-        buttons.add(obsysLink("Logout", 830, 5));
-        buttons.add(obsysButton("Back", 210, 400, 200, new Image("back.png")));
-        buttons.add(obsysButton("Close Program", 210, 450, 200));
+        Hyperlink hypLogout = obsysLink("Logout", 830, 5);
+        hypLogout.setOnAction(evt -> logoutHandler.run());
+        buttons.add(hypLogout);
+
+        Button btnBack = obsysButton("Back", 210, 400, 200, new Image("back.png"));
+        buttons.add(btnBack);
+
+        Button btnClose = obsysButton("Close Program", 210, 450, 200);
+        btnClose.setOnAction(evt -> exitHandler.run());
+        buttons.add(btnClose);
 
         return buttons;
     }
