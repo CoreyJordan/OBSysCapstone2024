@@ -22,11 +22,11 @@ public class LoginController {
     private final LoginModel loginModel;
 
 
-    public LoginController(Stage stage) {
+    public LoginController(Stage stage, String imgSource, String bannerText) {
         this.stage = stage;
         loginModel = new LoginModel();
         loginDao = new LoginDAO();
-        viewBuilder = new LoginView(loginModel, this::lookupLogin);
+        viewBuilder = new LoginView(loginModel, this::lookupLogin, imgSource, bannerText);
     }
 
     public Region getView() {

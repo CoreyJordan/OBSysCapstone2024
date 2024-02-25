@@ -17,10 +17,14 @@ public class LoginView extends ViewBuilder implements iObsysBuilder {
 
     private final LoginModel loginModel;
     private final Runnable loginHandler;
+    private final String bannerImageSource;
+    private final String bannerText;
 
-    public LoginView(LoginModel model, Runnable loginHandler) {
+    public LoginView(LoginModel model, Runnable loginHandler, String imgSource, String bannerText) {
         this.loginModel = model;
         this.loginHandler = loginHandler;
+        bannerImageSource = imgSource;
+        this.bannerText = bannerText;
     }
 
     @Override
@@ -93,7 +97,7 @@ public class LoginView extends ViewBuilder implements iObsysBuilder {
     public ArrayList<Node> createLabels() {
         ArrayList<Node> labels = new ArrayList<>();
 
-        labels.add(obsysLabel("Welcome", 28, 107, "banner"));
+        labels.add(obsysLabel(bannerText, 28, 107, "banner"));
         labels.add(obsysLabel("Don't have an account?", 516, 465));
         labels.add(obsysLabel("Sign in to manage your accounts.", 120, 465));
 
@@ -108,7 +112,7 @@ public class LoginView extends ViewBuilder implements iObsysBuilder {
     public ArrayList<Node> loadImages() {
         ArrayList<Node> images = new ArrayList<>();
 
-        images.add(obsysImage("dolphinLogin.png", 5, 90, 910, 180));
+        images.add(obsysImage(bannerImageSource, 5, 90, 910, 180));
         images.add(obsysImage("dolphinLogoTan.png", 695, 90, 220, 180));
 
         return images;

@@ -16,6 +16,6 @@ public class ObsysDb {
                 "jdbc:sqlserver://coacapstone2024.database.windows.net:1433;" +
                         "database=OBSysAccounts;user=c_jordan06@coacapstone2024;" +
                         "password=Capstone2024!;encrypt=true;trustServerCertificate=false;" +
-                        "hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
+                        "hostNameInCertificate=*.database.windows.net;loginTimeout=10;");
     }
 }

@@ -20,7 +20,8 @@ public class ErrorController {
     }
 
     public void logout() {
-        stage.setScene(new Scene(new LoginController(stage).getView()));
+        stage.setScene(new Scene(new LoginController(
+                stage, "dolphinExit.png", "Thank you!").getView()));
     }
 
     public void exitApp() {

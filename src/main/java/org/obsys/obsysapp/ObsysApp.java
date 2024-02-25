@@ -13,7 +13,7 @@ public class ObsysApp extends Application {
         stage.setTitle("OBSys - Online Banking Application");
         stage.getIcons().add(new Image("/obsysIcon.png"));
         stage.setResizable(false);
-        //stage.setScene(new Scene(new LoginController(stage).getView()));
+//        stage.setScene(new Scene(new LoginController(stage, "dolphinLogin.png", "Welcome").getView()));
         stage.setScene(new Scene(new ErrorController(stage, new Exception("Oops! An illegal operation has occurred")).getView()));
         stage.show();
     }
