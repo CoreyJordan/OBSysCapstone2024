@@ -17,10 +17,12 @@ import java.util.Objects;
 public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
     private CreationModel creationModel;
     private LoginModel loginModel;
+    private Runnable returnHandler;
 
-    public AcctCreationView(CreationModel creationModel, LoginModel loginModel) {
+    public AcctCreationView(CreationModel creationModel, LoginModel loginModel, Runnable returnHandler) {
         this.creationModel = creationModel;
         this.loginModel = loginModel;
+        this.returnHandler = returnHandler;
     }
 
     @Override
@@ -80,15 +82,17 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         ArrayList<Node> buttons = new ArrayList<>();
 
         Button btnBack = obsysButton("Return to Login", 10, 10, 180, new Image("back.png"));
-        // TODO btnBack.setOnAction(evt -> returnHandler.run());
+        btnBack.setOnAction(evt -> returnHandler.run());
         buttons.add(btnBack);
 
         Button btnLookUp = obsysButton("Find account", 225, 280);
         // TODO btnLookUp.setOnAction(evt -> lookupHandler.run();
         buttons.add(btnLookUp);
 
+        // The register button is disabled until a valid account is found.
         Button btnRegister = obsysButton("Register", 260, 409);
         // TODO btnRegister.setOnAction(evt -> createLoginHandler.run());
+        btnRegister.setDisable(true);
         buttons.add(btnRegister);
 
         return buttons;
@@ -126,8 +130,10 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         posY = 319;
         hintPosY = 321;
 
+        // Disable the username field until a valid account is found.
         TextField txtUsername = obsysTextField(posX, posY, width);
         txtUsername.textProperty().bindBidirectional(loginModel.usernameProperty());
+        txtUsername.setDisable(true);
         fields.add(txtUsername);
         fields.add(obsysLabel("USERNAME", hintPosX, hintPosY, "hint"));
 
@@ -153,6 +159,11 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         btnPrivacy.setOnMousePressed(evt -> showPassword(txtPassword, txtUnmasked));
         btnPrivacy.setOnMouseReleased(ext -> hidePassword(txtPassword, txtUnmasked));
         passwordNodes.add(btnPrivacy);
+
+        // Disable the password node until a valid account is found.
+        for (Node n : passwordNodes) {
+            n.setDisable(true);
+        }
 
         return passwordNodes;
     }

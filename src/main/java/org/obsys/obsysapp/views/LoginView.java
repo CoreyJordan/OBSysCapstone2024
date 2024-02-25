@@ -17,12 +17,15 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
 
     private final LoginModel loginModel;
     private final Runnable loginHandler;
+    private final Runnable openCreationHandler;
     private final String bannerImageSource;
     private final String bannerText;
 
-    public LoginView(LoginModel model, Runnable loginHandler, String imgSource, String bannerText) {
+    public LoginView(LoginModel model, Runnable loginHandler, Runnable openCreationHandler,
+                     String imgSource, String bannerText) {
         this.loginModel = model;
         this.loginHandler = loginHandler;
+        this.openCreationHandler = openCreationHandler;
         bannerImageSource = imgSource;
         this.bannerText = bannerText;
     }
@@ -87,7 +90,7 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
         buttons.add(btnLogin);
 
         Button btnCreateAcct = obsysButton("Create Account", 730, 457);
-        // TODO add action event
+        btnCreateAcct.setOnAction(evt -> openCreationHandler.run());
         buttons.add(btnCreateAcct);
 
         return buttons;

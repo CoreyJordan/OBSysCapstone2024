@@ -26,7 +26,17 @@ public class LoginController {
         this.stage = stage;
         loginModel = new LoginModel();
         loginDao = new LoginDAO();
-        viewBuilder = new LoginView(loginModel, this::lookupLogin, imgSource, bannerText);
+        viewBuilder = new LoginView(loginModel, this::lookupLogin, this::openCreation, imgSource, bannerText);
+    }
+
+    private static void navigateToHomePage(Login checkedLogin) {
+        if (checkedLogin.isAdmin()) {
+            // TODO open Admin Home Page
+            System.out.println("Loading Admin Home");
+        } else {
+            // TODO open User Home Page
+            System.out.println("Loading home page");
+        }
     }
 
     public Region getView() {
@@ -57,16 +67,9 @@ public class LoginController {
         }
     }
 
-    private static void navigateToHomePage(Login checkedLogin) {
-        if (checkedLogin.isAdmin()) {
-            // TODO open Admin Home Page
-            System.out.println("Loading Admin Home");
-        } else {
-            // TODO open User Home Page
-            System.out.println("Loading home page");
-        }
+    private void openCreation() {
+        stage.setScene(new Scene(new AcctCreationController(stage).getView()));
     }
-
 
     private boolean passwordsMatch(Login checkedLogin) {
         return checkedLogin.getPassword().equals(loginModel.getPassword());

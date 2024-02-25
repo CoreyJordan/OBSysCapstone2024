@@ -1,5 +1,6 @@
 package org.obsys.obsysapp.controllers;
 
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -18,7 +19,12 @@ public class AcctCreationController {
         this.stage = stage;
         creationModel = new CreationModel();
         loginModel = new LoginModel();
-        viewBuilder = new AcctCreationView(creationModel, loginModel);
+        viewBuilder = new AcctCreationView(creationModel, loginModel, this::goBack);
+    }
+
+    private void goBack() {
+        stage.setScene(new Scene(new LoginController(
+                stage, "dolphinLogin.png", "Welcome").getView()));
     }
 
     public Region getView() {
