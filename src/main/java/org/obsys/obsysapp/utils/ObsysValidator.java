@@ -1,6 +1,6 @@
 package org.obsys.obsysapp.utils;
 
-public class ObsysValidator {
+public class ObsysValidator{
     protected boolean containsSymbol(String input) {
         for (Character c : input.toCharArray()) {
             if (!Character.isLetterOrDigit(c)) {
@@ -35,5 +35,14 @@ public class ObsysValidator {
             }
         }
         return false;
+    }
+
+    protected boolean isInteger(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

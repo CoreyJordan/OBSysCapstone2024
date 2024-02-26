@@ -18,11 +18,14 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
     private CreationModel creationModel;
     private LoginModel loginModel;
     private Runnable returnHandler;
+    private Runnable lookupHandler;
 
-    public AcctCreationView(CreationModel creationModel, LoginModel loginModel, Runnable returnHandler) {
+    public AcctCreationView(CreationModel creationModel, LoginModel loginModel, Runnable returnHandler,
+                            Runnable lookupHandler) {
         this.creationModel = creationModel;
         this.loginModel = loginModel;
         this.returnHandler = returnHandler;
+        this.lookupHandler = lookupHandler;
     }
 
     @Override
@@ -58,7 +61,20 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
     public ArrayList<Node> createLabels() {
         ArrayList<Node> labels = new ArrayList<>();
 
+        Label lblAcctNumInvalid = obsysLabel("", 365, 145, "warning");
+        lblAcctNumInvalid.textProperty().bindBidirectional(creationModel.acctNumWarningProperty());
+        labels.add(lblAcctNumInvalid);
+
+        Label lblFirstNameInvalid = obsysLabel("", 365, 190, "warning");
+        lblFirstNameInvalid.textProperty().bindBidirectional(creationModel.firstNameWarningProperty());
+        labels.add(lblFirstNameInvalid);
+
+        Label lblLastNameInvalid = obsysLabel("", 365, 235, "warning");
+        lblLastNameInvalid.textProperty().bindBidirectional(creationModel.lastNameWarningProperty());
+        labels.add(lblLastNameInvalid);
+
         Label lblNotFound = obsysLabel("", 365, 280, 255, "warning");
+        lblNotFound.textProperty().bindBidirectional(creationModel.notFoundProperty());
         labels.add(lblNotFound);
 
         Label lblUsernameInvalid = obsysLabel("", 365, 319, 255, "warning");
@@ -69,8 +85,8 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
 
         labels.add(obsysLabel("Link your account", 25, 50, "banner"));
 
-        String message = "Confirm your information, then create a username & password.";
-        message += " Passwords must be at least 6 characters, contain at least 1 upper, 1 lower, 1 symbol, 1 number.";
+        String message = "Confirm your information, then create a username & password. " +
+            "Passwords must be at least 6 characters, contain at least 1 upper, 1 lower, 1 symbol, 1 number.";
 
         labels.add(obsysLabel(message, 50, 470, 540));
 
@@ -86,7 +102,7 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         buttons.add(btnBack);
 
         Button btnLookUp = obsysButton("Find account", 225, 280);
-        // TODO btnLookUp.setOnAction(evt -> lookupHandler.run();
+        btnLookUp.setOnAction(evt -> lookupHandler.run());
         buttons.add(btnLookUp);
 
         // The register button is disabled until a valid account is found.
@@ -161,9 +177,8 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         passwordNodes.add(btnPrivacy);
 
         // Disable the password node until a valid account is found.
-        for (Node n : passwordNodes) {
-            n.setDisable(true);
-        }
+        txtPassword.setDisable(true);
+        btnPrivacy.setDisable(true);
 
         return passwordNodes;
     }

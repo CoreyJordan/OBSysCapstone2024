@@ -11,6 +11,7 @@
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
         <property name="AZURE_SQL_DB_SERVER" value="/subscriptions/d0ec2977-c15d-46d6-addd-e7a6433629a6/resourceGroups/OBSysRGroup/providers/Microsoft.Sql/servers/coacapstone2024" />
+        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>

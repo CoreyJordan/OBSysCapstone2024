@@ -9,6 +9,10 @@ public class LoginValidator extends ObsysValidator{
         this.password = password;
     }
 
+    /**
+     * Verifies username and password input validity.
+     * @return True if both username and password are syntactically correct.
+     */
     public boolean okToLogin() {
         return usernameIsValid() && passwordIsValid();
     }
