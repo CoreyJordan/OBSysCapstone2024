@@ -11,7 +11,40 @@ public class LoginModel {
     }
 
     private final StringProperty invalidLogin = new SimpleStringProperty("");
+    private final StringProperty invalidPassword = new SimpleStringProperty("");
+    private final StringProperty invalidUsername = new SimpleStringProperty("");
 
+    public void setUsername(String username) {
+        this.username.set(username);
+    }
+
+    public String getInvalidLogin() {
+        return invalidLogin.get();
+    }
+
+    public String getInvalidPassword() {
+        return invalidPassword.get();
+    }
+
+    public StringProperty invalidPasswordProperty() {
+        return invalidPassword;
+    }
+
+    public void setInvalidPassword(String invalidPassword) {
+        this.invalidPassword.set(invalidPassword);
+    }
+
+    public String getInvalidUsername() {
+        return invalidUsername.get();
+    }
+
+    public StringProperty invalidUsernameProperty() {
+        return invalidUsername;
+    }
+
+    public void setInvalidUsername(String invalidUsername) {
+        this.invalidUsername.set(invalidUsername);
+    }
 
     public StringProperty invalidLoginProperty() {
         return invalidLogin;

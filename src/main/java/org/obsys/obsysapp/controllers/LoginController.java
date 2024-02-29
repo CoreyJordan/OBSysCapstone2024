@@ -44,19 +44,12 @@ public class LoginController {
     }
 
     private void lookupLogin() {
-        LoginValidator validator = new LoginValidator(loginModel.getUsername(), loginModel.getPassword());
-        if (!validator.okToLogin()) {
-            loginModel.setInvalidLogin("Invalid username and/or password");
-            return;
-        }
+        if (loginInputIsInvalid()) return;
 
         try (Connection conn = ObsysDbConnection.openDBConn()) {
             Login checkedLogin = loginDao.readPasswordByUsername(conn, loginModel.getUsername());
 
-            if (!passwordsMatch(checkedLogin)) {
-                loginModel.setInvalidLogin("Username or password matches no record");
-                return;
-            }
+            if (loginMatchNotFound(checkedLogin)) return;
 
             navigateToHomePage(checkedLogin);
 
@@ -65,6 +58,23 @@ public class LoginController {
             loginModel.setPassword("");
             stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
         }
+    }
+
+    private boolean loginMatchNotFound(Login checkedLogin) {
+        if (!passwordsMatch(checkedLogin)) {
+            loginModel.setInvalidLogin("Username or password matches no record");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean loginInputIsInvalid() {
+        LoginValidator validator = new LoginValidator(loginModel.getUsername(), loginModel.getPassword());
+        if (!validator.okToLogin()) {
+            loginModel.setInvalidLogin("Invalid username and/or password");
+            return true;
+        }
+        return false;
     }
 
     private void openCreation() {

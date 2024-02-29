@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.CreationModel;
@@ -19,13 +20,15 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
     private LoginModel loginModel;
     private Runnable returnHandler;
     private Runnable lookupHandler;
+    private Runnable createLoginHandler;
 
     public AcctCreationView(CreationModel creationModel, LoginModel loginModel, Runnable returnHandler,
-                            Runnable lookupHandler) {
+                            Runnable lookupHandler, Runnable createLoginHandler) {
         this.creationModel = creationModel;
         this.loginModel = loginModel;
         this.returnHandler = returnHandler;
         this.lookupHandler = lookupHandler;
+        this.createLoginHandler = createLoginHandler;
     }
 
     @Override
@@ -78,9 +81,11 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         labels.add(lblNotFound);
 
         Label lblUsernameInvalid = obsysLabel("", 365, 319, 255, "warning");
+        lblUsernameInvalid.textProperty().bindBidirectional(loginModel.invalidUsernameProperty());
         labels.add(lblUsernameInvalid);
 
-        Label lblPasswordInvalid = obsysLabel("", 365, 364, 255, "warning");
+        Label lblPasswordInvalid = obsysLabel("", 365, 369, 255, "warning");
+        lblPasswordInvalid.textProperty().bindBidirectional(loginModel.invalidPasswordProperty());
         labels.add(lblPasswordInvalid);
 
         labels.add(obsysLabel("Link your account", 25, 50, "banner"));
@@ -103,12 +108,12 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
 
         Button btnLookUp = obsysButton("Find account", 225, 280);
         btnLookUp.setOnAction(evt -> lookupHandler.run());
+        btnLookUp.setDefaultButton(true);
         buttons.add(btnLookUp);
 
-        // The register button is disabled until a valid account is found.
         Button btnRegister = obsysButton("Register", 260, 409);
-        // TODO btnRegister.setOnAction(evt -> createLoginHandler.run());
-        btnRegister.setDisable(true);
+        btnRegister.disableProperty().bindBidirectional(creationModel.registrationDisabledProperty());
+        btnRegister.setOnAction(evt -> createLoginHandler.run());
         buttons.add(btnRegister);
 
         return buttons;
@@ -146,10 +151,9 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         posY = 319;
         hintPosY = 321;
 
-        // Disable the username field until a valid account is found.
         TextField txtUsername = obsysTextField(posX, posY, width);
         txtUsername.textProperty().bindBidirectional(loginModel.usernameProperty());
-        txtUsername.setDisable(true);
+        txtUsername.disableProperty().bindBidirectional(creationModel.registrationDisabledProperty());
         fields.add(txtUsername);
         fields.add(obsysLabel("USERNAME", hintPosX, hintPosY, "hint"));
 
@@ -162,23 +166,30 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
 
         PasswordField txtPassword = obsysPassword(55, 364, 300);
         txtPassword.textProperty().bindBidirectional(loginModel.passwordProperty());
+        txtPassword.disableProperty().bind(creationModel.passwordDisableProperty());
         passwordNodes.add(txtPassword);
 
         TextField txtUnmasked = obsysTextField(txtPassword.getLayoutX(),
                 txtPassword.getLayoutY(), txtPassword.getPrefWidth());
-        txtUnmasked.setVisible(false);
+        txtUnmasked.textProperty().bind(txtPassword.textProperty());
+        txtUnmasked.visibleProperty().bind(txtPassword.visibleProperty().not());
         passwordNodes.add(txtUnmasked);
 
         passwordNodes.add(obsysLabel("PASSWORD", 75, 364, "hint"));
 
         Button btnPrivacy = obsysButton(new Image("privacyOn.png"), 300, 364, "toggle");
-        btnPrivacy.setOnMousePressed(evt -> showPassword(txtPassword, txtUnmasked));
-        btnPrivacy.setOnMouseReleased(ext -> hidePassword(txtPassword, txtUnmasked));
+        btnPrivacy.disableProperty().bindBidirectional(creationModel.registrationDisabledProperty());
+        btnPrivacy.setOnMousePressed(evt -> {
+            creationModel.setPasswordDisable(true);
+            txtPassword.setVisible(false);
+        });
+        btnPrivacy.setOnMouseReleased(ext -> {
+            creationModel.setPasswordDisable(false);
+            txtPassword.setVisible(true);
+            txtPassword.requestFocus();
+            txtPassword.positionCaret(txtPassword.getLength());
+        });
         passwordNodes.add(btnPrivacy);
-
-        // Disable the password node until a valid account is found.
-        txtPassword.setDisable(true);
-        btnPrivacy.setDisable(true);
 
         return passwordNodes;
     }
