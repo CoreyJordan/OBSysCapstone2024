@@ -32,17 +32,17 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public AnchorPane build() {
-        AnchorPane window = new AnchorPane();
-        window.getStylesheets().add(
+        AnchorPane loginWindow = new AnchorPane();
+        loginWindow.getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
-        window.getChildren().add(createPanels());
-        window.getChildren().addAll(loadImages());
-        window.getChildren().addAll(createLabels());
-        window.getChildren().addAll(createButtons());
-        window.getChildren().addAll(createTextFields());
-        window.getChildren().addAll(buildPasswordField());
+        loginWindow.getChildren().add(createPanels());
+        loginWindow.getChildren().addAll(loadImages());
+        loginWindow.getChildren().addAll(createLabels());
+        loginWindow.getChildren().addAll(createButtons());
+        loginWindow.getChildren().addAll(createTextFields());
+        loginWindow.getChildren().addAll(buildPasswordField());
 
-        return window;
+        return loginWindow;
     }
 
     @Override

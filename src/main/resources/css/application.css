@@ -4,6 +4,11 @@
     -fx-background-color: "#9A989C";
 }
 
+.scroll-pane {
+    -fx-background-color: "#9A989C";
+    -fx-background: "#9A989C";
+}
+
 .panel {
     -fx-arc-width: 15;
     -fx-arc-height: 15;
@@ -68,10 +73,16 @@
 
 }
 
+.panel-warning {
+    -fx-text-fill: YELLOW;
+}
+
 .banner {
     -fx-font-family: Georgia;
     -fx-font-size: 72;
 }
+
+
 
 .hint {
     -fx-font-size: 9;
@@ -83,6 +94,11 @@
     -fx-border-color: rgba(0, 0, 0, 0);
     -fx-text-fill: BLACK;
     -fx-underline: TRUE;
+}
+
+.sub-header {
+    -fx-font-family: Georgia;
+    -fx-font-size: 48;
 }
 
 .hyperlink:armed {

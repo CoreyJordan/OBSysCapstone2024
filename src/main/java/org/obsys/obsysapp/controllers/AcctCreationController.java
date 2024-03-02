@@ -32,10 +32,6 @@ public class AcctCreationController {
         loginDao = new LoginDAO();
         viewBuilder = new AcctCreationView(
                 creationModel, loginModel, this::goBack, this::findAccount, this::createLogin);
-        // For testing
-        creationModel.setAcctNum("1111111111");
-        creationModel.setFirstName("Laina");
-        creationModel.setLastName("Matyushenko");
     }
 
     public Region getView() {

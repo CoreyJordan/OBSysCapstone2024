@@ -218,9 +218,37 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return link;
     }
 
+    /**
+     * Creates a hyperlink at a specified location within the window with specific css class.
+     * @param content The text to be displayed in the link.
+     * @param x The horizontal position of the upper left corner of the link.
+     * @param y The vertical position of the upper left corner of the link.
+     * @param css The style class to be applied to the link.
+     * @return A hyperlink at a specified location within the window.
+     */
+    protected Hyperlink obsysLink(String content, double x, double y, String css) {
+
+        Hyperlink link = obsysLink(content, x, y);
+        link.getStyleClass().add(css);
+
+        return link;
+    }
+
     @Override
     public AnchorPane build() {
         return null;
+    }
+
+    protected ScrollPane obsysScrollPane(double x, double y, double width, double height) {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setLayoutX(x);
+        scrollPane.setLayoutY(y);
+        scrollPane.setPrefWidth(width);
+        scrollPane.setPrefHeight(height);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+
+        return scrollPane;
     }
 
 }

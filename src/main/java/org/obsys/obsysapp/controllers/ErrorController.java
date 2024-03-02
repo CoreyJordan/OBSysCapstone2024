@@ -18,11 +18,20 @@ public class ErrorController {
         viewBuilder = new ErrorView(new ErrorModel(ex), this::exitApp, this::logout, this::goBack);
     }
 
+    public ErrorController(Stage stage, Exception ex) {
+        this.previousPage = null;
+        this.stage = stage;
+        viewBuilder = new ErrorView(new ErrorModel(ex), this::exitApp, this::logout, this::goBack);
+    }
+
     public Region getView() {
         return viewBuilder.build();
     }
 
     private void goBack() {
+        if (previousPage == null) {
+            return;
+        }
         stage.setScene(new Scene(previousPage));
     }
 

@@ -29,13 +29,15 @@ public class LoginController {
         viewBuilder = new LoginView(loginModel, this::lookupLogin, this::openCreation, imgSource, bannerText);
     }
 
-    private static void navigateToHomePage(Login checkedLogin) {
+    private void navigateToHomePage(Login checkedLogin) {
         if (checkedLogin.isAdmin()) {
             // TODO open Admin Home Page
+
             System.out.println("Loading Admin Home");
         } else {
             // TODO open User Home Page
             System.out.println("Loading home page");
+            stage.setScene(new Scene(new HomeController(stage, checkedLogin).getView()));
         }
     }
 

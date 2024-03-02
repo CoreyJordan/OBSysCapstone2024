@@ -1,0 +1,85 @@
+package org.obsys.obsysapp.models;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import org.obsys.obsysapp.domain.Account;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+public class AccountsModel {
+    private final ArrayList<Account> accounts;
+
+    public AccountsModel(ArrayList<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    public int accountsCount() {
+        return accounts.size();
+    }
+
+    public StringProperty getAccountType(int i) {
+
+        return new SimpleStringProperty(switch (accounts.get(i).getType()) {
+            case "CH" -> "Checking";
+            case "IC" -> "Checking+";
+            case "LN" -> "Loan";
+            case "SV" -> "Saving";
+            default -> throw new IllegalStateException("Unexpected value: " + accounts.get(i).getType());
+        });
+    }
+
+    public StringProperty getAccountNum(int i) {
+        String acctNum = "..." + String.valueOf(accounts.get(i).getAcctNum()).substring(6);
+        return new SimpleStringProperty(acctNum);
+    }
+
+    public StringProperty getBalance(int i) {
+        return new SimpleStringProperty(String.format("$%,.2f", accounts.get(i).getBalance()));
+
+    }
+
+    public StringProperty balanceTypeProperty(int i) {
+        return new SimpleStringProperty(switch (accounts.get(i).getType()) {
+            case "LN" -> "BALANCE";
+            default -> "AVAILABLE";
+        });
+    }
+
+    public StringProperty statusProperty(int i) {
+        return new SimpleStringProperty(switch (accounts.get(i).getStatus()) {
+            case "DQ" -> "This account is delinquent";
+            case "CL" -> "This account is closed";
+            case "SU" -> "This account is suspended";
+            default -> "";
+        });
+    }
+
+    public StringProperty payDateProperty(int i) {
+        if (accounts.get(i).getType().equals("LN")) {
+            String paymentDate = "Next Payment: ";
+
+            int dayDue = accounts.get(i).getPaymentDate().getDayOfMonth();
+            int month = LocalDate.now().getMonthValue();
+
+            if (LocalDate.now().getDayOfMonth() > dayDue) {
+                month++;
+            }
+
+            LocalDate next = LocalDate.of(LocalDate.now().getYear(), month, dayDue);
+            paymentDate += next.format(DateTimeFormatter.ofPattern("MM/dd"));
+            return new SimpleStringProperty(paymentDate);
+        }
+        return new SimpleStringProperty("");
+    }
+
+    public StringProperty amountDueProperty(int i) {
+        if (accounts.get(i).getPaymentAmt() != -1) {
+            String amountDue = "Amount due: ";
+            amountDue += String.format("$%,.2f", accounts.get(i).getPaymentAmt());
+            return new SimpleStringProperty(amountDue);
+        }
+        return new SimpleStringProperty("");
+    }
+}
