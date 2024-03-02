@@ -11,33 +11,30 @@ import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.models.AccountsModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class HomeView extends ViewBuilder implements IObsysBuilder {
 
     private final Login user;
     private final AccountsModel acctModel;
-    private Runnable logoutHandler;
-    private Runnable naviagtionHandler;
+    private final Runnable logoutHandler;
+    private final Runnable navigationHandler;
 
     public HomeView(Login user, AccountsModel acctModel, Runnable logoutHandler, Runnable navigationHandler) {
         this.user = user;
         this.acctModel = acctModel;
         this.logoutHandler = logoutHandler;
-        this.naviagtionHandler = navigationHandler;
+        this.navigationHandler = navigationHandler;
     }
 
     @Override
     public AnchorPane build() {
-            AnchorPane homeWindow = new AnchorPane();
-            homeWindow.getStylesheets().add(
-                    Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
-            homeWindow.getChildren().add(createPane());
-            homeWindow.getChildren().addAll(loadImages());
-            homeWindow.getChildren().addAll(createButtons());
-            homeWindow.getChildren().addAll(createLabels());
+        AnchorPane homeWindow = super.build();
+        homeWindow.getChildren().add(createPane());
+        homeWindow.getChildren().addAll(loadImages());
+        homeWindow.getChildren().addAll(createButtons());
+        homeWindow.getChildren().addAll(createLabels());
 
-            return homeWindow;
+        return homeWindow;
     }
 
     @Override
@@ -52,7 +49,7 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
         accountsPanel.setContent(pane);
 
         for (int i = 0; i < acctModel.accountsCount(); i++) {
-            pane.getChildren().add(obsysPanel(10, 10 + (i * 120), 620, 100, "panel"));
+            pane.getChildren().add(obsysPanel(10, 10 + (i * 120), 620, 100));
             pane.getChildren().addAll(addAcctLabels(i));
         }
 
@@ -115,7 +112,7 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
 
         Hyperlink hypAcctName = obsysLink("AcctType", 10, 10 + (i * 120), "sub-header");
         hypAcctName.textProperty().bind(acctModel.getAccountType(i));
-        hypAcctName.setOnAction(evt -> naviagtionHandler.run());
+        hypAcctName.setOnAction(evt -> navigationHandler.run());
         labels.add(hypAcctName);
 
         Label lblAcctNum = obsysLabel("....0000", 125, 75 + (i * 120));

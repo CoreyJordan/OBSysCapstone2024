@@ -9,7 +9,6 @@ import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.ErrorModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ErrorView extends ViewBuilder implements IObsysBuilder {
 
@@ -27,9 +26,7 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public AnchorPane build() {
-        AnchorPane window = new AnchorPane();
-        window.getStylesheets().add(
-                Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
+        AnchorPane window = super.build();
         window.getChildren().addAll(createPanels());
         window.getChildren().addAll(loadImages());
         window.getChildren().addAll(createLabels());
@@ -71,16 +68,16 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
         ArrayList<Node> labels = new ArrayList<>();
 
         labels.add(obsysLabel("Oops! Something went wrong!", 300, 50, 600, "banner"));
-        labels.add(obsysLabel("An unexpected error has occurred. Please return to the previous page or exit " +
-                "the application", 190, 285, 270));
-        labels.add(obsysLabel(error.getEx().getMessage(), 460, 280, 400));
+        String prompt = "An unexpected error has occurred. Please return to the previous page or exit the application";
+        labels.add(obsysLabel(prompt, 190, 285, 270));
+        labels.add(obsysLabel(error.ex().getMessage(), 460, 280, 400));
 
         return labels;
     }
 
     @Override
     public Rectangle createPanels() {
-        return obsysPanel(450, 250, 420, 250, "panel");
+        return obsysPanel(450, 250, 420, 250);
     }
 
     public ArrayList<Node> loadImages() {

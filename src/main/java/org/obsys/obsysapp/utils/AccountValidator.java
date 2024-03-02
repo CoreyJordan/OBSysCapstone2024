@@ -1,9 +1,9 @@
 package org.obsys.obsysapp.utils;
 
 public class AccountValidator extends ObsysValidator {
-    private String acctNum;
-    private String firstName;
-    private String lastName;
+    private final String acctNum;
+    private final String firstName;
+    private final String lastName;
 
     public AccountValidator(String acctNum, String firstName, String lastName) {
         this.acctNum = acctNum;

@@ -8,8 +8,8 @@ public class ObsysDbConnection {
 
     /**
      * Creates a connection to the Azure database with login credentials. NOT production worthy
-     * @return An open database connection.
-     * @throws SQLException
+     * @return an open database connection.
+     * @throws SQLException potential database errors
      */
     public static Connection openDBConn() throws SQLException {
         return DriverManager.getConnection(

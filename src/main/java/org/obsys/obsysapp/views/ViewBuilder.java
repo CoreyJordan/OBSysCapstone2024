@@ -1,6 +1,5 @@
 package org.obsys.obsysapp.views;
 
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,7 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 public class ViewBuilder implements Builder<AnchorPane> {
 
@@ -98,11 +97,11 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return textField;
     }
 
-    protected PasswordField obsysPassword(double x, double y, double width) {
+    protected PasswordField obsysPassword(double x, double y) {
         PasswordField passwordField = new PasswordField();
         passwordField.setLayoutX(x);
         passwordField.setLayoutY(y);
-        passwordField.setPrefWidth(width);
+        passwordField.setPrefWidth(300);
 
         return passwordField;
     }
@@ -195,10 +194,17 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
 
-
-    protected Rectangle obsysPanel(double x, double y, double width, double height, String css) {
+    /**
+     * Creates a rounded node panel background for app controls. CSS styling is default set to 'panel'.
+     * @param x the horizontal position of the upper left corner
+     * @param y the vertical position of the upper left corner
+     * @param width width of the panel
+     * @param height height of the panel
+     * @return a formatted and positioned rectangle
+     */
+    protected Rectangle obsysPanel(double x, double y, double width, double height) {
         Rectangle panel = new Rectangle(x, y, width, height);
-        panel.getStyleClass().add(css);
+        panel.getStyleClass().add("panel");
 
         return panel;
     }
@@ -236,7 +242,10 @@ public class ViewBuilder implements Builder<AnchorPane> {
 
     @Override
     public AnchorPane build() {
-        return null;
+        AnchorPane window = new AnchorPane();
+        window.getStylesheets().add(
+                Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
+        return window;
     }
 
     protected ScrollPane obsysScrollPane(double x, double y, double width, double height) {

@@ -3,8 +3,8 @@ package org.obsys.obsysapp.models;
 import javafx.beans.property.*;
 
 public class LoginModel {
-    private StringProperty username = new SimpleStringProperty("");
-    private StringProperty password = new SimpleStringProperty("");
+    private final StringProperty username = new SimpleStringProperty("");
+    private final StringProperty password = new SimpleStringProperty("");
 
     public void setPassword(String password) {
         this.password.set(password);
@@ -14,28 +14,12 @@ public class LoginModel {
     private final StringProperty invalidPassword = new SimpleStringProperty("");
     private final StringProperty invalidUsername = new SimpleStringProperty("");
 
-    public void setUsername(String username) {
-        this.username.set(username);
-    }
-
-    public String getInvalidLogin() {
-        return invalidLogin.get();
-    }
-
-    public String getInvalidPassword() {
-        return invalidPassword.get();
-    }
-
     public StringProperty invalidPasswordProperty() {
         return invalidPassword;
     }
 
     public void setInvalidPassword(String invalidPassword) {
         this.invalidPassword.set(invalidPassword);
-    }
-
-    public String getInvalidUsername() {
-        return invalidUsername.get();
     }
 
     public StringProperty invalidUsernameProperty() {
@@ -55,11 +39,6 @@ public class LoginModel {
     }
 
     public LoginModel() {
-    }
-
-    public LoginModel(String username, String password) {
-        this.username = new SimpleStringProperty(username);
-        this.password = new SimpleStringProperty(password);
     }
 
     public String getUsername() {

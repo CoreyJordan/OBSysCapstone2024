@@ -11,7 +11,6 @@ import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.LoginModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class LoginView extends ViewBuilder implements IObsysBuilder {
 
@@ -32,9 +31,7 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public AnchorPane build() {
-        AnchorPane loginWindow = new AnchorPane();
-        loginWindow.getStylesheets().add(
-                Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
+        AnchorPane loginWindow = super.build();
         loginWindow.getChildren().add(createPanels());
         loginWindow.getChildren().addAll(loadImages());
         loginWindow.getChildren().addAll(createLabels());
@@ -62,7 +59,7 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
     public ArrayList<Node> buildPasswordField() {
         ArrayList<Node> passwordNodes = new ArrayList<>();
 
-        PasswordField txtPassword = obsysPassword(150, 390, 300);
+        PasswordField txtPassword = obsysPassword(150, 390);
         txtPassword.textProperty().bindBidirectional(loginModel.passwordProperty());
         passwordNodes.add(txtPassword);
 
@@ -123,6 +120,6 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public Rectangle createPanels() {
-        return obsysPanel(109, 306, 379, 200, "panel");
+        return obsysPanel(109, 306, 379, 200);
     }
 }

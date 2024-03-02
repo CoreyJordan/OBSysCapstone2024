@@ -65,12 +65,12 @@ public class LoginDAO {
             }
 
         }
-        return new Person(personId, firstName, lastName, username, password);
+        return new Person(personId, username, password);
 
     }
 
     public int insertLogin(Connection conn, int personId, String username, String password) throws SQLException {
-        int rowsUpdated = 0;
+        int rowsUpdated;
         try (PreparedStatement statement = conn.prepareStatement("""
                     UPDATE dbo.Person
                     SET Username = ?, UserPassword = ?

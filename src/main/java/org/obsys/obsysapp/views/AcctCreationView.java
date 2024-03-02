@@ -6,21 +6,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.CreationModel;
 import org.obsys.obsysapp.models.LoginModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
-    private CreationModel creationModel;
-    private LoginModel loginModel;
-    private Runnable returnHandler;
-    private Runnable lookupHandler;
-    private Runnable createLoginHandler;
+    private final CreationModel creationModel;
+    private final LoginModel loginModel;
+    private final Runnable returnHandler;
+    private final Runnable lookupHandler;
+    private final Runnable createLoginHandler;
 
     public AcctCreationView(CreationModel creationModel, LoginModel loginModel, Runnable returnHandler,
                             Runnable lookupHandler, Runnable createLoginHandler) {
@@ -33,9 +31,7 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public AnchorPane build() {
-        AnchorPane window = new AnchorPane();
-        window.getStylesheets().add(
-                Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
+        AnchorPane window = super.build();
         window.getChildren().add(createPanels());
         window.getChildren().addAll(loadImages());
         window.getChildren().addAll(createLabels());
@@ -48,7 +44,7 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public Rectangle createPanels() {
-        return obsysPanel(50, 140, 310, 310, "panel");
+        return obsysPanel(50, 140, 310, 310);
     }
 
     @Override
@@ -91,8 +87,7 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
         labels.add(obsysLabel("Link your account", 25, 50, "banner"));
 
         String message = "Confirm your information, then create a username & password. " +
-            "Passwords must be at least 6 characters, contain at least 1 upper, 1 lower, 1 symbol, 1 number.";
-
+                "Passwords must be at least 6 characters, contain at least 1 upper, 1 lower, 1 symbol, 1 number.";
         labels.add(obsysLabel(message, 50, 470, 540));
 
         return labels;
@@ -164,7 +159,7 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
     public ArrayList<Node> buildPasswordField() {
         ArrayList<Node> passwordNodes = new ArrayList<>();
 
-        PasswordField txtPassword = obsysPassword(55, 364, 300);
+        PasswordField txtPassword = obsysPassword(55, 364);
         txtPassword.textProperty().bindBidirectional(loginModel.passwordProperty());
         txtPassword.disableProperty().bind(creationModel.passwordDisableProperty());
         passwordNodes.add(txtPassword);

@@ -1,10 +1,10 @@
 package org.obsys.obsysapp.domain;
 
 public class Login {
-    private String username;
+    private final String username;
     private String password;
     boolean isAdmin;
-    private int personId;
+    private final int personId;
 
     public Login(String username, String password, boolean isAdmin, int personId) {
         this.username = username;
@@ -15,10 +15,6 @@ public class Login {
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -33,15 +29,8 @@ public class Login {
         return isAdmin;
     }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
     public int getPersonId() {
         return personId;
     }
 
-    public void setPersonId(int personId) {
-        this.personId = personId;
-    }
 }

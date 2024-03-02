@@ -3,12 +3,12 @@ package org.obsys.obsysapp.domain;
 import java.time.LocalDate;
 
 public class Account {
-    private String type;
-    private int acctNum;
-    private String status;
-    private double balance;
+    private final String type;
+    private final int acctNum;
+    private final String status;
+    private final double balance;
 
-    private LocalDate paymentDate;
+    private final LocalDate paymentDate;
     private double paymentAmt;
 
     public Account(String type, int acctNum, String status, double balance, LocalDate paymentDate) {
@@ -33,40 +33,20 @@ public class Account {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public int getAcctNum() {
         return acctNum;
-    }
-
-    public void setAcctNum(int acctNum) {
-        this.acctNum = acctNum;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
     public LocalDate getPaymentDate() {
         return paymentDate;
-    }
-
-    public void setPaymentDate(LocalDate paymentDate) {
-        this.paymentDate = paymentDate;
     }
 
     public double getPaymentAmt() {

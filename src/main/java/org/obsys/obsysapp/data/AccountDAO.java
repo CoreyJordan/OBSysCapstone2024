@@ -21,11 +21,11 @@ public class AccountDAO {
      */
     public ArrayList<Account> readAccountsByPersonId(Connection conn, int personId) throws SQLException {
         ArrayList<Account> accounts = new ArrayList<>();
-        String acctType = null;
-        int acctId = 0;
-        String acctStatus = null;
-        double balance = 0;
-        LocalDate paymentDate = null;
+        String acctType;
+        int acctId;
+        String acctStatus;
+        double balance;
+        LocalDate paymentDate;
 
 
         try (PreparedStatement statement = conn.prepareStatement("""

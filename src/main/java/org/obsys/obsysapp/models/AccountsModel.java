@@ -36,15 +36,16 @@ public class AccountsModel {
     }
 
     public StringProperty getBalance(int i) {
-        return new SimpleStringProperty(String.format("$%,.2f", accounts.get(i).getBalance()));
-
+        String balance = String.format("$%,.2f", accounts.get(i).getBalance());
+        return new SimpleStringProperty(balance);
     }
 
     public StringProperty balanceTypeProperty(int i) {
-        return new SimpleStringProperty(switch (accounts.get(i).getType()) {
-            case "LN" -> "BALANCE";
-            default -> "AVAILABLE";
-        });
+        SimpleStringProperty label = new SimpleStringProperty("Label");
+        if (accounts.get(i).getType().equals("LN")) {
+            label.set("BALANCE");
+        }
+        return label;
     }
 
     public StringProperty statusProperty(int i) {
@@ -56,6 +57,12 @@ public class AccountsModel {
         });
     }
 
+    /**
+     * Produces the next pay date for an upcoming loan payment. Does not return year. Payment date is based directly
+     * from date the account was opened.
+     * @param i the index of the loan account within the list
+     * @return the next day and month for payments due
+     */
     public StringProperty payDateProperty(int i) {
         if (accounts.get(i).getType().equals("LN")) {
             String paymentDate = "Next Payment: ";

@@ -66,10 +66,6 @@ public class CreationModel {
         return lastName.get();
     }
 
-    public void setLastName(String lastName) {
-        this.lastName.set(lastName);
-    }
-
     public StringProperty lastNameProperty() {
         return lastName;
     }
@@ -78,20 +74,12 @@ public class CreationModel {
         return firstName.get();
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName.set(firstName);
-    }
-
     public StringProperty firstNameProperty() {
         return firstName;
     }
 
     public String getAcctNum() {
         return acctNum.get();
-    }
-
-    public void setAcctNum(String acctNum) {
-        this.acctNum.set(acctNum);
     }
 
     public Property<String> acctNumProperty() {
