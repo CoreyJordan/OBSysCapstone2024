@@ -9,11 +9,13 @@ import org.obsys.obsysapp.data.AccountDAO;
 import org.obsys.obsysapp.data.ObsysDbConnection;
 import org.obsys.obsysapp.domain.Account;
 import org.obsys.obsysapp.domain.Login;
+import org.obsys.obsysapp.models.AccountModel;
 import org.obsys.obsysapp.models.AccountsModel;
 import org.obsys.obsysapp.views.HomeView;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HomeController {
     private final Stage stage;
@@ -52,7 +54,13 @@ public class HomeController {
     }
 
     private void navigate() {
-        // TODO navigate to pages
+        try (Connection conn = ObsysDbConnection.openDBConn()) {
+            AccountModel accountModel = acctDao.readFullAccountDetails(conn, acctsModel.getTargetAccountNumber());
+            stage.setScene(new Scene(new AccountController(stage, accountModel).getView()));
+        } catch (Exception e) {
+            stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+        }
+
     }
 
     public Region getView() {

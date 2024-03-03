@@ -10,6 +10,28 @@ import java.util.ArrayList;
 
 public class AccountsModel {
     private final ArrayList<Account> accounts;
+    private int targetAccountNumber;
+    private Account targetAcct;
+
+    public Account getTargetAcct() {
+        return targetAcct;
+    }
+
+    public void setTargetAcct(Account targetAcct) {
+        this.targetAcct = targetAcct;
+    }
+
+    public Account getAccount(int i) {
+        return accounts.get(i);
+    }
+
+    public int getTargetAccountNumber() {
+        return targetAccountNumber;
+    }
+
+    public void setTargetAccountNumber(int targetAccountNumber) {
+        this.targetAccountNumber = targetAccountNumber;
+    }
 
     public AccountsModel(ArrayList<Account> accounts) {
         this.accounts = accounts;
@@ -30,9 +52,13 @@ public class AccountsModel {
         });
     }
 
-    public StringProperty getAccountNum(int i) {
+    public StringProperty getAccountNumLast4(int i) {
         String acctNum = "..." + String.valueOf(accounts.get(i).getAcctNum()).substring(6);
         return new SimpleStringProperty(acctNum);
+    }
+
+    public int getAcctNum(int i) {
+        return accounts.get(i).getAcctNum();
     }
 
     public StringProperty getBalance(int i) {

@@ -15,13 +15,13 @@ import java.util.ArrayList;
 public class HomeView extends ViewBuilder implements IObsysBuilder {
 
     private final Login user;
-    private final AccountsModel acctModel;
+    private final AccountsModel accountsModel;
     private final Runnable logoutHandler;
     private final Runnable navigationHandler;
 
     public HomeView(Login user, AccountsModel acctModel, Runnable logoutHandler, Runnable navigationHandler) {
         this.user = user;
-        this.acctModel = acctModel;
+        this.accountsModel = acctModel;
         this.logoutHandler = logoutHandler;
         this.navigationHandler = navigationHandler;
     }
@@ -38,7 +38,7 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
     }
 
     @Override
-    public Rectangle createPanels() {
+    public ArrayList<Rectangle> createPanels() {
 
         return null;
     }
@@ -48,7 +48,7 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
         AnchorPane pane = addPane();
         accountsPanel.setContent(pane);
 
-        for (int i = 0; i < acctModel.accountsCount(); i++) {
+        for (int i = 0; i < accountsModel.accountsCount(); i++) {
             pane.getChildren().add(obsysPanel(10, 10 + (i * 120), 620, 100));
             pane.getChildren().addAll(addAcctLabels(i));
         }
@@ -111,34 +111,37 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
         ArrayList<Node> labels = new ArrayList<>();
 
         Hyperlink hypAcctName = obsysLink("AcctType", 10, 10 + (i * 120), "sub-header");
-        hypAcctName.textProperty().bind(acctModel.getAccountType(i));
-        hypAcctName.setOnAction(evt -> navigationHandler.run());
+        hypAcctName.textProperty().bind(accountsModel.getAccountType(i));
+        hypAcctName.setOnAction(evt -> {
+            accountsModel.setTargetAccountNumber(accountsModel.getAcctNum(i));
+            navigationHandler.run();
+        });
         labels.add(hypAcctName);
 
         Label lblAcctNum = obsysLabel("....0000", 125, 75 + (i * 120));
-        lblAcctNum.textProperty().bind(acctModel.getAccountNum(i));
+        lblAcctNum.textProperty().bind(accountsModel.getAccountNumLast4(i));
         labels.add(lblAcctNum);
 
         Label lblBalance = obsysLabel("Amount of Balance", 440, 50 + (i * 120), 175);
-        lblBalance.textProperty().bind(acctModel.getBalance(i));
+        lblBalance.textProperty().bind(accountsModel.getBalance(i));
         lblBalance.setAlignment(Pos.CENTER_RIGHT);
         labels.add(lblBalance);
 
         Label lblBalanceType = obsysLabel("TYPE", 440, 70 + (i * 120), 175, "hint");
-        lblBalanceType.textProperty().bind(acctModel.balanceTypeProperty(i));
+        lblBalanceType.textProperty().bind(accountsModel.balanceTypeProperty(i));
         lblBalanceType.setAlignment(Pos.CENTER_RIGHT);
         labels.add(lblBalanceType);
 
         Label lblStatus = obsysLabel("This account is status", 275, 30 + (i * 120), "panel-warning");
-        lblStatus.textProperty().bind(acctModel.statusProperty(i));
+        lblStatus.textProperty().bind(accountsModel.statusProperty(i));
         labels.add(lblStatus);
 
         Label lblPaymentDate = obsysLabel("", 275, 60 + (i * 120));
-        lblPaymentDate.textProperty().bind(acctModel.payDateProperty(i));
+        lblPaymentDate.textProperty().bind(accountsModel.payDateProperty(i));
         labels.add(lblPaymentDate);
 
         Label lblAmountDue = obsysLabel("", 290, 80 + (i * 120));
-        lblAmountDue.textProperty().bind(acctModel.amountDueProperty(i));
+        lblAmountDue.textProperty().bind(accountsModel.amountDueProperty(i));
         labels.add(lblAmountDue);
 
         return labels;

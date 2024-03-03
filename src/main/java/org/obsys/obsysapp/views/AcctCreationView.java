@@ -32,7 +32,7 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
     @Override
     public AnchorPane build() {
         AnchorPane window = super.build();
-        window.getChildren().add(createPanels());
+        window.getChildren().addAll(createPanels());
         window.getChildren().addAll(loadImages());
         window.getChildren().addAll(createLabels());
         window.getChildren().addAll(createButtons());
@@ -43,8 +43,10 @@ public class AcctCreationView extends ViewBuilder implements IObsysBuilder {
     }
 
     @Override
-    public Rectangle createPanels() {
-        return obsysPanel(50, 140, 310, 310);
+    public ArrayList<Rectangle> createPanels() {
+        ArrayList<Rectangle> panels = new ArrayList<>();
+        panels.add(obsysPanel(50, 140, 310, 310));
+        return panels;
     }
 
     @Override

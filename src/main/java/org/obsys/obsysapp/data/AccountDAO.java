@@ -1,6 +1,7 @@
 package org.obsys.obsysapp.data;
 
 import org.obsys.obsysapp.domain.Account;
+import org.obsys.obsysapp.models.AccountModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,6 +49,13 @@ public class AccountDAO {
         return accounts;
     }
 
+    /**
+     * Queries DB for the dollar amount of regular loan installments using the account number as a foreign key.
+     * @param conn connection to the database
+     * @param acctNum the foreign key linking to the account table
+     * @return a single decimal value
+     * @throws SQLException possible database errors
+     */
     public double readPaymentDateByAcctNum(Connection conn, int acctNum) throws SQLException{
         double paymentAmt = -1;
         try (PreparedStatement statement = conn.prepareStatement("""
@@ -63,5 +71,72 @@ public class AccountDAO {
             }
         }
         return paymentAmt;
+    }
+
+    /**
+     * Queries the database for full account details to be displayed. Transaction history goes back 1 month.
+     * @param conn connection to the database
+     * @param targetAccountNumber the account number being queried
+     * @return primary account details, loan details if applicable, and 1 month of history
+     * @throws SQLException possible errors reading from 3 separate tables
+     */
+    public AccountModel readFullAccountDetails(Connection conn, int targetAccountNumber) throws SQLException {
+        AccountModel account = new AccountModel(targetAccountNumber);
+
+        readPrimaryDetails(conn, account, targetAccountNumber);
+//        if (account.getType().equals("LN")) {
+//            readLoanDetails(conn, account, targetAccountNumber);
+//        }
+//        readTransactions(conn, account, targetAccountNumber);
+        
+        return account;
+    }
+
+    private void readTransactions(Connection conn, AccountModel account, int acctNum) throws SQLException {
+        // TODO query for transactions
+    }
+
+    private void readLoanDetails(Connection conn, AccountModel account, int acctNum) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+                SELECT LoanAmt, Term, InterestPaid, PaymentAmt, InterestBalance
+                FROM dbo.Loan
+                WHERE AccountId = ?;
+                """)) {
+            statement.setInt(1, acctNum);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                account.setLoanAmt(resultSet.getDouble(1));
+                account.setTerm(resultSet.getInt(2));
+                account.setInterestPaid(resultSet.getDouble(3));
+                account.setInstallment(resultSet.getDouble(4));
+                account.setInterestDue(resultSet.getDouble(5));
+            }
+
+        } catch (SQLException e) {
+            throw new SQLException("Problem reading loan details");
+        }
+    }
+
+    private void readPrimaryDetails(Connection conn, AccountModel account, int acctNum) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+                    SELECT AccountType, Balance, DateOpened, AcctStatus, InterestRate
+                    FROM dbo.Account
+                    WHERE AccountId = ?;
+                    """)) {
+            statement.setInt(1, acctNum);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                account.setType(resultSet.getString(1));
+                account.setBalance(resultSet.getDouble(2));
+                account.setDateOpened(resultSet.getDate(3).toLocalDate());
+                account.setStatus(resultSet.getString(4));
+                account.setInterestRate(resultSet.getDouble(5));
+            }
+
+        } catch (SQLException e) {
+            throw new SQLException("Problem reading account details");
+        }
     }
 }

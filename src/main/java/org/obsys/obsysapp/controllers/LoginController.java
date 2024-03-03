@@ -35,8 +35,6 @@ public class LoginController {
 
             System.out.println("Loading Admin Home");
         } else {
-            // TODO open User Home Page
-            System.out.println("Loading home page");
             stage.setScene(new Scene(new HomeController(stage, checkedLogin).getView()));
         }
     }

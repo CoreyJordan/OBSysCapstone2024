@@ -7,6 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ViewBuilder implements Builder<AnchorPane> {
@@ -258,6 +259,18 @@ public class ViewBuilder implements Builder<AnchorPane> {
 
 
         return scrollPane;
+    }
+
+    protected ComboBox<String> obsysComboBox(ArrayList<String> choices, double x, double y, double width) {
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setLayoutX(x);
+        comboBox.setLayoutY(y);
+        comboBox.setPrefWidth(width);
+        comboBox.getItems().addAll(choices);
+
+
+
+        return comboBox;
     }
 
 }

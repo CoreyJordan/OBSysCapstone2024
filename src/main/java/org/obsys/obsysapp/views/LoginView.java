@@ -32,7 +32,7 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
     @Override
     public AnchorPane build() {
         AnchorPane loginWindow = super.build();
-        loginWindow.getChildren().add(createPanels());
+        loginWindow.getChildren().addAll(createPanels());
         loginWindow.getChildren().addAll(loadImages());
         loginWindow.getChildren().addAll(createLabels());
         loginWindow.getChildren().addAll(createButtons());
@@ -119,7 +119,9 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
     }
 
     @Override
-    public Rectangle createPanels() {
-        return obsysPanel(109, 306, 379, 200);
+    public ArrayList<Rectangle> createPanels() {
+        ArrayList<Rectangle> panels = new ArrayList<>();
+        panels.add(obsysPanel(109, 306, 379, 200));
+        return panels;
     }
 }

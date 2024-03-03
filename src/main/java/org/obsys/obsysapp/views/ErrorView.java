@@ -76,8 +76,10 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
     }
 
     @Override
-    public Rectangle createPanels() {
-        return obsysPanel(450, 250, 420, 250);
+    public ArrayList<Rectangle> createPanels() {
+        ArrayList<Rectangle> panels = new ArrayList<>();
+        panels.add(obsysPanel(450, 250, 420, 250));
+        return panels;
     }
 
     public ArrayList<Node> loadImages() {
