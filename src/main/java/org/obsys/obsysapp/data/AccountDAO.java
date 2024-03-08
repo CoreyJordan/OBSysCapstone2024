@@ -83,60 +83,32 @@ public class AccountDAO {
     public AccountModel readFullAccountDetails(Connection conn, int targetAccountNumber) throws SQLException {
         AccountModel account = new AccountModel(targetAccountNumber);
 
-        readPrimaryDetails(conn, account, targetAccountNumber);
-//        if (account.getType().equals("LN")) {
-//            readLoanDetails(conn, account, targetAccountNumber);
-//        }
-//        readTransactions(conn, account, targetAccountNumber);
+        try (PreparedStatement statement = conn.prepareStatement("""
+                SELECT AccountType, Balance, DateOpened, AcctStatus, InterestRate, LoanAmt, Term, InterestPaid,
+                    PaymentAmt, InterestBalance
+                FROM dbo.Account
+                LEFT OUTER JOIN dbo.Loan
+                ON Account.AccountId = Loan.AccountId
+                WHERE dbo.Account.AccountId = ?;
+                """)) {
+            statement.setInt(1, targetAccountNumber);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                account.setType(resultSet.getString("AccountType"));
+                account.setBalance(resultSet.getDouble("Balance"));
+                account.setDateOpened(resultSet.getDate("DateOpened").toLocalDate());
+                account.setStatus(resultSet.getString("AcctStatus"));
+                account.setInterestRate(resultSet.getDouble("InterestRate"));
+                account.setLoanAmt(resultSet.getDouble("LoanAmt"));
+                account.setTerm(resultSet.getInt("Term"));
+                account.setInterestPaid(resultSet.getDouble("InterestPaid"));
+                account.setInstallment(resultSet.getDouble("PaymentAmt"));
+                account.setInterestDue(resultSet.getDouble("InterestBalance"));
+            }
+        }
         
         return account;
-    }
-
-    private void readTransactions(Connection conn, AccountModel account, int acctNum) throws SQLException {
-        // TODO query for transactions
-    }
-
-    private void readLoanDetails(Connection conn, AccountModel account, int acctNum) throws SQLException {
-        try (PreparedStatement statement = conn.prepareStatement("""
-                SELECT LoanAmt, Term, InterestPaid, PaymentAmt, InterestBalance
-                FROM dbo.Loan
-                WHERE AccountId = ?;
-                """)) {
-            statement.setInt(1, acctNum);
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                account.setLoanAmt(resultSet.getDouble(1));
-                account.setTerm(resultSet.getInt(2));
-                account.setInterestPaid(resultSet.getDouble(3));
-                account.setInstallment(resultSet.getDouble(4));
-                account.setInterestDue(resultSet.getDouble(5));
-            }
-
-        } catch (SQLException e) {
-            throw new SQLException("Problem reading loan details");
-        }
-    }
-
-    private void readPrimaryDetails(Connection conn, AccountModel account, int acctNum) throws SQLException {
-        try (PreparedStatement statement = conn.prepareStatement("""
-                    SELECT AccountType, Balance, DateOpened, AcctStatus, InterestRate
-                    FROM dbo.Account
-                    WHERE AccountId = ?;
-                    """)) {
-            statement.setInt(1, acctNum);
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                account.setType(resultSet.getString(1));
-                account.setBalance(resultSet.getDouble(2));
-                account.setDateOpened(resultSet.getDate(3).toLocalDate());
-                account.setStatus(resultSet.getString(4));
-                account.setInterestRate(resultSet.getDouble(5));
-            }
-
-        } catch (SQLException e) {
-            throw new SQLException("Problem reading account details");
-        }
     }
 }

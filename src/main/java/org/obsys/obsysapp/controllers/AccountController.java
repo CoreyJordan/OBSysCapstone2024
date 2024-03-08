@@ -1,23 +1,42 @@
 package org.obsys.obsysapp.controllers;
 
+import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.obsys.obsysapp.data.AccountDAO;
+import org.obsys.obsysapp.data.TransactionDAO;
+import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.models.AccountModel;
 import org.obsys.obsysapp.views.AccountView;
 import org.obsys.obsysapp.views.ViewBuilder;
 
 public class AccountController {
-    private Stage stage;
-    private ViewBuilder viewBuilder;
-    private AccountDAO acctDao;
+    private final Stage stage;
+    private final ViewBuilder viewBuilder;
+    private final AccountDAO acctDao;
+    private TransactionDAO transactDao;
     private AccountModel acctModel;
+    private Login login;
 
-    public AccountController(Stage stage, AccountModel acctModel) {
+    public AccountController(Stage stage, AccountModel acctModel, Login login) {
         this.stage = stage;
         acctDao = new AccountDAO();
         this.acctModel = acctModel;
-        viewBuilder = new AccountView();
+        viewBuilder = new AccountView(acctModel, this::goHome, this::logout);
+        this.login = login;
+    }
+
+    private void goHome() {
+        System.out.println("Going home");
+        stage.setScene(new Scene(new HomeController(stage, login).getView()));
+    }
+
+    private void logout() {
+        login = null;
+        acctModel = null;
+
+        stage.setScene(new Scene(new LoginController(
+                stage, "dolphinExit.png", "Thank you!").getView()));
     }
 
     public Region getView() {

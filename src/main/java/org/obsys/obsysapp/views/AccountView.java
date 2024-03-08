@@ -5,13 +5,25 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import org.obsys.obsysapp.models.AccountModel;
 
 import java.util.ArrayList;
 
 public class AccountView extends ViewBuilder implements IObsysBuilder {
+    private final AccountModel acctModel;
+    private final Runnable returnHandler;
+    private final Runnable logoutHandler;
+
+    public AccountView(AccountModel acctModel, Runnable returnHandler, Runnable logoutHandler) {
+        this.acctModel = acctModel;
+        this.returnHandler = returnHandler;
+        this.logoutHandler = logoutHandler;
+    }
 
     @Override
     public AnchorPane build() {
@@ -47,8 +59,113 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     @Override
     public ArrayList<Node> createLabels() {
         ArrayList<Node> labels = new ArrayList<>(createAcctLabels());
+        labels.addAll(createSummaryLabels());
+        labels.add(createHistoryLabels());
         labels.add(obsysLabel("Action Panel", 660, 215, "header3"));
 
+        return labels;
+    }
+
+    private Node createHistoryLabels() {
+        ScrollPane scrollPane = obsysScrollPane(25, 330, 570, 205);
+        scrollPane.getStyleClass().add("history");
+        VBox pane = addPane();
+        scrollPane.setContent(pane);
+
+        pane.getChildren().addAll(switch (acctModel.getType()) {
+            case "CH" -> checkingHistoryLabels();
+            case "SV" -> savingsHistoryLabels();
+            case "IC" -> checkPlusHistoryLabels();
+            case "LN" -> loanHistoryLabels();
+            default -> null;
+        });
+        return scrollPane;
+    }
+
+    private VBox addPane() {
+        VBox pane = new VBox();
+        pane.setPrefWidth(555);
+        return pane;
+    }
+
+    private ArrayList<Node> loanHistoryLabels() {
+        return null;
+    }
+
+    private ArrayList<Node> checkPlusHistoryLabels() {
+        return null;
+    }
+
+    private ArrayList<Node> savingsHistoryLabels() {
+        return null;
+    }
+
+    private ArrayList<Node> checkingHistoryLabels() {
+        ArrayList<Node> labels = new ArrayList<>();
+
+        labels.add(obsysLabel("Pending Transactions", 0, 0));
+        String header = String.format("%-9s %-18s %-9s %-9s \n", "Date", "Description", "Credit", "Debit");
+        labels.add(obsysLabel(header, 0, 0, "table"));
+
+        ArrayList<String> pendingTransactions = acctModel.getPendingTransactions();
+        for (String s : pendingTransactions) {
+            labels.add(obsysLabel(s, 0, 0, "table"));
+        }
+
+        labels.add(obsysLabel("\nPosted Transactions", 0, 0));
+
+        ArrayList<String> postedTransactions = acctModel.getPostedTransactions();
+        for (String s : postedTransactions) {
+            labels.add(obsysLabel(s, 0, 0, "table"));
+        }
+
+        return labels;
+    }
+
+    private ArrayList<Node> createSummaryLabels() {
+        return switch (acctModel.getType()) {
+            case "CH" -> checkingSummaryLabels();
+            case "SV" -> savingsSummaryLabels();
+            case "IC" -> checkPlusSummaryLabels();
+            case "LN" -> loanSummaryLabels();
+            default -> null;
+        };
+    }
+
+    private ArrayList<Node> loanSummaryLabels() {
+        return null;
+    }
+
+    private ArrayList<Node> checkPlusSummaryLabels() {
+        return null;
+    }
+
+    private ArrayList<Node> savingsSummaryLabels() {
+        return null;
+    }
+
+    private ArrayList<Node> checkingSummaryLabels() {
+        ArrayList<Node> labels = new ArrayList<>();
+
+        String fields = "Posted Balance:\nPending Debits:\nPending Credits:\nAvailable Balance:";
+        Label lblFields = obsysLabel(fields, 200, 220, 250, "right-aligned");
+        labels.add(lblFields);
+
+        Label lblPosted = obsysLabel("$#,###.##", 400, 220, 150, "right-aligned");
+        lblPosted.textProperty().bind(acctModel.postedBalanceProperty());
+        labels.add(lblPosted);
+
+        Label lblDebits = obsysLabel("$###.##", 400, 242.5, 150, "right-aligned");
+        lblDebits.textProperty().bind(acctModel.pendingDebitsProperty());
+        labels.add(lblDebits);
+
+        Label lblCredits = obsysLabel("$###.##", 400, 265, 150, "right-aligned");
+        lblCredits.textProperty().bind(acctModel.pendingCreditsProperty());
+        labels.add(lblCredits);
+
+        Label lblAvailable = obsysLabel("$###.##", 400, 287.5, 150, "right-aligned");
+        lblAvailable.textProperty().bind(acctModel.balanceProperty());
+        labels.add(lblAvailable);
 
         return labels;
     }
@@ -57,25 +174,25 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
         ArrayList<Node> labels = new ArrayList<>();
 
         Label lblAcctName = obsysLabel("AcctType", 40, 80, "sub-header");
-        // TODO hypAcctName.textProperty().bind(acctModel.getAccountType(i));
+        lblAcctName.textProperty().bind(acctModel.typeProperty());
         labels.add(lblAcctName);
 
         Label lblAcctNum = obsysLabel("....0000", 155, 135);
-        // TODO lblAcctNum.textProperty().bind(acctModel.getAccountNum(i));
+        lblAcctNum.textProperty().bind(acctModel.acctNumProperty());
         labels.add(lblAcctNum);
 
-        Label lblBalance = obsysLabel("Amount of Balance", 460, 120, 175);
-        // TODO lblBalance.textProperty().bind(acctModel.getBalance(i));
+        Label lblBalance = obsysLabel("Amount of Balance", 360, 120, 175);
+        lblBalance.textProperty().bind(acctModel.balanceProperty());
         lblBalance.setAlignment(Pos.CENTER_RIGHT);
         labels.add(lblBalance);
 
-        Label lblBalanceType = obsysLabel("TYPE", 460, 140, 175, "hint");
-        // TODO lblBalanceType.textProperty().bind(acctModel.balanceTypeProperty(i));
+        Label lblBalanceType = obsysLabel("TYPE", 360, 140, 175, "hint");
+        lblBalanceType.textProperty().bind(acctModel.balanceTypeProperty());
         lblBalanceType.setAlignment(Pos.CENTER_RIGHT);
         labels.add(lblBalanceType);
 
         Label lblStatus = obsysLabel("This account is status", 295, 100, "warning");
-        // TODO lblStatus.textProperty().bind(acctModel.statusProperty(i));
+        lblStatus.textProperty().bind(acctModel.statusProperty());
         labels.add(lblStatus);
 
         return labels;
@@ -86,11 +203,11 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
         ArrayList<Node> buttons = new ArrayList<>();
 
         Button btnBack = obsysButton("Home", 10, 10, 100, new Image("back.png"));
-        // TODO btnBack.setOnAction(evt -> returnHandler.run());
+        btnBack.setOnAction(evt -> returnHandler.run());
         buttons.add(btnBack);
 
         Hyperlink hypLogout = obsysLink("Logout", 830, 5);
-        // TODO hypLogout.setOnAction(evt -> logoutHandler.run());
+        hypLogout.setOnAction(evt -> logoutHandler.run());
         buttons.add(hypLogout);
 
         Button btnDeposit = obsysButton("Deposit Funds", 655, 300, 200);

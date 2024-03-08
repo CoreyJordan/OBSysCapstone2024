@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.obsys.obsysapp.data.AccountDAO;
 import org.obsys.obsysapp.data.ObsysDbConnection;
+import org.obsys.obsysapp.data.TransactionDAO;
 import org.obsys.obsysapp.domain.Account;
 import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.models.AccountModel;
@@ -15,18 +16,20 @@ import org.obsys.obsysapp.views.HomeView;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class HomeController {
     private final Stage stage;
     private final AccountDAO acctDao;
+    private final TransactionDAO transactDao;
     private Builder<AnchorPane> viewBuilder;
-    private AccountsModel acctsModel;
+    private AccountsModel accountsModel;
+    private final Login user;
 
     public HomeController(Stage stage, Login user) {
-
+        this.user = user;
         this.stage = stage;
         acctDao = new AccountDAO();
+        transactDao = new TransactionDAO();
         ArrayList<Account> accounts = new ArrayList<>();
 
         try (Connection conn = ObsysDbConnection.openDBConn()) {
@@ -40,13 +43,13 @@ public class HomeController {
             stage.setScene(new Scene(new ErrorController(stage, e).getView()));
         }
 
-        acctsModel = new AccountsModel(accounts);
-        viewBuilder = new HomeView(user, acctsModel, this::logout, this::navigate);
+        accountsModel = new AccountsModel(accounts);
+        viewBuilder = new HomeView(user, accountsModel, this::logout, this::navigate);
     }
 
     private void logout() {
         // Clear working data for security
-        acctsModel = null;
+        accountsModel = null;
         viewBuilder = null;
 
         stage.setScene(new Scene(new LoginController(
@@ -55,8 +58,11 @@ public class HomeController {
 
     private void navigate() {
         try (Connection conn = ObsysDbConnection.openDBConn()) {
-            AccountModel accountModel = acctDao.readFullAccountDetails(conn, acctsModel.getTargetAccountNumber());
-            stage.setScene(new Scene(new AccountController(stage, accountModel).getView()));
+            int acctNum = accountsModel.getTargetAccountNumber();
+
+            AccountModel accountModel = acctDao.readFullAccountDetails(conn, acctNum);
+            accountModel.setHistory(transactDao.readTransactionHistoryOneMonth(conn, acctNum));
+            stage.setScene(new Scene(new AccountController(stage, accountModel, user).getView()));
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
         }

@@ -9,6 +9,11 @@
     -fx-background: "#9A989C";
 }
 
+.history {
+    -fx-background-color: "#1C8899";
+    -fx-background: "#1C8899";
+}
+
 .panel {
     -fx-arc-width: 15;
     -fx-arc-height: 15;
@@ -66,6 +71,7 @@
     -fx-font-family: Arial;
     -fx-font-size: 18;
     -fx-wrap-text: true;
+    -fx-text-fill: black;
 }
 
 .warning {
@@ -86,6 +92,10 @@
 
 .hint {
     -fx-font-size: 9;
+}
+
+.right-aligned {
+    -fx-text-alignment: right;
 }
 
 .hyperlink {
@@ -122,4 +132,10 @@
     -fx-background-radius: 10;
     -fx-background-color: "#BFB59E";
 }
+
+.table {
+    -fx-font-family: "Courier New";
+}
+
+
 
