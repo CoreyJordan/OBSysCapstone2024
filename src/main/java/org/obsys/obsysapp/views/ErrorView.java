@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.ErrorModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ErrorView extends ViewBuilder implements IObsysBuilder {
 
@@ -36,21 +37,16 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> createButtons() {
-        ArrayList<Node> buttons = new ArrayList<>();
-
         Hyperlink hypLogout = obsysLink("Logout", 830, 5);
         hypLogout.setOnAction(evt -> logoutHandler.run());
-        buttons.add(hypLogout);
 
         Button btnBack = obsysButton("Back", 210, 400, 200, new Image("back.png"));
         btnBack.setOnAction(evt -> returnHandler.run());
-        buttons.add(btnBack);
 
         Button btnClose = obsysButton("Close Program", 210, 450, 200);
         btnClose.setOnAction(evt -> exitHandler.run());
-        buttons.add(btnClose);
 
-        return buttons;
+        return new ArrayList<>(List.of(hypLogout, btnBack, btnClose));
     }
 
     @Override
@@ -65,30 +61,26 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> createLabels() {
-        ArrayList<Node> labels = new ArrayList<>();
-
-        labels.add(obsysLabel("Oops! Something went wrong!", 300, 50, 600, "banner"));
         String prompt = "An unexpected error has occurred. Please return to the previous page or exit the application";
-        labels.add(obsysLabel(prompt, 190, 285, 270));
-        labels.add(obsysLabel(error.ex().getMessage(), 460, 280, 400));
-
-        return labels;
+        return new ArrayList<>(){{
+            add(obsysLabel("Oops! Something went wrong!", 300, 50, 600, "banner"));
+            add(obsysLabel(prompt, 190, 285, 270));
+            add(obsysLabel(error.ex().getMessage(), 460, 280, 400));
+        }};
     }
 
     @Override
     public ArrayList<Rectangle> createPanels() {
-        ArrayList<Rectangle> panels = new ArrayList<>();
-        panels.add(obsysPanel(450, 250, 420, 250));
-        return panels;
+        return new ArrayList<>(){{
+            add(obsysPanel(450, 250, 420, 250));
+        }};
     }
 
     public ArrayList<Node> loadImages() {
-        ArrayList<Node> images = new ArrayList<>();
-
-        images.add(obsysImage("dolphinFail.png", 5, 315, 165, 230));
-        images.add(obsysImage("dolphinLogoBlue.png", 5, 5, 200, 160));
-
-        return images;
+        return new ArrayList<>(){{
+            add(obsysImage("dolphinFail.png", 5, 315, 165, 230));
+            add(obsysImage("dolphinLogoBlue.png", 5, 5, 200, 160));
+        }};
     }
 
 }

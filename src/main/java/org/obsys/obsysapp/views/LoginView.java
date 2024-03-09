@@ -11,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.LoginModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoginView extends ViewBuilder implements IObsysBuilder {
 
@@ -44,84 +45,59 @@ public class LoginView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> createTextFields() {
-        ArrayList<Node> fields = new ArrayList<>();
-
         TextField txtUsername = obsysTextField(150, 340, 300);
         txtUsername.textProperty().bindBidirectional(loginModel.usernameProperty());
-        fields.add(txtUsername);
-
-        fields.add(obsysLabel("USERNAME", 170, 342, "hint"));
-
-        return fields;
+        return new ArrayList<>(List.of(txtUsername, obsysLabel("USERNAME", 170, 342, "hint")));
     }
 
     @Override
     public ArrayList<Node> buildPasswordField() {
-        ArrayList<Node> passwordNodes = new ArrayList<>();
-
         PasswordField txtPassword = obsysPassword(150, 390);
         txtPassword.textProperty().bindBidirectional(loginModel.passwordProperty());
-        passwordNodes.add(txtPassword);
 
         TextField txtUnmasked = obsysTextField(txtPassword.getLayoutX(),
                 txtPassword.getLayoutY(), txtPassword.getPrefWidth());
         txtUnmasked.setVisible(false);
-        passwordNodes.add(txtUnmasked);
-
-        passwordNodes.add(obsysLabel("PASSWORD", 170, 392, "hint"));
 
         Button btnPrivacy = obsysButton(new Image("privacyOn.png"), 400, 390, "toggle");
         btnPrivacy.setOnMousePressed(evt -> showPassword(txtPassword, txtUnmasked));
         btnPrivacy.setOnMouseReleased(ext -> hidePassword(txtPassword, txtUnmasked));
-        passwordNodes.add(btnPrivacy);
 
-        return passwordNodes;
+        return new ArrayList<>(List.of(txtPassword, txtUnmasked, btnPrivacy,
+                obsysLabel("PASSWORD", 170, 392, "hint")));
     }
 
     @Override
     public ArrayList<Node> createButtons() {
-        ArrayList<Node> buttons = new ArrayList<>();
-
         Button btnLogin = obsysButton("Login", 400, 457);
         btnLogin.setOnAction(evt -> loginHandler.run());
-        buttons.add(btnLogin);
 
         Button btnCreateAcct = obsysButton("Create Account", 730, 457);
         btnCreateAcct.setOnAction(evt -> openCreationHandler.run());
-        buttons.add(btnCreateAcct);
 
-        return buttons;
+        return new ArrayList<>(List.of(btnLogin, btnCreateAcct));
     }
 
     @Override
     public ArrayList<Node> createLabels() {
-        ArrayList<Node> labels = new ArrayList<>();
-
-        labels.add(obsysLabel(bannerText, 28, 107, "banner"));
-        labels.add(obsysLabel("Don't have an account?", 516, 465));
-        labels.add(obsysLabel("Sign in to manage your accounts.", 120, 465));
-
         Label lblInvalidLogin = obsysLabel("", 500, 350, 200, "warning");
         lblInvalidLogin.textProperty().bindBidirectional(loginModel.invalidLoginProperty());
-        labels.add(lblInvalidLogin);
 
-        return labels;
+        return new ArrayList<>(List.of(lblInvalidLogin)) {{
+            add(obsysLabel(bannerText, 28, 107, "banner"));
+            add(obsysLabel("Don't have an account?", 516, 465));
+            add(obsysLabel("Sign in to manage your accounts.", 120, 465));
+        }};
     }
 
     @Override
     public ArrayList<Node> loadImages() {
-        ArrayList<Node> images = new ArrayList<>();
-
-        images.add(obsysImage(bannerImageSource, 5, 90, 910, 180));
-        images.add(obsysImage("dolphinLogoTan.png", 695, 90, 220, 180));
-
-        return images;
+        return new ArrayList<>(List.of(obsysImage(bannerImageSource, 5, 90, 910, 180),
+                obsysImage("dolphinLogoTan.png", 695, 90, 220, 180)));
     }
 
     @Override
     public ArrayList<Rectangle> createPanels() {
-        ArrayList<Rectangle> panels = new ArrayList<>();
-        panels.add(obsysPanel(109, 306, 379, 200));
-        return panels;
+        return new ArrayList<>(List.of(obsysPanel(109, 306, 379, 200)));
     }
 }
