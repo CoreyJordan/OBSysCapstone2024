@@ -27,7 +27,8 @@ public class AccountPageTest extends Application {
 
             // Mock data
             Login login = new Login("wwindmilla", "lH5@2S,j_)ybs", false, 1111111159);
-            AccountModel sample = getSampleChecking();
+//            AccountModel sample = getSampleChecking();
+            AccountModel sample = getSampleSavings();
 
 
             stage.setScene(new Scene(new AccountController(stage, sample, login).getView()));
@@ -46,6 +47,18 @@ public class AccountPageTest extends Application {
         sample.setStatus("OP");
         sample.setInterestRate(0);
         sample.setHistory(getSampleTransactions());
+        return sample;
+    }
+
+    private AccountModel getSampleSavings() {
+        AccountModel sample = new AccountModel(1111111112);
+        sample.setType("SV");
+        sample.setBalance(1241.53);
+        sample.setDateOpened(LocalDate.of(2023, 2, 21));
+        sample.setStatus("OP");
+        sample.setInterestRate(.0025);
+        sample.setHistory(getSampleTransactions());
+        sample.setInterestPaid(524.25);
         return sample;
     }
 

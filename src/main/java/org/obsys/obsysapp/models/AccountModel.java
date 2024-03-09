@@ -218,4 +218,16 @@ public class AccountModel {
         }
         return transactions;
     }
+
+    public StringProperty dateOpenedProperty() {
+        return new SimpleStringProperty(dateOpened.format(DateTimeFormatter.ofPattern("MM/dd/yy")));
+    }
+
+    public StringProperty interestRateProperty() {
+        return new SimpleStringProperty(interestRate.get() + "%");
+    }
+
+    public StringProperty paidInterestProperty() {
+        return new SimpleStringProperty(String.format("$%,.2f", interestPaid.get()));
+    }
 }
