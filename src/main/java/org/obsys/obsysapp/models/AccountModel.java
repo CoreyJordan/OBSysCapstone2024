@@ -1,33 +1,59 @@
 package org.obsys.obsysapp.models;
 
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.obsys.obsysapp.domain.Transaction;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class AccountModel {
     private final int acctNum;
+    private final DoubleProperty interestRate = new SimpleDoubleProperty(-1);
+    private final DoubleProperty interestDue = new SimpleDoubleProperty(-1);
     private String type = "";
     private double balance = -1;
     private LocalDate dateOpened = LocalDate.MIN;
     private String status = "";
-    private final DoubleProperty interestRate = new SimpleDoubleProperty(-1);
-    private final DoubleProperty loanAmt = new SimpleDoubleProperty(-1);
-    private final IntegerProperty term = new SimpleIntegerProperty(-1);
-    private final DoubleProperty interestPaid = new SimpleDoubleProperty(-1);
-    private final DoubleProperty installment = new SimpleDoubleProperty(-1);
+    private double loanAmt = -1;
+    private int term = -1;
+    private double interestPaid = -1;
+    private double installment = -1;
     private ArrayList<Transaction> history = new ArrayList<>();
-    private final DoubleProperty interestDue = new SimpleDoubleProperty(-1);
-
 
     public AccountModel(int acctNum) {
         this.acctNum = acctNum;
     }
 
+    private static String getPayeeDescription(Transaction t) {
+        String description;
+        switch (t.getType()) {
+            case "TF":
+                description = "To:" + t.getTransferToAcctId();
+                break;
+            case "RC":
+                description = "From: " + t.getTransferToAcctId();
+                break;
+            case "PY":
+                description = "Loan:" + t.getTransferToAcctId();
+                break;
+            default:
+                description = t.getPayee();
+                int end = description.length();
+                if (end > 18) {
+                    end = 18;
+                }
+                description = description.substring(0, end);
+        }
+        return description;
+    }
+
     public void setInstallment(double installment) {
-        this.installment.set(installment);
+        this.installment = installment;
     }
 
     public void setBalance(double balance) {
@@ -47,25 +73,25 @@ public class AccountModel {
     }
 
     public void setLoanAmt(double loanAmt) {
-        this.loanAmt.set(loanAmt);
+        this.loanAmt = loanAmt;
     }
 
     public void setTerm(int term) {
-        this.term.set(term);
+        this.term = term;
     }
 
     public void setInterestPaid(double interestPaid) {
-        this.interestPaid.set(interestPaid);
+        this.interestPaid = interestPaid;
     }
 
     public void setInterestDue(double interestDue) {
         this.interestDue.set(interestDue);
     }
 
-
     public void setHistory(ArrayList<Transaction> history) {
         this.history = history;
     }
+
 
     public StringProperty typeProperty() {
         return switch (type) {
@@ -144,6 +170,11 @@ public class AccountModel {
         return new SimpleStringProperty(String.format("$%,.2f", transactionsTotal));
     }
 
+    /**
+     * Sends to the view the most recent 7 days of transactions.
+     *
+     * @return list of transaction within one week of today
+     */
     public ArrayList<String> getPendingTransactions() {
         ArrayList<String> transactions = new ArrayList<>();
 
@@ -155,17 +186,7 @@ public class AccountModel {
         for (Transaction t : history) {
             if (t.getDate().isAfter(LocalDate.now().minusWeeks(1))) {
                 date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
-
-                if (t.getType().equals("TF")) {
-                    description = "To:" + t.getTransferToAcctId();
-                } else {
-                    description = t.getPayee();
-                    int end = description.length();
-                    if (end > 15) {
-                        end = 15;
-                    }
-                    description = description.substring(0, end);
-                }
+                description = getPayeeDescription(t);
 
                 if (t.getAmount() > 0) {
                     credit = String.format("$%,.2f", t.getAmount());
@@ -175,13 +196,19 @@ public class AccountModel {
                     credit = "-";
                 }
 
-                transactions.add(String.format("%-9s %-18s %-9s %-9s \n", date, description, credit, debit));
+                transactions.add(String.format("%-9s %-20s %9s %9s \n", date, description, credit, debit));
             }
         }
         return transactions;
 
     }
 
+    /***
+     * Sends transaction beyond a week old to 1 month.
+     * Rather than limit the query to 1 month, we parse it out here. This allows us to get full history details such as
+     * total interest accrued without having to run 2 seperate queries.
+     * @return a list of transactions from 7 to 30 days old
+     */
     public ArrayList<String> getPostedTransactions() {
         ArrayList<String> transactions = new ArrayList<>();
 
@@ -191,19 +218,10 @@ public class AccountModel {
         String debit;
 
         for (Transaction t : history) {
-            if (t.getDate().isBefore(LocalDate.now().minusDays(6))) {
+            if (t.getDate().isBefore(LocalDate.now().minusDays(6)) &&
+                    t.getDate().isAfter(LocalDate.now().minusMonths(1))) {
                 date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
-
-                if (t.getType().equals("TF")) {
-                    description = "To: " + t.getTransferToAcctId();
-                } else {
-                    description = t.getPayee();
-                    int end = description.length();
-                    if (end > 15) {
-                        end = 15;
-                    }
-                    description = description.substring(0, end);
-                }
+                description = getPayeeDescription(t);
 
                 if (t.getAmount() > 0) {
                     credit = String.format("$%,.2f", t.getAmount());
@@ -213,21 +231,98 @@ public class AccountModel {
                     credit = "-";
                 }
 
-                transactions.add(String.format("%-9s %-18s %-9s %-9s \n", date, description, credit, debit));
+                transactions.add(String.format("%-9s %-20s %9s %9s \n", date, description, credit, debit));
             }
         }
         return transactions;
+    }
+
+    public ArrayList<String> getScheduledLoanPayments() {
+        ArrayList<String> payments = new ArrayList<>();
+        String date;
+
+        for (Transaction t : history) {
+            if (t.getDate().isAfter(LocalDate.now().minusWeeks(1))) {
+                date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
+                payments.add(String.format("%-30s $%,-10.2f", date, t.getAmount()));
+            }
+        }
+        return payments;
+    }
+
+    public ArrayList<String> getPostedLoanPayments() {
+        ArrayList<String> payments = new ArrayList<>();
+        String date;
+
+        for (Transaction t : history) {
+            if (t.getDate().isBefore(LocalDate.now().minusDays(6)) &&
+                    t.getDate().isAfter(LocalDate.now().minusMonths(6))) {
+                date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
+                payments.add(String.format("%-10s $%,-11.2f $%,-11.2f $%,-11.2f",
+                        date, Math.abs(t.getAmount()), t.getAmtToPrincipal(), t.getAmtToInterest()));
+            }
+        }
+        return payments;
     }
 
     public StringProperty dateOpenedProperty() {
         return new SimpleStringProperty(dateOpened.format(DateTimeFormatter.ofPattern("MM/dd/yy")));
     }
 
+    public StringProperty maturityProperty() {
+        return new SimpleStringProperty(dateOpened.plusMonths(term).format(DateTimeFormatter.ofPattern("MM/dd/yy")));
+    }
+
+    public StringProperty remainingPaymentsCountProperty() {
+        LocalDate maturity = dateOpened.plusMonths(term);
+        LocalDate current = getCurrentDueDate();
+
+        long months = ChronoUnit.MONTHS.between(current, maturity);
+
+        return new SimpleStringProperty(String.valueOf(months));
+    }
+
+    private LocalDate getCurrentDueDate() {
+        LocalDate currentDueDate = dateOpened.withMonth(LocalDate.now().getMonthValue());
+        currentDueDate = currentDueDate.withYear(LocalDate.now().getYear());
+
+        if (currentDueDate.isBefore(LocalDate.now())) {
+            currentDueDate = currentDueDate.plusMonths(1);
+        }
+        return currentDueDate;
+    }
+
+    public StringProperty dueDateProperty() {
+        return new SimpleStringProperty(getCurrentDueDate().format(DateTimeFormatter.ofPattern("MM/dd/yy")));
+    }
+
     public StringProperty interestRateProperty() {
         return new SimpleStringProperty(interestRate.get() + "%");
     }
 
+    public StringProperty interestPaymentsProperty() {
+        double totalPaid = 0;
+        for (Transaction t : history) {
+            if (t.getType().equals("DP") && t.getPayee().equals("Interest Payment")) {
+                totalPaid += t.getAmount();
+            }
+        }
+        return new SimpleStringProperty(String.format("$%,.2f", totalPaid));
+    }
+
     public StringProperty paidInterestProperty() {
-        return new SimpleStringProperty(String.format("$%,.2f", interestPaid.get()));
+        return new SimpleStringProperty(String.format("$%,.2f", interestPaid));
+    }
+
+    public StringProperty paidPrincipalProperty() {
+        return new SimpleStringProperty(String.format("$%,.2f", loanAmt - balance));
+    }
+
+    public StringProperty installmentProperty() {
+        return new SimpleStringProperty(String.format("$%,.2f", installment));
+    }
+
+    public StringProperty loanAmountProperty() {
+        return new SimpleStringProperty(String.format("$%,.2f", loanAmt));
     }
 }

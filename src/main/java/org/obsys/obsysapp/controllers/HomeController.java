@@ -61,7 +61,7 @@ public class HomeController {
             int acctNum = accountsModel.getTargetAccountNumber();
 
             AccountModel accountModel = acctDao.readFullAccountDetails(conn, acctNum);
-            accountModel.setHistory(transactDao.readTransactionHistoryOneMonth(conn, acctNum));
+            accountModel.setHistory(transactDao.readTransactionHistory(conn, acctNum));
             stage.setScene(new Scene(new AccountController(stage, accountModel, user).getView()));
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));

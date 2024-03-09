@@ -27,7 +27,6 @@ public class AccountController {
     }
 
     private void goHome() {
-        System.out.println("Going home");
         stage.setScene(new Scene(new HomeController(stage, login).getView()));
     }
 
