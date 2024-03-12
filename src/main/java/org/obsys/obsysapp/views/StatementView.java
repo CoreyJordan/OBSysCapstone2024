@@ -14,10 +14,12 @@ import java.util.List;
 public class StatementView extends ViewBuilder implements IObsysBuilder {
     private StatementModel stmtModel;
     private Runnable logoutHandler;
+    private Runnable returnHandler;
 
-    public StatementView(StatementModel stmtModel, Runnable logoutHandler) {
+    public StatementView(StatementModel stmtModel, Runnable logoutHandler, Runnable returnHandler) {
         this.stmtModel = stmtModel;
         this.logoutHandler = logoutHandler;
+        this.returnHandler = returnHandler;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
     @Override
     public ArrayList<Node> createButtons() {
         Button btnBack = obsysButton("Back", 10, 10, 100, new Image("back.png"));
-        // TODO btnBack.setOnAction(evt -> returnHandler.run());
+        btnBack.setOnAction(evt -> returnHandler.run());
 
         Hyperlink hypLogout = obsysLink("Logout", 830, 5);
         hypLogout.setOnAction(evt -> logoutHandler.run());

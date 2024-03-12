@@ -9,6 +9,7 @@ import org.obsys.obsysapp.controllers.StatementController;
 import org.obsys.obsysapp.domain.Account;
 import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.domain.Person;
+import org.obsys.obsysapp.models.AccountModel;
 import org.obsys.obsysapp.models.StatementModel;
 
 import java.time.LocalDate;
@@ -28,7 +29,7 @@ public class StatementPageTest extends Application {
             stage.setResizable(false);
 
             stage.setScene(new Scene(
-                    new StatementController(stage, createSampleStatementModel()).getView()));
+                    new StatementController(stage, createSampleStatementModel(), getSampleChecking()).getView()));
 
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e).getView()));
@@ -78,5 +79,15 @@ public class StatementPageTest extends Application {
                         false,
                         1111111149
                 ));
+    }
+
+    private AccountModel getSampleChecking() {
+        AccountModel sample = new AccountModel(1111111111);
+        sample.setType("CH");
+        sample.setBalance(1241.53);
+        sample.setDateOpened(LocalDate.of(2023, 2, 21));
+        sample.setStatus("OP");
+        sample.setInterestRate(0);
+        return sample;
     }
 }

@@ -3,6 +3,7 @@ package org.obsys.obsysapp.models;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.obsys.obsysapp.domain.Account;
+import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.domain.Person;
 
 import java.time.LocalDate;
@@ -21,38 +22,9 @@ public class StatementModel {
         this.account = account;
     }
 
-    public ArrayList<LocalDate> getMonths() {
-        return months;
-    }
-
-    public void setMonths(ArrayList<LocalDate> months) {
-        this.months = months;
-    }
-
-    public boolean isValidMonth() {
-        return isValidMonth;
-    }
-
-    public void setValidMonth(boolean validMonth) {
-        isValidMonth = validMonth;
-    }
-
-    public String getNameAndAddress() {
-        return String.format("%s %s\n%s\n%s, %s %s",
-                person.getFirstName(),
-                person.getLastName(),
-                person.getStreetAddress(),
-                person.getCity(),
-                person.getState(),
-                person.getPostalCode());
-    }
-
+    // PROPERTIES
     public StringProperty accountNumProperty() {
         return new SimpleStringProperty(String.valueOf(account.getAcctNum()));
-    }
-
-    public void setSelectedPeriod(LocalDate selectedPeriod) {
-        this.selectedMonth = selectedPeriod;
     }
 
     public StringProperty stmtDateProperty() {
@@ -68,5 +40,45 @@ public class StatementModel {
                 selectedMonth.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"))
         );
         return new SimpleStringProperty(period);
+    }
+
+    // GETTERS
+    public ArrayList<LocalDate> getMonths() {
+        return months;
+    }
+
+    public boolean isValidMonth() {
+        return isValidMonth;
+    }
+
+    public String getNameAndAddress() {
+        return String.format("%s %s\n%s\n%s, %s %s",
+                person.getFirstName(),
+                person.getLastName(),
+                person.getStreetAddress(),
+                person.getCity(),
+                person.getState(),
+                person.getPostalCode());
+    }
+
+    public int getAccountNumber() {
+        return account.getAcctNum();
+    }
+
+    public Login getLogin() {
+        return person.getLogin();
+    }
+
+    // SETTERS
+    public void setMonths(ArrayList<LocalDate> months) {
+        this.months = months;
+    }
+
+    public void setSelectedPeriod(LocalDate selectedPeriod) {
+        this.selectedMonth = selectedPeriod;
+    }
+
+    public void setValidMonth(boolean validMonth) {
+        isValidMonth = validMonth;
     }
 }
