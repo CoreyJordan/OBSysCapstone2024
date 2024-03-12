@@ -1,7 +1,6 @@
 package org.obsys.obsysapp.data;
 
 import org.obsys.obsysapp.domain.Login;
-import org.obsys.obsysapp.domain.Person;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,15 +37,16 @@ public class LoginDAO {
         return new Login(username, password, isAdmin, personId);
     }
 
-    public Person readPersonByNameAndAccount(
+    public Login readPersonByNameAndAccount(
             Connection conn, String acctNum, String firstName, String lastName) throws SQLException {
         int personId = 0;
         String username = null;
         String password = null;
         int acctNumber = Integer.parseInt(acctNum);
+        boolean isAdmin = false;
 
         try (PreparedStatement statement = conn.prepareStatement("""
-                    SELECT Person.PersonId, Person.Username, Person.UserPassword
+                    SELECT Person.PersonId, Person.Username, Person.UserPassword, Person.IsAdmin
                     FROM dbo.Account
                     JOIN dbo.Person ON dbo.Account.PersonId = dbo.Person.PersonId
                     WHERE dbo.Account.AccountId = ?
@@ -62,10 +62,11 @@ public class LoginDAO {
                 personId = resultSet.getInt(1);
                 username = resultSet.getString(2);
                 password = resultSet.getString(3);
+                isAdmin = resultSet.getBoolean(4);
             }
 
         }
-        return new Person(personId, username, password);
+        return new Login(username, password, isAdmin, personId);
 
     }
 

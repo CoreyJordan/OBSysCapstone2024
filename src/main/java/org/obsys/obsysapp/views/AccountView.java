@@ -19,11 +19,16 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     private final AccountModel acctModel;
     private final Runnable returnHandler;
     private final Runnable logoutHandler;
+    private final Runnable transactionHandler;
+    private final Runnable statementHandler;
 
-    public AccountView(AccountModel acctModel, Runnable returnHandler, Runnable logoutHandler) {
+    public AccountView(AccountModel acctModel, Runnable returnHandler, Runnable logoutHandler,
+                       Runnable transactionHandler, Runnable statementHandler) {
         this.acctModel = acctModel;
         this.returnHandler = returnHandler;
         this.logoutHandler = logoutHandler;
+        this.transactionHandler = transactionHandler;
+        this.statementHandler = statementHandler;
     }
 
     @Override
@@ -249,20 +254,32 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
         hypLogout.setOnAction(evt -> logoutHandler.run());
 
         Button btnPay = obsysButton("Make a Payment", 655, 300, 200);
-        // TODO payment handler
+        btnPay.setOnAction(evt -> {
+            // TODO set model to transaction type: Payment
+            transactionHandler.run();
+        });
 
         Button btnDeposit = obsysButton("Deposit Funds", 655, 300, 200);
-        // TODO deposit handler
+        btnDeposit.setOnAction(evt -> {
+            // TODO set model to transaction type: Deposit
+            transactionHandler.run();
+        });
 
         Button btnWithdraw = obsysButton("Withdraw Funds", 655, 350, 200);
-        // TODO withdraw handler
+        btnWithdraw.setOnAction(evt -> {
+            // TODO set model to transaction type: Withdraw
+            transactionHandler.run();
+        });
 
         Button btnTransfer = obsysButton("Transfer Funds", 655, 400, 200);
-        // TODO transfer handler
+        btnTransfer.setOnAction(evt -> {
+            // TODO set model to transaction type: Transfer
+            transactionHandler.run();
+        });
 
 
         Button btnStatement = obsysButton("Statements", 655, 475, 200);
-        // TODO statement handler
+        btnStatement.setOnAction(evt -> statementHandler.run());
 
         return new ArrayList<>(List.of(btnBack, hypLogout, btnStatement)) {{
             addAll(acctModel.getType().equals("LN") ? List.of(btnPay) : List.of(btnDeposit, btnWithdraw, btnTransfer));

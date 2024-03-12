@@ -22,8 +22,17 @@ public class AccountController {
         this.stage = stage;
         acctDao = new AccountDAO();
         this.acctModel = acctModel;
-        viewBuilder = new AccountView(acctModel, this::goHome, this::logout);
+        viewBuilder = new AccountView(acctModel, this::goHome, this::logout,
+                this::goToTransactions, this::goToStatement);
         this.login = login;
+    }
+
+    private void goToStatement() {
+        // TODO Navigate to statements page
+    }
+
+    private void goToTransactions() {
+        // TODO Navigate to the transactions page
     }
 
     private void goHome() {

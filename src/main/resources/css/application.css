@@ -14,6 +14,11 @@
     -fx-background: "#1C8899";
 }
 
+.statement {
+    -fx-background-color: BLACK;
+    -fx-background: WHITE;
+}
+
 .panel {
     -fx-arc-width: 15;
     -fx-arc-height: 15;
@@ -123,14 +128,15 @@
 
 .list-cell {
     -fx-alignment: center;
-    -fx-background-color: "#BFB59E";
-    -fx-background-radius: 10;
+    -fx-background-color: "#56CEE8";
+    -fx-background-radius: 5;
+    -fx-font-size: 18;
 }
 
 .list-view {
     -fx-alignment: center;
-    -fx-background-radius: 10;
-    -fx-background-color: "#BFB59E";
+    -fx-background-color: "#56CEE8";
+    -fx-font-size: 18;
 }
 
 .table {

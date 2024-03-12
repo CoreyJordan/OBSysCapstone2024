@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.obsys.obsysapp.data.LoginDAO;
 import org.obsys.obsysapp.data.ObsysDbConnection;
-import org.obsys.obsysapp.domain.Person;
+import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.models.CreationModel;
 import org.obsys.obsysapp.models.LoginModel;
 import org.obsys.obsysapp.utils.AccountValidator;
@@ -23,7 +23,7 @@ public class AcctCreationController {
     private final CreationModel creationModel;
     private final LoginModel loginModel;
     private final LoginDAO loginDao;
-    private Person foundPerson;
+    private Login foundPerson;
 
     public AcctCreationController(Stage stage) {
         this.stage = stage;
@@ -103,7 +103,7 @@ public class AcctCreationController {
         return false;
     }
 
-    private boolean accountAlreadyExists(Person foundPerson) {
+    private boolean accountAlreadyExists(Login foundPerson) {
         if (foundPerson.getUsername() != null) {
             creationModel.setNotFound("There is already a username associated with this account");
             return true;
@@ -111,7 +111,7 @@ public class AcctCreationController {
         return false;
     }
 
-    private boolean notFound(Person foundPerson) {
+    private boolean notFound(Login foundPerson) {
         if (foundPerson.getPersonId() == 0) {
             creationModel.setNotFound("No account found with that name and/or account number");
             return true;

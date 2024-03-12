@@ -67,7 +67,7 @@ public class AccountsModel {
     }
 
     public StringProperty balanceTypeProperty(int i) {
-        SimpleStringProperty label = new SimpleStringProperty("Label");
+        SimpleStringProperty label = new SimpleStringProperty("Available");
         if (accounts.get(i).getType().equals("LN")) {
             label.set("BALANCE");
         }
