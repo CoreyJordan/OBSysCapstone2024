@@ -8,12 +8,10 @@ public class Person {
     private String city;
     private String state;
     private String postalCode;
-    private String phoneNum;
-    private String email;
     private Login login;
 
     public Person(int personId, String lastName, String firstName, String streetAddress, String city, String state,
-                  String postalCode, String phoneNum, String email, Login login) {
+                  String postalCode, Login login) {
         this.personId = personId;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -21,8 +19,6 @@ public class Person {
         this.city = city;
         this.state = state;
         this.postalCode = postalCode;
-        this.phoneNum = phoneNum;
-        this.email = email;
         this.login = login;
     }
 
@@ -52,14 +48,6 @@ public class Person {
 
     public String getPostalCode() {
         return postalCode;
-    }
-
-    public String getPhoneNum() {
-        return phoneNum;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public Login getLogin() {

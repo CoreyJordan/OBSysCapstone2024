@@ -10,6 +10,7 @@ public class Transaction {
     private final String payee;
     private double amtToPrincipal;
     private double amtToInterest;
+    private double balanceResult;
 
     public Transaction(String type, double amount, LocalDate date, String payee) {
         this.type = type;
@@ -32,6 +33,12 @@ public class Transaction {
         this.amtToInterest = amtToInterest;
     }
 
+    public Transaction(String type, double amount, LocalDate date, String payee, double balanceResult) {
+        this(type, amount, date, payee);
+        this.balanceResult = balanceResult;
+    }
+
+    // Getters
     public LocalDate getDate() {
         return date;
     }
@@ -58,5 +65,9 @@ public class Transaction {
 
     public double getAmtToInterest() {
         return amtToInterest;
+    }
+
+    public double getBalance() {
+        return balanceResult;
     }
 }

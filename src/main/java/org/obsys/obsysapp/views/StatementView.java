@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.StatementModel;
 
@@ -72,6 +73,7 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
 
     private ArrayList<Node> createComboBox() {
         ComboBox<LocalDate> cmbMonths = obsysComboBox(stmtModel.getMonths(), 290, 120, 265);
+        cmbMonths.setValue(stmtModel.getMonths().getFirst());
 
         return new ArrayList<>(List.of(cmbMonths));
     }
@@ -119,8 +121,41 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
             add(obsysLabel("STATEMENT OF ACCOUNT", 550, 165));
             add(obsysLabel(stmtPeriod, 120, 210, "right-aligned"));
             add(obsysLabel(nameAndAddress, 120, 320));
+            add(createMonthlySummary());
+            add(createTransactionsTable());
         }};
     }
+
+    private Node createMonthlySummary() {
+        VBox vbox = new VBox();
+        vbox.setLayoutX(120);
+        vbox.setLayoutY(420);
+
+
+        vbox.getChildren().add(obsysLabel("Account Summary", 0, 0, "header3"));
+
+        Label lblSummary = obsysLabel("", 0, 0, "table");
+        lblSummary.textProperty().bind(stmtModel.summaryProperty());
+        vbox.getChildren().add(lblSummary);
+
+        return vbox;
+    }
+
+    private Node createTransactionsTable() {
+        VBox vbox = new VBox();
+        vbox.setLayoutX(120);
+        vbox.setLayoutY(620);
+
+        vbox.getChildren().add(obsysLabel("Transactions", 0, 0, "header3"));
+
+        Label lblTransactions = obsysLabel("", 0, 0, "table");
+        lblTransactions.textProperty().bind(stmtModel.transactionsProperty());
+        vbox.getChildren().add(lblTransactions);
+
+        return vbox;
+    }
+
+
 
     // No text fields or passwords utilized on this page
     @Override

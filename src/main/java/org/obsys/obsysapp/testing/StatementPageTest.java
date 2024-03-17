@@ -6,9 +6,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.obsys.obsysapp.controllers.ErrorController;
 import org.obsys.obsysapp.controllers.StatementController;
-import org.obsys.obsysapp.domain.Account;
-import org.obsys.obsysapp.domain.Login;
-import org.obsys.obsysapp.domain.Person;
+import org.obsys.obsysapp.domain.*;
 import org.obsys.obsysapp.models.AccountModel;
 import org.obsys.obsysapp.models.StatementModel;
 
@@ -40,7 +38,9 @@ public class StatementPageTest extends Application {
     }
 
     private StatementModel createSampleStatementModel() {
-        StatementModel stmtModel = new StatementModel(createSamplePerson(), createSampleCheckingAccount());
+        StatementModel stmtModel = new StatementModel(createSamplePerson(),
+                createSampleCheckingAccount(),
+                createSampleCheckingSummary());
         stmtModel.setMonths(new ArrayList<>(List.of(
                 LocalDate.of(2024, 3, 21),
                 LocalDate.of(2024, 2, 21),
@@ -62,6 +62,23 @@ public class StatementPageTest extends Application {
         );
     }
 
+    private MonthlySummary createSampleCheckingSummary() {
+        return new MonthlySummary(sampleCheckingTransactions());
+    }
+
+    private ArrayList<Transaction> sampleCheckingTransactions() {
+        return new ArrayList<>(){{
+            add(new Transaction("DP", 535.34, LocalDate.of(2024,2,4), "Sample", 752.25));
+            add(new Transaction("WD", 695.34, LocalDate.of(2024,2,5), "Sample", 56.91));
+            add(new Transaction("DP", 456.45, LocalDate.of(2024,2,6), "Sample", 513.36));
+            add(new Transaction("DP", 25.56, LocalDate.of(2024,2,7), "Sample", 538.92));
+            add(new Transaction("DP", 658.56, LocalDate.of(2024,2,8), "Sample", 1197.48));
+            add(new Transaction("WD", 654.21, LocalDate.of(2024,2,9), "Sample", 543.27));
+            add(new Transaction("DP", 25.25, LocalDate.of(2024,2,10), "Sample", 568.52));
+
+        }};
+    }
+
     private Person createSamplePerson() {
         return new Person(
                 1111111149,
@@ -71,8 +88,6 @@ public class StatementPageTest extends Application {
                 "Cheyenne",
                 "WY",
                 "82007",
-                "307-966-5395",
-                "lmatyushenko0@clickbank.net",
                 new Login(
                         "lainaTest",
                         "Adm!n1",
