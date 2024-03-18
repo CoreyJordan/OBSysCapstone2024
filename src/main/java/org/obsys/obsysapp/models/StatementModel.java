@@ -16,12 +16,18 @@ public class StatementModel {
     private LocalDate selectedMonth = LocalDate.MIN;
     private MonthlySummary summary;
 
-
-    public StatementModel(Person person, Account account, MonthlySummary summary) {
+    public StatementModel(Person person, Account account) {
         this.person = person;
         this.account = account;
-        this.summary = summary;
     }
+
+    public StatementModel(Person person, Account account, MonthlySummary summary, LocalDate selectedMonth) {
+        this(person, account);
+        this.summary = summary;
+        this.selectedMonth = selectedMonth;
+    }
+
+
 
     private static String getPayeeDescription(Transaction t) {
         String description;
@@ -116,19 +122,6 @@ public class StatementModel {
         return months;
     }
 
-    // SETTERS
-    public void setMonths(ArrayList<LocalDate> months) {
-        this.months = months;
-    }
-
-    public boolean isValidMonth() {
-        return isValidMonth;
-    }
-
-    public void setValidMonth(boolean validMonth) {
-        isValidMonth = validMonth;
-    }
-
     public String getNameAndAddress() {
         return String.format("%s %s\n%s\n%s, %s %s",
                 person.getFirstName(),
@@ -143,7 +136,25 @@ public class StatementModel {
         return person.getLogin();
     }
 
+    public LocalDate getSelectedMonth() {
+        return selectedMonth;
+    }
+
+    public boolean isValidMonth() {
+        return isValidMonth;
+    }
+
+    // SETTERS
+    public void setMonths(ArrayList<LocalDate> months) {
+        this.months = months;
+    }
+
+    public void setValidMonth(boolean validMonth) {
+        isValidMonth = validMonth;
+    }
+
     public void setSelectedPeriod(LocalDate selectedPeriod) {
         this.selectedMonth = selectedPeriod;
     }
+
 }

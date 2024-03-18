@@ -1,14 +1,16 @@
 package org.obsys.obsysapp.views;
 
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.StatementModel;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,20 +28,15 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
     @Override
     public AnchorPane build() {
         AnchorPane stmtWindow = super.build();
-        stmtWindow.getChildren().addAll(createPanels());
         stmtWindow.getChildren().addAll(loadImages());
         stmtWindow.getChildren().addAll(createLabels());
         stmtWindow.getChildren().addAll(createButtons());
-        stmtWindow.getChildren().addAll(createComboBox());
         stmtWindow.getChildren().add(createScrollPane());
 
         return stmtWindow;
     }
 
-    @Override
-    public ArrayList<Rectangle> createPanels() {
-        return new ArrayList<>(List.of(obsysPanel(270, 100, 640, 75)));
-    }
+
 
     @Override
     public ArrayList<Node> loadImages() {
@@ -50,7 +47,7 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
     public ArrayList<Node> createLabels() {
         String prompt = "Select a month and Open Statement to view that statement.\n" +
                 "Press Print to print a copy or save it to file.";
-        return new ArrayList<>(List.of(obsysLabel("Statements", 210, 10, "banner"),
+        return new ArrayList<>(List.of(obsysLabel("Statement", 210, 10, "banner"),
                 obsysLabel(prompt, 620, 55, 300, "hint")));
     }
 
@@ -65,17 +62,7 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
         Button btnPrint = obsysButton("Print", 740, 120, 160);
         // TODO btnPrint.setOnAction(evt -> printHandler.run());
 
-        Button btnOpen = obsysButton("Open Statement", 570, 120, 160);
-        // TODO btnOpen.setOnAction(evt -> openStmtHandler.run());
-
-        return new ArrayList<>(List.of(btnBack, hypLogout, btnPrint, btnOpen));
-    }
-
-    private ArrayList<Node> createComboBox() {
-        ComboBox<LocalDate> cmbMonths = obsysComboBox(stmtModel.getMonths(), 290, 120, 265);
-        cmbMonths.setValue(stmtModel.getMonths().getFirst());
-
-        return new ArrayList<>(List.of(cmbMonths));
+        return new ArrayList<>(List.of(btnBack, hypLogout, btnPrint));
     }
 
     private Node createScrollPane() {
@@ -95,7 +82,6 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
 
         stmtModel.setValidMonth(true);  // For building, remove after testing
         if (stmtModel.isValidMonth()) {
-            // TODO Pass month into createStatement
             stmtPane.getChildren().addAll(createStatement());
         }
         return stmtPane;
@@ -165,6 +151,11 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> buildPasswordField() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Rectangle> createPanels() {
         return null;
     }
 }

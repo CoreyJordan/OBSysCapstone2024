@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class AccountModel {
     private final int acctNum;
@@ -23,6 +26,7 @@ public class AccountModel {
     private int term = -1;
     private double interestPaid = -1;
     private double installment = -1;
+    private LocalDate selectedMonth;
     private ArrayList<Transaction> history = new ArrayList<>();
 
     public AccountModel(int acctNum) {
@@ -51,47 +55,6 @@ public class AccountModel {
         }
         return description;
     }
-
-    public void setInstallment(double installment) {
-        this.installment = installment;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public void setDateOpened(LocalDate dateOpened) {
-        this.dateOpened = dateOpened;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setInterestRate(double interestRate) {
-        this.interestRate.set(interestRate);
-    }
-
-    public void setLoanAmt(double loanAmt) {
-        this.loanAmt = loanAmt;
-    }
-
-    public void setTerm(int term) {
-        this.term = term;
-    }
-
-    public void setInterestPaid(double interestPaid) {
-        this.interestPaid = interestPaid;
-    }
-
-    public void setInterestDue(double interestDue) {
-        this.interestDue.set(interestDue);
-    }
-
-    public void setHistory(ArrayList<Transaction> history) {
-        this.history = history;
-    }
-
 
     public StringProperty typeProperty() {
         return switch (type) {
@@ -324,5 +287,120 @@ public class AccountModel {
 
     public StringProperty loanAmountProperty() {
         return new SimpleStringProperty(String.format("$%,.2f", loanAmt));
+    }
+
+    public int getAcctNum() {
+        return acctNum;
+    }
+
+    public double getInterestRate() {
+        return interestRate.get();
+    }
+
+    public void setInterestRate(double interestRate) {
+        this.interestRate.set(interestRate);
+    }
+
+    public double getInterestDue() {
+        return interestDue.get();
+    }
+
+    public void setInterestDue(double interestDue) {
+        this.interestDue.set(interestDue);
+    }
+
+    public DoubleProperty interestDueProperty() {
+        return interestDue;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public LocalDate getDateOpened() {
+        return dateOpened;
+    }
+
+    public void setDateOpened(LocalDate dateOpened) {
+        this.dateOpened = dateOpened;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public double getLoanAmt() {
+        return loanAmt;
+    }
+
+    public void setLoanAmt(double loanAmt) {
+        this.loanAmt = loanAmt;
+    }
+
+    public int getTerm() {
+        return term;
+    }
+
+    public void setTerm(int term) {
+        this.term = term;
+    }
+
+    public double getInterestPaid() {
+        return interestPaid;
+    }
+
+    public void setInterestPaid(double interestPaid) {
+        this.interestPaid = interestPaid;
+    }
+
+    public double getInstallment() {
+        return installment;
+    }
+
+    public void setInstallment(double installment) {
+        this.installment = installment;
+    }
+
+    public ArrayList<Transaction> getHistory() {
+        return history;
+    }
+
+    public void setHistory(ArrayList<Transaction> history) {
+        this.history = history;
+    }
+
+    public ArrayList<LocalDate> getMonths() {
+        ArrayList<LocalDate> months = new ArrayList<>();
+
+        if (history.isEmpty()) {
+            return months;
+        }
+
+        history.sort(Comparator.comparing(Transaction::getDate));
+        long numberOfMonths = ChronoUnit.MONTHS.between(dateOpened, history.getLast().getDate());
+
+        for (int i = 0; i < numberOfMonths; i++) {
+            if (dateOpened.plusMonths(i + 1).isBefore(LocalDate.now())) {
+                months.add(dateOpened.plusMonths(i + 1));
+            }
+        }
+        Collections.sort(months, Collections.reverseOrder());
+        return months;
+    }
+
+    public LocalDate getSelectedMonth() {
+        return selectedMonth;
+    }
+
+    public void setSelectedMonth(LocalDate selectedMonth) {
+        this.selectedMonth = selectedMonth;
     }
 }

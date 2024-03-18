@@ -2,10 +2,8 @@ package org.obsys.obsysapp.data;
 
 import org.obsys.obsysapp.domain.Transaction;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TransactionDAO {
@@ -37,6 +35,36 @@ public class TransactionDAO {
 
 
         return history;
+    }
+
+    public ArrayList<Transaction> readTransactionsByMonth(Connection conn, LocalDate date) throws SQLException{
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        try (PreparedStatement statement = conn.prepareStatement("""
+                SELECT * FROM dbo.AccountActivity
+                LEFT OUTER JOIN dbo.Payee
+                ON dbo.Payee.PayeeId = dbo.AccountActivity.Payee
+                WHERE TransactionDate BETWEEN ? AND ?
+                """)) {
+            statement.setDate(1, Date.valueOf(date.minusMonths(1).plusDays(1)));
+            statement.setDate(2, Date.valueOf(date));
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                transactions.add(new Transaction(
+                        resultSet.getString("TransactionType"),
+                        resultSet.getDouble("TransactionAmt"),
+                        resultSet.getDate("TransactionDate").toLocalDate(),
+                        resultSet.getInt("TransferTo"),
+                        resultSet.getString("PayeeDescription"),
+                        resultSet.getDouble("ToPrincipal"),
+                        resultSet.getDouble("ToInterest"),
+                        resultSet.getDouble("Balance")
+                ));
+            }
+        }
+
+        return transactions;
     }
 
 }

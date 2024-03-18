@@ -65,6 +65,7 @@ public class HomeController {
             stage.setScene(new Scene(new AccountController(stage, accountModel, user).getView()));
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+            e.printStackTrace();
         }
 
     }

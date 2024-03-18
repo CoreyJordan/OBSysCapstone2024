@@ -2,16 +2,14 @@ package org.obsys.obsysapp.views;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import org.obsys.obsysapp.models.AccountModel;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -277,13 +275,22 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
             transactionHandler.run();
         });
 
-
-        Button btnStatement = obsysButton("Statements", 655, 475, 200);
-        btnStatement.setOnAction(evt -> statementHandler.run());
-
-        return new ArrayList<>(List.of(btnBack, hypLogout, btnStatement)) {{
+        return new ArrayList<>(List.of(btnBack, hypLogout)) {{
             addAll(acctModel.getType().equals("LN") ? List.of(btnPay) : List.of(btnDeposit, btnWithdraw, btnTransfer));
+            addAll(createComboBox());
         }};
+    }
+
+    private ArrayList<Node> createComboBox() {
+        ComboBox<LocalDate> cmbMonths = obsysComboBox(acctModel.getMonths(), 655, 475, 200);
+        cmbMonths.setOnAction(evt -> {
+            acctModel.setSelectedMonth(cmbMonths.getValue());
+            statementHandler.run();
+        });
+
+        Label lblStatement = obsysLabel("STATEMENTS", 675, 477, "hint");
+
+        return new ArrayList<>(List.of(cmbMonths, lblStatement));
     }
 
 

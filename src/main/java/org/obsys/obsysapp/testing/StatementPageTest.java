@@ -40,7 +40,9 @@ public class StatementPageTest extends Application {
     private StatementModel createSampleStatementModel() {
         StatementModel stmtModel = new StatementModel(createSamplePerson(),
                 createSampleCheckingAccount(),
-                createSampleCheckingSummary());
+                createSampleCheckingSummary(),
+                LocalDate.of(2024, 2, 21)
+                );
         stmtModel.setMonths(new ArrayList<>(List.of(
                 LocalDate.of(2024, 3, 21),
                 LocalDate.of(2024, 2, 21),
@@ -48,7 +50,6 @@ public class StatementPageTest extends Application {
                 LocalDate.of(2023, 12, 21),
                 LocalDate.of(2023, 11, 21)
         )));
-        stmtModel.setSelectedPeriod(LocalDate.of(2024, 2, 21));
         return stmtModel;
     }
 

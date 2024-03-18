@@ -10,15 +10,19 @@ public class Person {
     private String postalCode;
     private Login login;
 
-    public Person(int personId, String lastName, String firstName, String streetAddress, String city, String state,
-                  String postalCode, Login login) {
-        this.personId = personId;
+    public Person(String lastName, String firstName, String streetAddress, String city, String state, String postalCode) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.streetAddress = streetAddress;
         this.city = city;
         this.state = state;
         this.postalCode = postalCode;
+    }
+
+    public Person(int personId, String lastName, String firstName, String streetAddress, String city, String state,
+                  String postalCode, Login login) {
+        this(lastName, firstName, streetAddress, city, state, postalCode);
+        this.personId = personId;
         this.login = login;
     }
 

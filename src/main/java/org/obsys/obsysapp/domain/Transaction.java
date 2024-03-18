@@ -38,6 +38,12 @@ public class Transaction {
         this.balanceResult = balanceResult;
     }
 
+    public Transaction(String type, double amount, LocalDate date, int transferToAcctId, String payee,
+                       double amtToPrincipal, double amtToInterest, double balanceResult) {
+        this(type, amount, date, transferToAcctId, payee, amtToPrincipal, amtToInterest);
+        this.balanceResult = balanceResult;
+    }
+
     // Getters
     public LocalDate getDate() {
         return date;

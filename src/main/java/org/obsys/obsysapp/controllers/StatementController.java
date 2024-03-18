@@ -8,6 +8,9 @@ import org.obsys.obsysapp.models.StatementModel;
 import org.obsys.obsysapp.views.StatementView;
 import org.obsys.obsysapp.views.ViewBuilder;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 public class StatementController {
     private final Stage stage;
     private final ViewBuilder viewBuilder;
