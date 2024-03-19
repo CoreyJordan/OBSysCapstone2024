@@ -1,6 +1,5 @@
 package org.obsys.obsysapp.testing;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.obsys.obsysapp.utils.AccountValidator;
 

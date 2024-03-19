@@ -27,12 +27,10 @@ public class StatementPageTest extends Application {
             stage.setResizable(false);
 
             stage.setScene(new Scene(
-                    new StatementController(stage, createSampleStatementModel(), getSampleChecking()).getView()));
+                    new StatementController(stage, createSampleStatementModel(), getSampleChecking(), getLogin()).getView()));
 
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e).getView()));
-
-            e.printStackTrace();
         }
         stage.show();
     }
@@ -89,12 +87,16 @@ public class StatementPageTest extends Application {
                 "Cheyenne",
                 "WY",
                 "82007",
-                new Login(
-                        "lainaTest",
-                        "Adm!n1",
-                        false,
-                        1111111149
-                ));
+                getLogin());
+    }
+
+    private static Login getLogin() {
+        return new Login(
+                "lainaTest",
+                "Adm!n1",
+                false,
+                1111111149
+        );
     }
 
     private AccountModel getSampleChecking() {

@@ -282,6 +282,11 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> createComboBox() {
+        // Account page sufficiently displays payment history, rather than design a loan statement, we just escape.
+        if (acctModel.getType().equals("LN")) {
+            return new ArrayList<>();
+        }
+
         ComboBox<LocalDate> cmbMonths = obsysComboBox(acctModel.getMonths(), 655, 475, 200);
         cmbMonths.setOnAction(evt -> {
             acctModel.setSelectedMonth(cmbMonths.getValue());

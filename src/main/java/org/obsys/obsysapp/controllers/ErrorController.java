@@ -36,7 +36,7 @@ public class ErrorController {
     }
 
     private void logout() {
-        LoginController login = new LoginController( stage, "dolphinExit.png", "Thank you!");
+        LoginController login = new LoginController(stage, "dolphinExit.png", "Thank you!");
         stage.setScene(new Scene(login.getView()));
     }
 

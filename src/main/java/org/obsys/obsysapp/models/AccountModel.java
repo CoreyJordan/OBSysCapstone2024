@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -33,7 +32,7 @@ public class AccountModel {
         this.acctNum = acctNum;
     }
 
-    private static String getPayeeDescription(Transaction t) {
+    private String getPayeeDescription(Transaction t) {
         String description;
         switch (t.getType()) {
             case "TF":
@@ -392,7 +391,7 @@ public class AccountModel {
                 months.add(dateOpened.plusMonths(i + 1));
             }
         }
-        Collections.sort(months, Collections.reverseOrder());
+        months.sort(Collections.reverseOrder());
         return months;
     }
 

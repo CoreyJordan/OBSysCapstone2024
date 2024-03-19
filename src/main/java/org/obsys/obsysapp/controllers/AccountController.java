@@ -3,21 +3,18 @@ package org.obsys.obsysapp.controllers;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import org.obsys.obsysapp.data.AccountDAO;
 import org.obsys.obsysapp.data.ObsysDbConnection;
 import org.obsys.obsysapp.data.PersonDAO;
 import org.obsys.obsysapp.data.TransactionDAO;
 import org.obsys.obsysapp.domain.Account;
 import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.domain.MonthlySummary;
-import org.obsys.obsysapp.domain.Person;
 import org.obsys.obsysapp.models.AccountModel;
 import org.obsys.obsysapp.models.StatementModel;
 import org.obsys.obsysapp.views.AccountView;
 import org.obsys.obsysapp.views.ViewBuilder;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class AccountController {
     private final Stage stage;
@@ -34,28 +31,21 @@ public class AccountController {
     }
 
     private void goToStatement() {
-        System.out.println(acctModel.getSelectedMonth());
-
-        // TODO Create monthly summary, person, account
-        // TODO Create Statement Model
-
-        // TODO Navigate to statement page
-
         try (Connection conn = ObsysDbConnection.openDBConn()) {
             StatementModel stmtModel = new StatementModel(
                     new PersonDAO().readPersonByPersonId(conn, login.getPersonId()),
                     new Account(acctModel.getType(), acctModel.getAcctNum(), acctModel.getStatus(),
                             acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment(),
                             acctModel.getInterestRate(), acctModel.getTerm(), acctModel.getInterestPaid()),
-                    new MonthlySummary(new TransactionDAO().readTransactionsByMonth(conn, acctModel.getSelectedMonth())),
+                    new MonthlySummary(new TransactionDAO().readTransactionsByMonth(
+                            conn, acctModel.getSelectedMonth(), acctModel.getAcctNum())),
                     acctModel.getSelectedMonth()
             );
 
-            stage.setScene(new Scene(new StatementController(stage, stmtModel, acctModel).getView()));
+            stage.setScene(new Scene(new StatementController(stage, stmtModel, acctModel, login).getView()));
 
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
-            e.printStackTrace();
         }
     }
 

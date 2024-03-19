@@ -11,7 +11,7 @@ public class MonthlySummary {
     private double interestPaid;
     private double fees = 0;    // No fees in transactions at this time
 
-    private ArrayList<Transaction> transactions =  new ArrayList<>();
+    private final ArrayList<Transaction> transactions;
 
     // Checking Constructor
     public MonthlySummary(ArrayList<Transaction> transactions) {
