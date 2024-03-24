@@ -27,6 +27,7 @@ public class AccountModel {
     private double installment = -1;
     private LocalDate selectedMonth;
     private ArrayList<Transaction> history = new ArrayList<>();
+    private String transactionType;
 
     public AccountModel(int acctNum) {
         this.acctNum = acctNum;
@@ -36,7 +37,11 @@ public class AccountModel {
         String description;
         switch (t.getType()) {
             case "TF":
-                description = "To:" + t.getTransferToAcctId();
+                if (t.getAmount() < 0) {
+                    description = "To:" + t.getTransferToAcctId();
+                } else {
+                    description = "From" + t.getTransferToAcctId();
+                }
                 break;
             case "RC":
                 description = "From: " + t.getTransferToAcctId();
@@ -114,7 +119,7 @@ public class AccountModel {
         for (Transaction t : history) {
             if (t.getDate().isAfter(LocalDate.now().minusWeeks(1)) &&
                     !t.getType().equals("DP")) {
-                transactionsTotal += t.getAmount() * -1;
+                transactionsTotal += t.getAmount();
             }
         }
         return new SimpleStringProperty(String.format("$%,.2f", transactionsTotal));
@@ -140,60 +145,48 @@ public class AccountModel {
     public ArrayList<String> getPendingTransactions() {
         ArrayList<String> transactions = new ArrayList<>();
 
-        String date;
-        String description;
-        String credit;
-        String debit;
 
         for (Transaction t : history) {
             if (t.getDate().isAfter(LocalDate.now().minusWeeks(1))) {
-                date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
-                description = getPayeeDescription(t);
-
-                if (t.getAmount() > 0) {
-                    credit = String.format("$%,.2f", t.getAmount());
-                    debit = "-";
-                } else {
-                    debit = String.format("$%,.2f", t.getAmount() * -1);
-                    credit = "-";
-                }
-
-                transactions.add(String.format("%-9s %-20s %9s %9s \n", date, description, credit, debit));
+                formatTransactions(transactions, t);
             }
         }
         return transactions;
 
     }
 
+    private void formatTransactions(ArrayList<String> transactions, Transaction t) {
+        String date;
+        String description;
+        String credit;
+        String debit;
+        date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
+        description = getPayeeDescription(t);
+
+        if (t.getAmount() > 0) {
+            credit = String.format("$%,.2f", t.getAmount());
+            debit = "-";
+        } else {
+            debit = String.format("$%,.2f", t.getAmount() * -1);
+            credit = "-";
+        }
+
+        transactions.add(String.format("%-9s %-20s %9s %9s \n", date, description, credit, debit));
+    }
+
     /***
      * Sends transaction beyond a week old to 1 month.
      * Rather than limit the query to 1 month, we parse it out here. This allows us to get full history details such as
-     * total interest accrued without having to run 2 seperate queries.
+     * total interest accrued without having to run 2 separate queries.
      * @return a list of transactions from 7 to 30 days old
      */
     public ArrayList<String> getPostedTransactions() {
         ArrayList<String> transactions = new ArrayList<>();
 
-        String date;
-        String description;
-        String credit;
-        String debit;
-
         for (Transaction t : history) {
             if (t.getDate().isBefore(LocalDate.now().minusDays(6)) &&
                     t.getDate().isAfter(LocalDate.now().minusMonths(1))) {
-                date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
-                description = getPayeeDescription(t);
-
-                if (t.getAmount() > 0) {
-                    credit = String.format("$%,.2f", t.getAmount());
-                    debit = "-";
-                } else {
-                    debit = String.format("$%,.2f", t.getAmount() * -1);
-                    credit = "-";
-                }
-
-                transactions.add(String.format("%-9s %-20s %9s %9s \n", date, description, credit, debit));
+                formatTransactions(transactions, t);
             }
         }
         return transactions;
@@ -300,16 +293,8 @@ public class AccountModel {
         this.interestRate.set(interestRate);
     }
 
-    public double getInterestDue() {
-        return interestDue.get();
-    }
-
     public void setInterestDue(double interestDue) {
         this.interestDue.set(interestDue);
-    }
-
-    public DoubleProperty interestDueProperty() {
-        return interestDue;
     }
 
     public double getBalance() {
@@ -334,10 +319,6 @@ public class AccountModel {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public double getLoanAmt() {
-        return loanAmt;
     }
 
     public void setLoanAmt(double loanAmt) {
@@ -366,10 +347,6 @@ public class AccountModel {
 
     public void setInstallment(double installment) {
         this.installment = installment;
-    }
-
-    public ArrayList<Transaction> getHistory() {
-        return history;
     }
 
     public void setHistory(ArrayList<Transaction> history) {
@@ -401,5 +378,13 @@ public class AccountModel {
 
     public void setSelectedMonth(LocalDate selectedMonth) {
         this.selectedMonth = selectedMonth;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
     }
 }

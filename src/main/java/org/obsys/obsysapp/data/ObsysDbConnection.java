@@ -14,7 +14,7 @@ public class ObsysDbConnection {
     public static Connection openDBConn() throws SQLException {
         return DriverManager.getConnection(
                 "jdbc:sqlserver://coacapstone2024.database.windows.net:1433;" +
-                        "database=OBSysAccounts;user=c_jordan06@coacapstone2024;" +
+                        "database=OBSysAccounts_2024-03-24T04-34Z;user=c_jordan06@coacapstone2024;" +
                         "password=Capstone2024!;Pooling=True;encrypt=true;trustServerCertificate=false;" +
                         "hostNameInCertificate=*.database.windows.net;loginTimeout=600;");
     }

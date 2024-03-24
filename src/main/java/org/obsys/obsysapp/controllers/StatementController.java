@@ -19,7 +19,7 @@ public class StatementController {
         this.stage = stage;
         this.acctModel = acctModel;
         this.login = login;
-        viewBuilder = new StatementView(stmtModel, this::logout, this:: goBack, this::print, stage);
+        viewBuilder = new StatementView(stmtModel, this::logout, this:: goBack, stage);
     }
 
     public Region getView() {
@@ -35,7 +35,4 @@ public class StatementController {
         stage.setScene(new Scene(new AccountController(stage, acctModel, login).getView()));
     }
 
-    private void print() {
-        // TODO Build print dialog
-    }
 }

@@ -56,7 +56,7 @@ public class LoginController {
         } catch (SQLException e) {
             // Erase password from model for security.
             loginModel.setPassword("");
-            stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
         }
     }
 

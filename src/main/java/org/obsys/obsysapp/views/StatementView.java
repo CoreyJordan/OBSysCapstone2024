@@ -21,14 +21,12 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
     private final StatementModel stmtModel;
     private final Runnable logoutHandler;
     private final Runnable returnHandler;
-    private final Runnable printHandler;
-    private Stage stage;
+    private final Stage stage;
 
-    public StatementView(StatementModel stmtModel, Runnable logoutHandler, Runnable returnHandler, Runnable printHandler, Stage stage) {
+    public StatementView(StatementModel stmtModel, Runnable logoutHandler, Runnable returnHandler, Stage stage) {
         this.stmtModel = stmtModel;
         this.logoutHandler = logoutHandler;
         this.returnHandler = returnHandler;
-        this.printHandler = printHandler;
         this.stage = stage;
     }
 
@@ -150,15 +148,13 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
         PrinterJob job = PrinterJob.createPrinterJob();
         PageLayout layout = job.getPrinter().createPageLayout(Paper.NA_LETTER, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
 
-        if (job != null) {
-            double ratio = layout.getPrintableHeight() / node.getBoundsInParent().getHeight() * .60;
-            Scale scale = new Scale(ratio, ratio);
-            node.getTransforms().add(scale);
+        double ratio = layout.getPrintableHeight() / node.getBoundsInParent().getHeight() * .60;
+        Scale scale = new Scale(ratio, ratio);
+        node.getTransforms().add(scale);
 
-            job.showPrintDialog(stage);
-            job.printPage(layout, node);
-            job.endJob();
-        }
+        job.showPrintDialog(stage);
+        job.printPage(layout, node);
+        job.endJob();
     }
 
 

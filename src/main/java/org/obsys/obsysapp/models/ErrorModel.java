@@ -1,4 +1,12 @@
 package org.obsys.obsysapp.models;
 
-public record ErrorModel(Exception ex) {
+public class ErrorModel {
+    String error;
+    public ErrorModel(String error) {
+        this.error = error;
+    }
+
+    public String getError() {
+        return error;
+    }
 }

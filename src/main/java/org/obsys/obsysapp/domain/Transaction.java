@@ -3,24 +3,20 @@ package org.obsys.obsysapp.domain;
 import java.time.LocalDate;
 
 public class Transaction {
+    private int accountId;
     private final String type;
     private double amount;
     private final LocalDate date;
     private int transferToAcctId;
-    private final String payee;
+    private int payeeId;
+    private String payee;
     private double amtToPrincipal;
     private double amtToInterest;
     private double balanceResult;
 
     public Transaction(String type, double amount, LocalDate date, String payee) {
         this.type = type;
-
-        // Only deposits remain positive
         this.amount = amount;
-        if (!type.equals("DP")) {
-            this.amount *= -1;
-        }
-
         this.date = date;
         this.payee = payee;
     }
@@ -31,6 +27,15 @@ public class Transaction {
         this.transferToAcctId = transferToAcctId;
         this.amtToPrincipal = amtToPrincipal;
         this.amtToInterest = amtToInterest;
+    }
+
+    // Transfer Constructor
+    public Transaction(String type, double amount, LocalDate date, int accountId, int transferToAcctId) {
+        this.type = type;
+        this.amount = amount;
+        this.date = date;
+        this.accountId = accountId;
+        this.transferToAcctId = transferToAcctId;
     }
 
     public Transaction(String type, double amount, LocalDate date, String payee, double balanceResult) {
@@ -75,5 +80,31 @@ public class Transaction {
 
     public double getBalance() {
         return balanceResult;
+    }
+
+    public int getPayeeId() {
+        return payeeId;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    // SETTERS
+
+    public void setPayeeId(int payeeId) {
+        this.payeeId = payeeId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setTransferToAcctId(int transferToAcctId) {
+        this.transferToAcctId = transferToAcctId;
     }
 }

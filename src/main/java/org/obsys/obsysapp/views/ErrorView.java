@@ -65,7 +65,7 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
         return new ArrayList<>(){{
             add(obsysLabel("Oops! Something went wrong!", 300, 50, 600, "banner"));
             add(obsysLabel(prompt, 190, 285, 270));
-            add(obsysLabel(error.ex().getMessage(), 460, 280, 400));
+            add(obsysLabel(error.getError(), 460, 280, 400));
         }};
     }
 

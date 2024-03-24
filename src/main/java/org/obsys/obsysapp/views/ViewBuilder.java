@@ -262,7 +262,7 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return scrollPane;
     }
 
-    protected ComboBox<LocalDate> obsysComboBox(ArrayList<LocalDate> choices, double x, double y, double width) {
+    protected ComboBox<LocalDate> obsysDateCombo(ArrayList<LocalDate> choices, double x, double y, double width) {
         ComboBox<LocalDate> comboBox = new ComboBox<>();
         comboBox.setLayoutX(x);
         comboBox.setLayoutY(y);
@@ -270,6 +270,25 @@ public class ViewBuilder implements Builder<AnchorPane> {
         comboBox.getItems().addAll(choices);
 
         return comboBox;
+    }
+
+    protected ComboBox<String> obsysPayeeCombo(ArrayList<String> choices, double x, double y, double width) {
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setLayoutX(x);
+        comboBox.setLayoutY(y);
+        comboBox.setPrefWidth(width);
+        comboBox.getItems().addAll(choices);
+
+        return comboBox;
+    }
+
+    protected DatePicker obsysDatePicker(double x, double y, double width) {
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+        datePicker.setLayoutX(x);
+        datePicker.setLayoutY(y);
+        datePicker.setPrefWidth(width);
+
+        return datePicker;
     }
 
 }

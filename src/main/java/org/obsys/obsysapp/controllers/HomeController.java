@@ -40,7 +40,7 @@ public class HomeController {
                 }
             }
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
         }
 
         accountsModel = new AccountsModel(accounts);
@@ -64,7 +64,7 @@ public class HomeController {
             accountModel.setHistory(transactDao.readTransactionHistory(conn, acctNum));
             stage.setScene(new Scene(new AccountController(stage, accountModel, user).getView()));
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
         }
 
     }

@@ -57,7 +57,7 @@ public class AcctCreationController {
             enableRegistration();
 
         } catch (SQLException e) {
-            stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
         }
     }
 
@@ -80,7 +80,7 @@ public class AcctCreationController {
             stage.setScene(new Scene(new LoginController(
                     stage, "dolphinLogin.png", "Success!").getView()));
         } catch (SQLException e) {
-            stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
         }
     }
 

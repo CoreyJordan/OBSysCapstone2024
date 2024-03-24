@@ -4,17 +4,21 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.obsys.obsysapp.data.ObsysDbConnection;
+import org.obsys.obsysapp.data.PayeeDAO;
 import org.obsys.obsysapp.data.PersonDAO;
 import org.obsys.obsysapp.data.TransactionDAO;
 import org.obsys.obsysapp.domain.Account;
 import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.domain.MonthlySummary;
+import org.obsys.obsysapp.domain.Payee;
 import org.obsys.obsysapp.models.AccountModel;
 import org.obsys.obsysapp.models.StatementModel;
+import org.obsys.obsysapp.models.TransactionModel;
 import org.obsys.obsysapp.views.AccountView;
 import org.obsys.obsysapp.views.ViewBuilder;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 public class AccountController {
     private final Stage stage;
@@ -45,12 +49,31 @@ public class AccountController {
             stage.setScene(new Scene(new StatementController(stage, stmtModel, acctModel, login).getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e, this.getView()).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
         }
     }
 
     private void goToTransactions() {
-        // TODO Navigate to the transactions page
+        try (Connection conn = ObsysDbConnection.openDBConn()) {
+            PayeeDAO payeeDao = new PayeeDAO();
+
+            ArrayList<Payee> payees = switch (acctModel.getTransactionType()) {
+                case "TF", "PY" -> payeeDao.readAccoutsByPersonId(conn, login.getPersonId(), acctModel.getAcctNum());
+                default -> payeeDao.readPayeesByAccount(conn, acctModel.getAcctNum());
+            };
+
+            Account account = new Account(acctModel.getType(), acctModel.getAcctNum(), acctModel.getStatus(),
+                    acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment(),
+                    acctModel.getInterestRate(), acctModel.getTerm(), acctModel.getInterestPaid());
+
+            TransactionModel transactionModel = new TransactionModel(
+                    acctModel.getTransactionType(), account, payees
+                    );
+
+            stage.setScene(new Scene(new TransactionController(stage, this.getView(), transactionModel).getView()));
+        } catch (Exception e) {
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+        }
     }
 
     private void goHome() {

@@ -126,6 +126,14 @@
     -fx-text-fill: CYAN;
 }
 
+.combo-box {
+    -fx-background-radius: 10;
+}
+
+.date-picker {
+    -fx-background-radius: 10;
+}
+
 .list-cell {
     -fx-alignment: center;
     -fx-background-color: "#56CEE8";
@@ -141,6 +149,22 @@
 
 .table {
     -fx-font-family: "Courier New";
+}
+
+.combo-box-base {
+    -fx-background-color: rgba(0, 0, 0, 0);
+}
+
+.combo-box-base .arrow-button {
+    -fx-background-color: "#56CEE8";
+    -fx-border-color: BLACK;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.date-picker .cell:focused{
+    -fx-background-radius: 10;
+    -fx-background-color: "#56CEE8";
 }
 
 

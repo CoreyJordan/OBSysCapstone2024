@@ -253,25 +253,25 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
 
         Button btnPay = obsysButton("Make a Payment", 655, 300, 200);
         btnPay.setOnAction(evt -> {
-            // TODO set model to transaction type: Payment
+            acctModel.setTransactionType("PY");
             transactionHandler.run();
         });
 
         Button btnDeposit = obsysButton("Deposit Funds", 655, 300, 200);
         btnDeposit.setOnAction(evt -> {
-            // TODO set model to transaction type: Deposit
+            acctModel.setTransactionType("DP");
             transactionHandler.run();
         });
 
         Button btnWithdraw = obsysButton("Withdraw Funds", 655, 350, 200);
         btnWithdraw.setOnAction(evt -> {
-            // TODO set model to transaction type: Withdraw
+            acctModel.setTransactionType("WD");
             transactionHandler.run();
         });
 
         Button btnTransfer = obsysButton("Transfer Funds", 655, 400, 200);
         btnTransfer.setOnAction(evt -> {
-            // TODO set model to transaction type: Transfer
+            acctModel.setTransactionType("TF");
             transactionHandler.run();
         });
 
@@ -287,7 +287,7 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
             return new ArrayList<>();
         }
 
-        ComboBox<LocalDate> cmbMonths = obsysComboBox(acctModel.getMonths(), 655, 475, 200);
+        ComboBox<LocalDate> cmbMonths = this.obsysDateCombo(acctModel.getMonths(), 655, 475, 200);
         cmbMonths.setOnAction(evt -> {
             acctModel.setSelectedMonth(cmbMonths.getValue());
             statementHandler.run();

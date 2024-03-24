@@ -111,4 +111,34 @@ public class AccountDAO {
         
         return account;
     }
+
+    public int updateBalance(Connection conn, double amount, int accountId) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+                UPDATE dbo.Account
+                SET Balance = Balance + ?
+                WHERE AccountId = ?
+                """)) {
+            statement.setDouble(1, amount);
+            statement.setInt(2, accountId);
+
+            return statement.executeUpdate();
+        }
+    }
+
+    public double readAcctBalanceById(Connection conn, int accountId) throws SQLException {
+        double balance = -99999999;
+        try (PreparedStatement statement = conn.prepareStatement("""
+                SELECT Balance
+                FROM dbo.Account
+                WHERE AccountId = ?
+                    """)) {
+            statement.setInt(1, accountId);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                balance = resultSet.getDouble("Balance");
+            }
+        }
+        return balance;
+    }
 }

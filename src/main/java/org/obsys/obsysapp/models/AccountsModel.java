@@ -11,19 +11,6 @@ import java.util.ArrayList;
 public class AccountsModel {
     private final ArrayList<Account> accounts;
     private int targetAccountNumber;
-    private Account targetAcct;
-
-    public Account getTargetAcct() {
-        return targetAcct;
-    }
-
-    public void setTargetAcct(Account targetAcct) {
-        this.targetAcct = targetAcct;
-    }
-
-    public Account getAccount(int i) {
-        return accounts.get(i);
-    }
 
     public int getTargetAccountNumber() {
         return targetAccountNumber;

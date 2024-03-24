@@ -12,16 +12,16 @@ public class ErrorController {
     private final ViewBuilder viewBuilder;
     private final Region previousPage;
 
-    public ErrorController(Stage stage, Exception ex, Region previousPage) {
+    public ErrorController(Stage stage, String error, Region previousPage) {
         this.previousPage = previousPage;
         this.stage = stage;
-        viewBuilder = new ErrorView(new ErrorModel(ex), this::exitApp, this::logout, this::goBack);
+        viewBuilder = new ErrorView(new ErrorModel(error), this::exitApp, this::logout, this::goBack);
     }
 
-    public ErrorController(Stage stage, Exception ex) {
+    public ErrorController(Stage stage, String error) {
         this.previousPage = null;
         this.stage = stage;
-        viewBuilder = new ErrorView(new ErrorModel(ex), this::exitApp, this::logout, this::goBack);
+        viewBuilder = new ErrorView(new ErrorModel(error), this::exitApp, this::logout, this::goBack);
     }
 
     public Region getView() {

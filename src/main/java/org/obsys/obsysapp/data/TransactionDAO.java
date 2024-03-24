@@ -32,8 +32,6 @@ public class TransactionDAO {
                 ));
             }
         }
-
-
         return history;
     }
 
@@ -69,4 +67,35 @@ public class TransactionDAO {
         return transactions;
     }
 
+    public int insertTransaction(Connection conn, Transaction transaction, double balance) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+            INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, Payee, Balance)
+            VALUES(?,?,?,?,?,?);
+                """)) {
+            statement.setString(1, transaction.getType());
+            statement.setDouble(2, transaction.getAmount());
+            statement.setDate(3, Date.valueOf(transaction.getDate()));
+            statement.setInt(4, transaction.getAccountId());
+            statement.setInt(5, transaction.getPayeeId());
+            statement.setDouble(6, balance + transaction.getAmount());
+
+            return statement.executeUpdate();
+        }
+    }
+
+    public int insertTransfer(Connection conn, Transaction transaction, double balance) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+            INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, TransferTo, Balance)
+            VALUES(?,?,?,?,?,?);
+                """)) {
+            statement.setString(1, transaction.getType());
+            statement.setDouble(2, transaction.getAmount());
+            statement.setDate(3, Date.valueOf(transaction.getDate()));
+            statement.setInt(4, transaction.getAccountId());
+            statement.setInt(5, transaction.getTransferToAcctId());
+            statement.setDouble(6, balance + transaction.getAmount());
+
+            return statement.executeUpdate();
+        }
+    }
 }
