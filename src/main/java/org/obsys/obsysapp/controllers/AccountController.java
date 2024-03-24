@@ -39,8 +39,7 @@ public class AccountController {
             StatementModel stmtModel = new StatementModel(
                     new PersonDAO().readPersonByPersonId(conn, login.getPersonId()),
                     new Account(acctModel.getType(), acctModel.getAcctNum(), acctModel.getStatus(),
-                            acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment(),
-                            acctModel.getInterestRate(), acctModel.getTerm(), acctModel.getInterestPaid()),
+                            acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment()),
                     new MonthlySummary(new TransactionDAO().readTransactionsByMonth(
                             conn, acctModel.getSelectedMonth(), acctModel.getAcctNum())),
                     acctModel.getSelectedMonth()
@@ -58,17 +57,16 @@ public class AccountController {
             PayeeDAO payeeDao = new PayeeDAO();
 
             ArrayList<Payee> payees = switch (acctModel.getTransactionType()) {
-                case "TF", "PY" -> payeeDao.readAccoutsByPersonId(conn, login.getPersonId(), acctModel.getAcctNum());
+                case "TF", "PY" -> payeeDao.readAccountsByPersonId(conn, login.getPersonId(), acctModel.getAcctNum());
                 default -> payeeDao.readPayeesByAccount(conn, acctModel.getAcctNum());
             };
 
             Account account = new Account(acctModel.getType(), acctModel.getAcctNum(), acctModel.getStatus(),
-                    acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment(),
-                    acctModel.getInterestRate(), acctModel.getTerm(), acctModel.getInterestPaid());
+                    acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment());
 
             TransactionModel transactionModel = new TransactionModel(
                     acctModel.getTransactionType(), account, payees
-                    );
+            );
 
             stage.setScene(new Scene(new TransactionController(stage, this.getView(), transactionModel).getView()));
         } catch (Exception e) {

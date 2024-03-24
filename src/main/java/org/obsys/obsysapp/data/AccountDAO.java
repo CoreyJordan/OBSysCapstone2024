@@ -112,6 +112,15 @@ public class AccountDAO {
         return account;
     }
 
+    /**
+     * Updates the balance of a target account. Must be run in conjunction with a transaction query in order to
+     * maintain data integrity.
+     * @param conn stable database connection
+     * @param amount dollar amount by which the account balance will be modified
+     * @param accountId target account to be updated
+     * @return number of rows affected
+     * @throws SQLException possible database update failure
+     */
     public int updateBalance(Connection conn, double amount, int accountId) throws SQLException {
         try (PreparedStatement statement = conn.prepareStatement("""
                 UPDATE dbo.Account
@@ -125,6 +134,13 @@ public class AccountDAO {
         }
     }
 
+    /**
+     * Reads a single balance from an account in order to update balances from accounts outside the model data sets.
+     * @param conn stable database connection
+     * @param accountId target account
+     * @return current dollar amount balance. Will return -9999999 if no balance found.
+     * @throws SQLException possible database update failure
+     */
     public double readAcctBalanceById(Connection conn, int accountId) throws SQLException {
         double balance = -99999999;
         try (PreparedStatement statement = conn.prepareStatement("""

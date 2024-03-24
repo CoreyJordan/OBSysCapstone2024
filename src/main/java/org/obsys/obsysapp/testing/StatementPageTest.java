@@ -30,7 +30,7 @@ public class StatementPageTest extends Application {
                     new StatementController(stage, createSampleStatementModel(), getSampleChecking(), getLogin()).getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }

@@ -21,12 +21,12 @@ public class ErrorPageTest extends Application {
 
             stage.setScene(new Scene(
                     new ErrorController(
-                            stage, new Exception("Oops! An illegal operation has occurred"),
+                            stage, "Oops! An illegal operation has occurred",
                             new LoginController(
                                     stage, "dolphinLogin.png", "Welcome").getView()).getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }

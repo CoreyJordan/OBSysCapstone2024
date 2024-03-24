@@ -21,9 +21,9 @@ public class HomeController {
     private final Stage stage;
     private final AccountDAO acctDao;
     private final TransactionDAO transactDao;
+    private final Login user;
     private Builder<AnchorPane> viewBuilder;
     private AccountsModel accountsModel;
-    private final Login user;
 
     public HomeController(Stage stage, Login user) {
         this.user = user;

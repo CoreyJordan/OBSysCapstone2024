@@ -19,7 +19,7 @@ public class StatementController {
         this.stage = stage;
         this.acctModel = acctModel;
         this.login = login;
-        viewBuilder = new StatementView(stmtModel, this::logout, this:: goBack, stage);
+        viewBuilder = new StatementView(stmtModel, this::logout, this::goBack, stage);
     }
 
     public Region getView() {

@@ -1,8 +1,8 @@
 package org.obsys.obsysapp.domain;
 
 public class Payee {
-    private int payeeNumber;
-    private String description;
+    private final int payeeNumber;
+    private final String description;
 
     public Payee(int payeeNumber, String description) {
         this.payeeNumber = payeeNumber;

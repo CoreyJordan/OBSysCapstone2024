@@ -38,16 +38,16 @@ public class AccountModel {
         switch (t.getType()) {
             case "TF":
                 if (t.getAmount() < 0) {
-                    description = "To:" + t.getTransferToAcctId();
+                    description = "To: " + t.getTransferToAcctId();
                 } else {
-                    description = "From" + t.getTransferToAcctId();
+                    description = "From: " + t.getTransferToAcctId();
                 }
                 break;
             case "RC":
                 description = "From: " + t.getTransferToAcctId();
                 break;
             case "PY":
-                description = "Loan:" + t.getTransferToAcctId();
+                description = "Loan: " + t.getTransferToAcctId();
                 break;
             default:
                 description = t.getPayee();

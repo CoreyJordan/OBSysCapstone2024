@@ -21,7 +21,7 @@ public class CreationPageTest extends Application {
 
             stage.setScene(new Scene(new AcctCreationController(stage).getView()));
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }

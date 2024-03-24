@@ -23,7 +23,7 @@ public class ObsysApp extends Application {
                     new LoginController(stage, "dolphinLogin.png", "Welcome").getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }

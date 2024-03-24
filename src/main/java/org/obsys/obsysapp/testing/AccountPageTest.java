@@ -35,7 +35,7 @@ public class AccountPageTest extends Application {
             stage.setScene(new Scene(new AccountController(stage, sample, login).getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }

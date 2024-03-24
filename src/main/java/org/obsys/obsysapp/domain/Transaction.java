@@ -3,10 +3,10 @@ package org.obsys.obsysapp.domain;
 import java.time.LocalDate;
 
 public class Transaction {
-    private int accountId;
     private final String type;
-    private double amount;
+    private final double amount;
     private final LocalDate date;
+    private int accountId;
     private int transferToAcctId;
     private int payeeId;
     private String payee;
@@ -49,7 +49,6 @@ public class Transaction {
         this.balanceResult = balanceResult;
     }
 
-    // Getters
     public LocalDate getDate() {
         return date;
     }
@@ -86,25 +85,15 @@ public class Transaction {
         return payeeId;
     }
 
-    public int getAccountId() {
-        return accountId;
-    }
-
-    // SETTERS
-
     public void setPayeeId(int payeeId) {
         this.payeeId = payeeId;
     }
 
+    public int getAccountId() {
+        return accountId;
+    }
+
     public void setAccountId(int accountId) {
         this.accountId = accountId;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public void setTransferToAcctId(int transferToAcctId) {
-        this.transferToAcctId = transferToAcctId;
     }
 }

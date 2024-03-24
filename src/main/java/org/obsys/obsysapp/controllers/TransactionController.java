@@ -60,16 +60,12 @@ public class TransactionController {
         }
 
         // Create objects for standard deposits and withdrawals. Transfers and payments will create their own objects.
-        Transaction transaction = new Transaction(
-                transactionModel.getTransactionType(),
-                amount,
-                transactionModel.getTransactionDate(),
-                transactionModel.getTransactionPayee());
+        Transaction transaction = new Transaction( transactionModel.getTransactionType(), amount,
+                transactionModel.getTransactionDate(), transactionModel.getTransactionPayee());
         double accountBalance = transactionModel.getAccount().getBalance();
+        transaction.setAccountId(transactionModel.getAccount().getAcctNum());
 
         try (Connection conn = ObsysDbConnection.openDBConn()) {
-
-
             switch (transactionModel.getTransactionType()) {
                 case "WD" -> {
                     setPayeeId(transaction, conn);
@@ -88,7 +84,7 @@ public class TransactionController {
         }
     }
 
-    private void setPayeeId(Transaction transaction, Connection conn) {
+    private void setPayeeId(Transaction transaction, Connection conn) throws SQLException{
         if (matchPayeeId() != 0) {
             transaction.setPayeeId(matchPayeeId());
         } else {
@@ -106,7 +102,7 @@ public class TransactionController {
         if (transactionDAO.insertTransaction(conn, deposit, acctBalance) != 1 ||
                 accountDao.updateBalance(conn, deposit.getAmount(), deposit.getAccountId()) != 1) {
             String depositFailed = "Unable to deposit funds. Please contact your bank representative to resolve.";
-            stage.setScene(new Scene(new ErrorController(stage, depositFailed, this.getView()).getView()));
+            throw new SQLException(depositFailed);
         }
     }
 
@@ -138,11 +134,11 @@ public class TransactionController {
             return;
         }
 
-        // Create new transaction objects for deposit and withdrawal. The parent transfer object does not give us a
-        // clear way to nullify the payeeId
-        Transaction withdrawTransfer = new Transaction(transfer.getType(), transfer.getAmount() * -1, transfer.getDate(),
+        Transaction withdrawTransfer = new Transaction(
+                transfer.getType(), transfer.getAmount() * -1, transfer.getDate(),
                 transactionModel.getAccount().getAcctNum(), matchPayeeId());
-        Transaction depositTransfer = new Transaction(transfer.getType(), transfer.getAmount(), transfer.getDate(),
+        Transaction depositTransfer = new Transaction(
+                transfer.getType(), transfer.getAmount(), transfer.getDate(),
                 matchPayeeId(), transactionModel.getAccount().getAcctNum());
 
         double depositAcctBalance = accountDao.readAcctBalanceById(conn, depositTransfer.getAccountId());
@@ -151,8 +147,8 @@ public class TransactionController {
                 transactionDAO.insertTransfer(conn, depositTransfer, depositAcctBalance) != 1 ||
                 accountDao.updateBalance(conn, withdrawTransfer.getAmount(), withdrawTransfer.getAccountId()) != 1 ||
                 accountDao.updateBalance(conn, depositTransfer.getAmount(), depositTransfer.getAccountId()) != 1) {
-            String depositFailed = "Unable to transfer funds. Please contact your bank representative to resolve.";
-            stage.setScene(new Scene(new ErrorController(stage, depositFailed, this.getView()).getView()));
+            String transferFailed = "Unable to transfer funds. Please contact your bank representative to resolve.";
+            throw new SQLException(transferFailed);
         }
 
     }
@@ -170,8 +166,8 @@ public class TransactionController {
 
         if (transactionDAO.insertTransaction(conn, withdrawal, acctBalance) != 1 ||
                 accountDao.updateBalance(conn, withdrawal.getAmount(), withdrawal.getAccountId()) != 1) {
-            String depositFailed = "Unable to transfer funds. Please contact your bank representative to resolve.";
-            stage.setScene(new Scene(new ErrorController(stage, depositFailed, this.getView()).getView()));
+            String transferFailed = "Unable to transfer funds. Please contact your bank representative to resolve.";
+            throw new SQLException(transferFailed);
         }
 
     }

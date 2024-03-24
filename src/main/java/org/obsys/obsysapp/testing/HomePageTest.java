@@ -24,7 +24,7 @@ public class HomePageTest extends Application {
             stage.setScene(new Scene(new HomeController(stage, testUser).getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e).getView()));
+            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }
