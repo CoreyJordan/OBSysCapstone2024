@@ -96,4 +96,9 @@ public class Transaction {
     public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
+
+    public int getReferenceId() {
+        // TODO query for transactionID
+        return 1;
+    }
 }
