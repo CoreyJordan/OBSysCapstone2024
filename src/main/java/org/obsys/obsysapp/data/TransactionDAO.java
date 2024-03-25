@@ -91,11 +91,10 @@ public class TransactionDAO {
      *
      * @param conn        stable connection to the Obsys DB
      * @param transaction deposit/withdrawal
-     * @param balance     current dollar balance this transaction will update
      * @return number of rows affected
      * @throws SQLException possible database failure
      */
-    public int insertTransaction(Connection conn, Transaction transaction, double balance) throws SQLException {
+    public int insertTransaction(Connection conn, Transaction transaction) throws SQLException {
         try (PreparedStatement statement = conn.prepareStatement("""
                 INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, Payee, Balance)
                 VALUES(?,?,?,?,?,?);
@@ -105,7 +104,7 @@ public class TransactionDAO {
             statement.setDate(3, Date.valueOf(transaction.getDate()));
             statement.setInt(4, transaction.getAccountId());
             statement.setInt(5, transaction.getPayeeId());
-            statement.setDouble(6, balance + transaction.getAmount());
+            statement.setDouble(6, transaction.getBalance());
 
             return statement.executeUpdate();
         }
@@ -117,11 +116,10 @@ public class TransactionDAO {
      *
      * @param conn        stable connection to the Obsys DB
      * @param transaction transfer deposit / transfer withdrawal
-     * @param balance     current dollar balance this transaction will update
      * @return number of rows affected
      * @throws SQLException possible database failure
      */
-    public int insertTransfer(Connection conn, Transaction transaction, double balance) throws SQLException {
+    public int insertTransfer(Connection conn, Transaction transaction) throws SQLException {
         try (PreparedStatement statement = conn.prepareStatement("""
                 INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, TransferTo, Balance)
                 VALUES(?,?,?,?,?,?);
@@ -131,9 +129,33 @@ public class TransactionDAO {
             statement.setDate(3, Date.valueOf(transaction.getDate()));
             statement.setInt(4, transaction.getAccountId());
             statement.setInt(5, transaction.getTransferToAcctId());
-            statement.setDouble(6, balance + transaction.getAmount());
+            statement.setDouble(6, transaction.getBalance());
 
             return statement.executeUpdate();
         }
     }
+
+    /**
+     * Returns the TransactionId of the last transaction inserted into the database. This method MUST be called
+     * immediately after the transaction is inserted to prevent grabbing a later transaction.
+     * @param conn stable Obsys DB connection
+     * @return int TransactionId
+     * @throws SQLException possible database failures
+     */
+    public int readLastTransactionId(Connection conn) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+                SELECT IDENT_CURRENT('AccountActivity') AS TransactionId
+                    """)) {
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("TransactionId");
+            }
+        }
+        return 0;
+    }
 }
+
+
+
+
+

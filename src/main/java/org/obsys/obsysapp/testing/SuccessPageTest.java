@@ -27,7 +27,8 @@ public class SuccessPageTest extends Application {
 
             stage.setScene(new Scene(
                     new SuccessController(stage,
-                            new SuccessModel(sampleDeposit(), sampleChecking())).getView()));
+                            new SuccessModel(sampleWithdrawal(), sampleChecking())).getView()));
+//                            new SuccessModel(sampleDeposit(), sampleChecking())).getView()));
 
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
@@ -42,5 +43,8 @@ public class SuccessPageTest extends Application {
 
     private Transaction sampleDeposit() {
         return new Transaction("DP", 100.00, LocalDate.now(), "ATM 12345", 250.00);
+    }
+    private Transaction sampleWithdrawal(){
+        return new Transaction("WD", -150.00, LocalDate.now(), "Branch 1234", 350.25);
     }
 }

@@ -49,10 +49,10 @@ public class SuccessView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> createLabels() {
-        Label lblFields = obsysLabel("", 530, 260, 200, "right-aligned");
+        Label lblFields = obsysLabel("", 490, 260, 200, "right-aligned");
         lblFields.textProperty().bind(successModel.fieldsProperty());
 
-        Label lblDetails = obsysLabel("", 700, 260, 200, "right-aligned");
+        Label lblDetails = obsysLabel("", 650, 260, 200, "right-aligned");
         lblDetails.textProperty().bind(successModel.detailsProperty());
         return new ArrayList<>(List.of(lblFields, lblDetails)){{
             add(obsysLabel("Success!", 600, 55, "banner"));

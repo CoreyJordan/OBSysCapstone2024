@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Transaction {
     private final String type;
-    private final double amount;
+    private double amount;
     private final LocalDate date;
     private int accountId;
     private int transferToAcctId;
@@ -13,6 +13,7 @@ public class Transaction {
     private double amtToPrincipal;
     private double amtToInterest;
     private double balanceResult;
+    private int referenceId;
 
     public Transaction(String type, double amount, LocalDate date, String payee) {
         this.type = type;
@@ -98,7 +99,18 @@ public class Transaction {
     }
 
     public int getReferenceId() {
-        // TODO query for transactionID
-        return 1;
+        return referenceId;
+    }
+
+    public void setReferenceId(int referenceId) {
+        this.referenceId = referenceId;
+    }
+
+    public void setBalanceResult(double balanceResult) {
+        this.balanceResult = balanceResult;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }
