@@ -9,6 +9,7 @@ public class Account {
     private final double balance;
     private final LocalDate paymentDate;
     private double paymentAmt;
+    private double interestDue;
 
     public Account(String type, int acctNum, String status, double balance, LocalDate paymentDate) {
         this.type = type;
@@ -22,6 +23,12 @@ public class Account {
     public Account(String type, int acctNum, String status, double balance, LocalDate paymentDate, double paymentAmt) {
         this(type, acctNum, status, balance, paymentDate);
         this.paymentAmt = paymentAmt;
+    }
+
+    public Account(String type, int acctNum, String status, double balance, LocalDate dateOpened,
+                   double installment, double interestDue) {
+        this(type, acctNum, status, balance, dateOpened, installment);
+        this.interestDue = interestDue;
     }
 
     public String getType() {
@@ -50,5 +57,9 @@ public class Account {
 
     public void setPaymentAmt(double paymentAmt) {
         this.paymentAmt = paymentAmt;
+    }
+
+    public double getInterestDue() {
+        return interestDue;
     }
 }

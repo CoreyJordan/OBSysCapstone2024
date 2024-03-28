@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import org.obsys.obsysapp.controllers.ErrorController;
 import org.obsys.obsysapp.controllers.TransactionController;
 import org.obsys.obsysapp.domain.Account;
+import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.domain.Payee;
 import org.obsys.obsysapp.models.TransactionModel;
 
@@ -37,7 +38,9 @@ public class TransactionPageTest extends Application {
 
             // Run test
             stage.setScene(new Scene(
-                    new TransactionController(stage, new Region(), testModel).getView()));
+                    new TransactionController(stage, new Region(), testModel, new Login(
+                            "test", "Adm!n1", false, 1111111111
+                    )).getView()));
 
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));

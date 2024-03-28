@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import org.obsys.obsysapp.controllers.ErrorController;
 import org.obsys.obsysapp.controllers.SuccessController;
 import org.obsys.obsysapp.domain.Account;
+import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.domain.Transaction;
 import org.obsys.obsysapp.models.SuccessModel;
 
@@ -27,7 +28,9 @@ public class SuccessPageTest extends Application {
 
             stage.setScene(new Scene(
                     new SuccessController(stage,
-                            new SuccessModel(sampleWithdrawal(), sampleChecking())).getView()));
+                            new SuccessModel(sampleWithdrawal(), sampleChecking()), new Login(
+                                    "test", "Adm!n1", false, 1111111111
+                    )).getView()));
 //                            new SuccessModel(sampleDeposit(), sampleChecking())).getView()));
 
         } catch (Exception e) {

@@ -153,6 +153,24 @@ public class TransactionDAO {
         }
         return 0;
     }
+
+    public int insertPayment(Connection conn, Transaction payment) throws SQLException{
+        try (PreparedStatement statement = conn.prepareStatement("""
+                INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, TransferTo, ToPrincipal, ToInterest, Balance) 
+                VALUES (?,?,?,?,?,?,?,?)
+                    """)) {
+            statement.setString(1, payment.getType());
+            statement.setDouble(2, payment.getAmount());
+            statement.setDate(3, Date.valueOf(payment.getDate()));
+            statement.setInt(4, payment.getAccountId());
+            statement.setInt(5, payment.getTransferToAcctId());
+            statement.setDouble(6, payment.getAmtToPrincipal());
+            statement.setDouble(7, payment.getAmtToInterest());
+            statement.setDouble(8, payment.getBalance());
+
+            return statement.executeUpdate();
+        }
+    }
 }
 
 

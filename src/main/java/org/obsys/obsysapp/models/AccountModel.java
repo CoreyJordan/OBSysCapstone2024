@@ -387,4 +387,12 @@ public class AccountModel {
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
+
+    public double getInterestDue() {
+        return interestDue.get();
+    }
+
+    public DoubleProperty interestDueProperty() {
+        return interestDue;
+    }
 }

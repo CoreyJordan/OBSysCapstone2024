@@ -62,13 +62,13 @@ public class AccountController {
             };
 
             Account account = new Account(acctModel.getType(), acctModel.getAcctNum(), acctModel.getStatus(),
-                    acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment());
+                    acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment(), acctModel.getInterestDue());
 
             TransactionModel transactionModel = new TransactionModel(
                     acctModel.getTransactionType(), account, payees
             );
 
-            stage.setScene(new Scene(new TransactionController(stage, this.getView(), transactionModel).getView()));
+            stage.setScene(new Scene(new TransactionController(stage, this.getView(), transactionModel, login).getView()));
         } catch (Exception e) {
             stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
         }

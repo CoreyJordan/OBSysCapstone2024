@@ -157,4 +157,25 @@ public class AccountDAO {
         }
         return balance;
     }
+
+    /**
+     * Updates the loan account interest due with the current payment information.
+     * @param conn stable database connection
+     * @param amount interest portion of the transaction
+     * @param accountId loan account to which the payment is directed
+     * @return number of rows affected
+     * @throws SQLException possible database failures
+     */
+    public int updateInterestBalance(Connection conn, double amount, int accountId) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+                UPDATE dbo.Loan
+                SET InterestBalance = InterestBalance - ?
+                WHERE AccountId = ?
+                    """)) {
+            statement.setDouble(1, amount);
+            statement.setInt(2, accountId);
+
+            return statement.executeUpdate();
+        }
+    }
 }

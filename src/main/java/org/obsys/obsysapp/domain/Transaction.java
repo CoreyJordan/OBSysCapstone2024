@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class Transaction {
     private final String type;
-    private double amount;
     private final LocalDate date;
+    private double amount;
     private int accountId;
     private int transferToAcctId;
     private int payeeId;
@@ -58,6 +58,10 @@ public class Transaction {
         return amount;
     }
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
     public String getType() {
         return type;
     }
@@ -68,6 +72,10 @@ public class Transaction {
 
     public String getPayee() {
         return payee;
+    }
+
+    public void setPayee(String payee) {
+        this.payee = payee;
     }
 
     public double getAmtToPrincipal() {
@@ -108,9 +116,5 @@ public class Transaction {
 
     public void setBalanceResult(double balanceResult) {
         this.balanceResult = balanceResult;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
     }
 }

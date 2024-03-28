@@ -18,25 +18,42 @@ public class SuccessModel {
 
     public SimpleStringProperty fieldsProperty() {
         return new SimpleStringProperty(switch (transaction.getType()) {
-            case "TF" -> "transfer";
-            case "PY" -> "payment";
+            case "TF" -> "Account:\nType:\nAmount\nTo Account:\nBalance Pending:\nDate\nRef. #:";
+            case "PY" -> "Account:\nType:\nAmount\nBalance:\nDate\nRef. #:";
             default -> "Account:\nType:\nAmount\nPayee:\nBalance Pending:\nDate\nRef. #:";
         });
     }
 
     public SimpleStringProperty detailsProperty() {
-        return new SimpleStringProperty(switch (transaction.getType()) {
-            case "TF" -> "transfer";
-            case "PY" -> "payment";
-            default -> String.format("%s \n%s \n%s \n%s \n%s \n%s \n%s \n\n",
+        if (transaction.getType().equals("PY")) {
+            return new SimpleStringProperty(String.format("%s \n%s \n%s \n%s \n%s \n%s \n\n",
                     getAccountName() + " .." + String.valueOf(account.getAcctNum()).substring(6),
                     formatTransactionType(),
                     String.format("$%,.2f", Math.abs(transaction.getAmount())),
-                    transaction.getPayee().substring(0, 20),
                     String.format("$%,.2f", transaction.getBalance()),
                     transaction.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")),
-                    transaction.getReferenceId());
-        });
+                    transaction.getReferenceId()));
+        }
+
+        return new SimpleStringProperty(String.format("%s \n%s \n%s \n%s \n%s \n%s \n%s \n\n",
+                    getAccountName() + " .." + String.valueOf(account.getAcctNum()).substring(6),
+                    formatTransactionType(),
+                    String.format("$%,.2f", Math.abs(transaction.getAmount())),
+                    truncatePayee(transaction.getPayee()),
+                    String.format("$%,.2f", transaction.getBalance()),
+                    transaction.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")),
+                    transaction.getReferenceId()));
+    }
+
+    private String truncatePayee(String payee) {
+        if (payee.contains("$")) {
+            payee = payee.substring(0, payee.indexOf("$"));
+        }
+
+        if (payee.length() > 20) {
+            return payee.substring(0, 20);
+        }
+        return payee;
     }
 
     private String getAccountName() {
@@ -51,10 +68,13 @@ public class SuccessModel {
     private String formatTransactionType() {
         return switch (transaction.getType()) {
             case "WD" -> "Withdrawal";
-            case "TF" -> "transfer";
-            case "PY" -> "payment";
+            case "TF" -> "Transfer";
+            case "PY" -> "Payment";
             default -> "Deposit";
         };
     }
 
+    public Account getAccount() {
+        return account;
+    }
 }
