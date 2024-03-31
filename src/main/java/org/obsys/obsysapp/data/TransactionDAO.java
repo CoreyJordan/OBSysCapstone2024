@@ -156,7 +156,7 @@ public class TransactionDAO {
 
     public int insertPayment(Connection conn, Transaction payment) throws SQLException{
         try (PreparedStatement statement = conn.prepareStatement("""
-                INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, TransferTo, ToPrincipal, ToInterest, Balance) 
+                INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, TransferTo, ToPrincipal, ToInterest, Balance)
                 VALUES (?,?,?,?,?,?,?,?)
                     """)) {
             statement.setString(1, payment.getType());

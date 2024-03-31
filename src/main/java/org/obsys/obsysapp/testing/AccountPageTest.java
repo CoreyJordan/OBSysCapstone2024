@@ -27,8 +27,8 @@ public class AccountPageTest extends Application {
 
             // Mock data
             Login login = new Login("wwindmilla", "lH5@2S,j_)ybs", false, 1111111159);
-            AccountModel sample = getSampleChecking();
-//            AccountModel sample = getSampleSavings();
+//            AccountModel sample = getSampleChecking();
+            AccountModel sample = getSampleSavings();
 //            AccountModel sample = getSampleLoan();
 
 

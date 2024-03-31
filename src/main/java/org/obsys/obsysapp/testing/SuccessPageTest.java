@@ -1,7 +1,6 @@
 package org.obsys.obsysapp.testing;
 
 import javafx.application.Application;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -20,7 +19,7 @@ public class SuccessPageTest extends Application {
     }
 
     @Override
-    public void start(Stage stage){
+    public void start(Stage stage) {
         try {
             stage.setTitle("OBSys - Online Banking Application");
             stage.getIcons().add(new Image("/obsysIcon.png"));
@@ -29,7 +28,7 @@ public class SuccessPageTest extends Application {
             stage.setScene(new Scene(
                     new SuccessController(stage,
                             new SuccessModel(sampleWithdrawal(), sampleChecking()), new Login(
-                                    "test", "Adm!n1", false, 1111111111
+                            "test", "Adm!n1", false, 1111111111
                     )).getView()));
 //                            new SuccessModel(sampleDeposit(), sampleChecking())).getView()));
 
@@ -47,7 +46,8 @@ public class SuccessPageTest extends Application {
     private Transaction sampleDeposit() {
         return new Transaction("DP", 100.00, LocalDate.now(), "ATM 12345", 250.00);
     }
-    private Transaction sampleWithdrawal(){
+
+    private Transaction sampleWithdrawal() {
         return new Transaction("WD", -150.00, LocalDate.now(), "Branch 1234", 350.25);
     }
 }

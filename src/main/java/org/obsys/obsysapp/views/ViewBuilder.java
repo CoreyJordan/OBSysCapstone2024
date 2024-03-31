@@ -272,7 +272,8 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return comboBox;
     }
 
-    protected ComboBox<String> obsysPayeeCombo(ArrayList<String> choices, double x, double y, double width) {
+
+    protected ComboBox<String> obsysStringCombo(ArrayList<String> choices, double x, double y, double width) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setLayoutX(x);
         comboBox.setLayoutY(y);

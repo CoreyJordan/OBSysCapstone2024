@@ -107,7 +107,7 @@ public class TransactionModel {
             case "TF" -> "TO ACCOUNT";
             case "PY" -> "FROM ACCOUNT";
             default -> "PAYER";
-            });
+        });
     }
 
     public StringProperty transactionPayeeProperty() {

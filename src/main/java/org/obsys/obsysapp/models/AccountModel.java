@@ -285,10 +285,6 @@ public class AccountModel {
         return acctNum;
     }
 
-    public double getInterestRate() {
-        return interestRate.get();
-    }
-
     public void setInterestRate(double interestRate) {
         this.interestRate.set(interestRate);
     }
@@ -325,16 +321,8 @@ public class AccountModel {
         this.loanAmt = loanAmt;
     }
 
-    public int getTerm() {
-        return term;
-    }
-
     public void setTerm(int term) {
         this.term = term;
-    }
-
-    public double getInterestPaid() {
-        return interestPaid;
     }
 
     public void setInterestPaid(double interestPaid) {
@@ -392,7 +380,4 @@ public class AccountModel {
         return interestDue.get();
     }
 
-    public DoubleProperty interestDueProperty() {
-        return interestDue;
-    }
 }

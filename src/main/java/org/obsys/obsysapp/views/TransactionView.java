@@ -144,7 +144,7 @@ public class TransactionView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> createPayeeCombo() {
-        ComboBox<String> cmbPayee = obsysPayeeCombo(transactionModel.getPayeeDescriptions(), 285, 285, 320);
+        ComboBox<String> cmbPayee = obsysStringCombo(transactionModel.getPayeeDescriptions(), 285, 285, 320);
         cmbPayee.setValue(transactionModel.getPayeeDescriptions().getFirst());
         if (cmbPayee.getValue().isEmpty()) {
             cmbPayee.setEditable(true);

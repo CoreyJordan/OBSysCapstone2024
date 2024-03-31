@@ -121,6 +121,12 @@
     -fx-font-size: 32;
 }
 
+.header4 {
+    -fx-font-family: Georgia;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
+
 .hyperlink:armed {
     -fx-border-color: BLACK;
     -fx-text-fill: CYAN;
@@ -149,6 +155,11 @@
 
 .table {
     -fx-font-family: "Courier New";
+}
+
+.table-small {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 14;
 }
 
 .combo-box-base {
