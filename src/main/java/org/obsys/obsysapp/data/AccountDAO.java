@@ -103,7 +103,7 @@ public class AccountDAO {
                 account.setInterestRate(resultSet.getDouble("InterestRate"));
                 account.setLoanAmt(resultSet.getDouble("LoanAmt"));
                 account.setTerm(resultSet.getInt("Term"));
-                account.setInterestPaid(resultSet.getDouble("InterestPaid"));
+                account.setInterestRecieved(resultSet.getDouble("InterestPaid"));
                 account.setInstallment(resultSet.getDouble("PaymentAmt"));
                 account.setInterestDue(resultSet.getDouble("InterestBalance"));
             }
@@ -176,6 +176,30 @@ public class AccountDAO {
             statement.setInt(2, accountId);
 
             return statement.executeUpdate();
+        }
+    }
+
+    /**
+     * Queries the database for the personId number of an account  in order to identify the account holder.
+     * @param conn stable db connection
+     * @param accountNum account number to be referenced
+     * @return person id number
+     * @throws SQLException possible db failures
+     */
+    public int readPersonIdByAccountNum(Connection conn, int accountNum) throws SQLException {
+        int personId = 0;
+        try (PreparedStatement statement = conn.prepareStatement("""
+                SELECT PersonId
+                FROM dbo.Account
+                WHERE AccountId = ?
+                    """)){
+            statement.setInt(1, accountNum);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                personId = resultSet.getInt(1);
+            }
+            return personId;
         }
     }
 }

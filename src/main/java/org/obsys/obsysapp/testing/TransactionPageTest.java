@@ -28,7 +28,7 @@ public class TransactionPageTest extends Application {
             stage.setResizable(false);
 
             // Set type to DP for Deposit, WD for Withdrawal, TR for Transfer, PY for Payment
-            String type = "DP";
+            String type = "PY";
 
             // Test Checking Account
             Account testChecking = new Account("CH", 1234567890, "OP", 1234.23,

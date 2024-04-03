@@ -79,6 +79,29 @@ public class PayeeDAO {
         return payees;
     }
 
+    public ArrayList<Payee> readAccountsByPersonId(Connection conn, int personId) throws SQLException {
+        ArrayList<Payee> payees = new ArrayList<>();
+
+        try (PreparedStatement statement = conn.prepareStatement("""
+                SELECT AccountId, AccountDescription
+                FROM Account A
+                JOIN dbo.AccountType T on T.AcctTypeId = A.AccountType
+                WHERE PersonId = ?
+                """)) {
+            statement.setInt(1, personId);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                payees.add(new Payee(
+                        resultSet.getInt("AccountId"),
+                        resultSet.getString("AccountDescription") + " ..." +
+                                String.valueOf(resultSet.getInt("AccountId")).substring(6)
+                                ));
+            }
+        }
+        return payees;
+    }
+
     /**
      * Inserts a new payee into the database. Will first verify the payee does not already exist. The database does not
      * enforce uniqueness on description, however this initial search will prevent identical, but not similar insertions.

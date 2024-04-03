@@ -99,6 +99,15 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return textField;
     }
 
+    protected TextArea obsysTextArea (double x, double y, double width) {
+        TextArea textField = new TextArea();
+        textField.setLayoutX(x);
+        textField.setLayoutY(y);
+        textField.setPrefWidth(width);
+
+        return textField;
+    }
+
     protected PasswordField obsysPassword(double x, double y) {
         PasswordField passwordField = new PasswordField();
         passwordField.setLayoutX(x);

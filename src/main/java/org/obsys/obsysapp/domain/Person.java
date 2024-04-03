@@ -2,12 +2,14 @@ package org.obsys.obsysapp.domain;
 
 public class Person {
     private int personId;
-    private String lastName;
-    private String firstName;
-    private String streetAddress;
-    private String city;
-    private String state;
-    private String postalCode;
+    private final String lastName;
+    private final String firstName;
+    private final String streetAddress;
+    private final String city;
+    private final String state;
+    private final String postalCode;
+    private String phone;
+    private String email;
     private Login login;
 
     public Person(String lastName, String firstName, String streetAddress, String city, String state, String postalCode) {
@@ -24,6 +26,14 @@ public class Person {
         this(lastName, firstName, streetAddress, city, state, postalCode);
         this.personId = personId;
         this.login = login;
+    }
+
+    public Person(int personId, String lastName, String firstName, String streetAddress, String city, String state,
+                  String postalCode, String phone, String email) {
+        this(lastName, firstName, streetAddress, city, state, postalCode);
+        this.personId = personId;
+        this.phone = phone;
+        this.email = email;
     }
 
     public int getPersonId() {
@@ -56,5 +66,13 @@ public class Person {
 
     public Login getLogin() {
         return login;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

@@ -61,6 +61,21 @@
     -fx-padding: 10, 10, 5, 10;
 }
 
+.text-area {
+    -fx-font-family: Arial;
+    -fx-font-size: 14;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: "#56CEE8";
+    -fx-border-color: BLACK;
+    -fx-padding: 10, 10, 5, 10;
+}
+
+.text-area .content {
+    -fx-background-color: "#56CEE8";
+    -fx-font-size: 14;
+}
+
 .password-field {
     -fx-font-family: Arial;
     -fx-font-size: 18;

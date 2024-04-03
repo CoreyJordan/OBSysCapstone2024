@@ -8,6 +8,7 @@ import javafx.util.Builder;
 import org.obsys.obsysapp.data.LoginDAO;
 import org.obsys.obsysapp.data.ObsysDbConnection;
 import org.obsys.obsysapp.domain.Login;
+import org.obsys.obsysapp.models.AdminHomeModel;
 import org.obsys.obsysapp.models.LoginModel;
 import org.obsys.obsysapp.utils.LoginValidator;
 import org.obsys.obsysapp.views.LoginView;
@@ -31,7 +32,8 @@ public class LoginController {
 
     private void navigateToHomePage(Login checkedLogin) {
         if (checkedLogin.isAdmin()) {
-            // TODO open Admin Home Page
+            AdminHomeModel adminHomeModel = new AdminHomeModel(loginModel.getUsername());
+            stage.setScene(new Scene(new AdminHomeController(stage, adminHomeModel, checkedLogin).getView()));
 
             System.out.println("Loading Admin Home");
         } else {

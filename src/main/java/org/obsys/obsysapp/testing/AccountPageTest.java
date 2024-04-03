@@ -50,7 +50,7 @@ public class AccountPageTest extends Application {
         sample.setHistory(getSampleTransactions());
         sample.setLoanAmt(17265.54);
         sample.setTerm(240);
-        sample.setInterestPaid(4002.21);
+        sample.setInterestRecieved(4002.21);
         sample.setInstallment(375.45);
         sample.setInterestDue(45.54);
         return sample;
@@ -75,7 +75,7 @@ public class AccountPageTest extends Application {
         sample.setStatus("OP");
         sample.setInterestRate(.0025);
         sample.setHistory(getSampleTransactions());
-        sample.setInterestPaid(524.25);
+        sample.setInterestRecieved(524.25);
         return sample;
     }
 

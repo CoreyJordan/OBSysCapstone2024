@@ -23,11 +23,15 @@ public class AccountModel {
     private String status = "";
     private double loanAmt = -1;
     private int term = -1;
-    private double interestPaid = -1;
+    private double interestRecieved = -1;
     private double installment = -1;
     private LocalDate selectedMonth;
     private ArrayList<Transaction> history = new ArrayList<>();
     private String transactionType;
+
+    public AccountModel() {
+        acctNum = 1000000000;
+    }
 
     public AccountModel(int acctNum) {
         this.acctNum = acctNum;
@@ -114,6 +118,16 @@ public class AccountModel {
         return new SimpleStringProperty(String.format("$%,.2f", balance - transactionsTotal));
     }
 
+    public String getPostedBalance() {
+        double transactionsTotal = 0;
+        for (Transaction t : history) {
+            if (t.getDate().isAfter(LocalDate.now().minusWeeks(1))) {
+                transactionsTotal += t.getAmount();
+            }
+        }
+        return String.format("$%,.2f", balance - transactionsTotal);
+    }
+
     public StringProperty pendingDebitsProperty() {
         double transactionsTotal = 0;
         for (Transaction t : history) {
@@ -123,6 +137,17 @@ public class AccountModel {
             }
         }
         return new SimpleStringProperty(String.format("$%,.2f", transactionsTotal));
+    }
+
+    public String getPendingDebits() {
+        double transactionsTotal = 0;
+        for (Transaction t : history) {
+            if (t.getDate().isAfter(LocalDate.now().minusWeeks(1)) &&
+                    !t.getType().equals("DP")) {
+                transactionsTotal += t.getAmount();
+            }
+        }
+        return String.format("$%,.2f", transactionsTotal);
     }
 
     public StringProperty pendingCreditsProperty() {
@@ -135,6 +160,18 @@ public class AccountModel {
 
         }
         return new SimpleStringProperty(String.format("$%,.2f", transactionsTotal));
+    }
+
+    public String getPendingCredits() {
+        double transactionsTotal = 0;
+        for (Transaction t : history) {
+            if (t.getDate().isAfter(LocalDate.now().minusWeeks(1)) &&
+                    t.getType().equals("DP")) {
+                transactionsTotal += t.getAmount();
+            }
+
+        }
+        return String.format("$%,.2f", transactionsTotal);
     }
 
     /**
@@ -266,7 +303,7 @@ public class AccountModel {
     }
 
     public StringProperty paidInterestProperty() {
-        return new SimpleStringProperty(String.format("$%,.2f", interestPaid));
+        return new SimpleStringProperty(String.format("$%,.2f", interestRecieved));
     }
 
     public StringProperty paidPrincipalProperty() {
@@ -283,14 +320,6 @@ public class AccountModel {
 
     public int getAcctNum() {
         return acctNum;
-    }
-
-    public void setInterestRate(double interestRate) {
-        this.interestRate.set(interestRate);
-    }
-
-    public void setInterestDue(double interestDue) {
-        this.interestDue.set(interestDue);
     }
 
     public double getBalance() {
@@ -315,18 +344,6 @@ public class AccountModel {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public void setLoanAmt(double loanAmt) {
-        this.loanAmt = loanAmt;
-    }
-
-    public void setTerm(int term) {
-        this.term = term;
-    }
-
-    public void setInterestPaid(double interestPaid) {
-        this.interestPaid = interestPaid;
     }
 
     public double getInstallment() {
@@ -379,5 +396,62 @@ public class AccountModel {
     public double getInterestDue() {
         return interestDue.get();
     }
+
+    public void setInterestDue(double interestDue) {
+        this.interestDue.set(interestDue);
+    }
+
+    public LocalDate getMaturityDate() {
+        return dateOpened.plusMonths(term);
+    }
+
+    public double getInterestRate() {
+        return interestRate.get();
+    }
+
+    public void setInterestRate(double interestRate) {
+        this.interestRate.set(interestRate);
+    }
+
+    public int getTerm() {
+        return term;
+    }
+
+    public void setTerm(int term) {
+        this.term = term;
+    }
+
+    public double getLoanAmt() {
+        return loanAmt;
+    }
+
+    public void setLoanAmt(double loanAmt) {
+        this.loanAmt = loanAmt;
+    }
+
+    public double getInterestPaid() {
+        double total = 0;
+        for (Transaction t : history) {
+            total += t.getAmtToInterest();
+        }
+        return total;
+    }
+
+    public double getPrincipalPaid() {
+        double total = 0;
+        for (Transaction t : history) {
+            total += t.getAmtToPrincipal();
+        }
+        return total;
+    }
+
+    public double getInterestReceived() {
+        return interestRecieved;
+    }
+
+    public void setInterestRecieved(double interestRecieved) {
+        this.interestRecieved = interestRecieved;
+    }
+
 
 }
