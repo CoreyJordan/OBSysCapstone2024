@@ -328,9 +328,9 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> createAccountCombo() {
-        ComboBox<String> cmbAccount = obsysStringCombo(new ArrayList<>(), 232, 207, 218);
+        ComboBox<String> cmbAccount = obsysStringCombo(new ArrayList<>(), 230, 206, 218);
         cmbAccount.setItems(adminModel.getAcctDescriptions());
-        Label lblAccount = obsysLabel("ACCOUNT", 252, 209, "hint");
+        Label lblAccount = obsysLabel("ACCOUNT", 250, 208, "hint");
         cmbAccount.setOnAction(evt -> {
             adminModel.setSelectedAccount(cmbAccount.getValue());
             accountSelectionHandler.run();
