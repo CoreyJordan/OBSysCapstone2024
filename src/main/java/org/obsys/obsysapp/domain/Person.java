@@ -12,6 +12,18 @@ public class Person {
     private String email;
     private Login login;
 
+    public Person() {
+        personId = 0;
+        firstName = "";
+        lastName = "";
+        state = "";
+        streetAddress = "";
+        city = "";
+        postalCode = "";
+        phone = "";
+        email = "";
+    }
+
     public Person(String lastName, String firstName, String streetAddress, String city, String state, String postalCode) {
         this.lastName = lastName;
         this.firstName = firstName;

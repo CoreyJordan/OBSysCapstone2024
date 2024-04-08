@@ -152,6 +152,10 @@
 
 }
 
+.combo-box .text-input{
+    -fx-alignment: center;
+}
+
 .date-picker {
     -fx-background-radius: 10;
 

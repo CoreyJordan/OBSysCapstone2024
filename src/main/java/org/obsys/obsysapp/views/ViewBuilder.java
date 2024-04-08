@@ -14,11 +14,13 @@ import java.util.Objects;
 public class ViewBuilder implements Builder<AnchorPane> {
 
     /**
-     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Creates a label node displaying a message at an x,y coordinate in the
+     * window.
      * Normal label css styles are applied.
      * @param contents The message to be displayed in the label.
      * @param x The horizontal position of the upper left corner of the label.
-     * @param y The vertical axis position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the
+     *          label.
      * @return A string label at x,y.
      */
     protected Label obsysLabel(String contents, double x, double y) {
@@ -30,16 +32,19 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
     /**
-     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Creates a label node displaying a message at an x,y coordinate in the
+     * window.
      * Sets a fixed field width for the label.
      * Normal label css styles are applied.
      * @param contents The message to be displayed in the label.
      * @param x The horizontal position of the upper left corner of the label.
-     * @param y The vertical axis position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the
+     *          label.
      * @param width The horizontal field width to contain the text.
      * @return A string label at x,y.
      */
-    protected Label obsysLabel(String contents, double x, double y, double width) {
+    protected Label obsysLabel(
+            String contents, double x, double y, double width) {
         Label label = obsysLabel(contents, x, y);
         label.setPrefWidth(width);
 
@@ -47,15 +52,18 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
     /**
-     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Creates a label node displaying a message at an x,y coordinate in the
+     * window.
      * Css styles are applied according to the parameter.
      * @param contents The message to be displayed in the label.
      * @param x The horizontal position of the upper left corner of the label.
-     * @param y The vertical axis position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the
+     *          label.
      * @param css The style class name assigned to the label.
      * @return A string label at x,y.
      */
-    protected Label obsysLabel(String contents, double x, double y, String css) {
+    protected Label obsysLabel(
+            String contents, double x, double y, String css) {
         Label label = obsysLabel(contents, x, y);
         label.getStyleClass().add(css);
 
@@ -63,24 +71,28 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
     /**
-     * Creates a label node displaying a message at an x,y coordinate in the window.
+     * Creates a label node displaying a message at an x,y coordinate in the
+     * window.
      * Sets a fixed field width for the label.
      * Css styles are applied according to the parameter.
      * @param contents The message to be displayed in the label.
      * @param x The horizontal position of the upper left corner of the label.
-     * @param y The vertical axis position of the upper left corner of the label.
+     * @param y The vertical axis position of the upper left corner of the
+     *          label.
      * @param width The horizontal field width to contain the text.
      * @param css The style class name assigned to the label.
      * @return A string label at x,y.
      */
-    protected Label obsysLabel(String contents, double x, double y, double width, String css) {
+    protected Label obsysLabel(
+            String contents, double x, double y, double width, String css) {
         Label label = obsysLabel(contents, x, y, width);
         label.getStyleClass().add(css);
 
         return label;
     }
 
-    protected ImageView obsysImage(String source, double x, double y, double width, double height) {
+    protected ImageView obsysImage(
+            String source, double x, double y, double width, double height) {
         ImageView imageView = new ImageView(source);
         imageView.setLayoutX(x);
         imageView.setLayoutY(y);
@@ -117,7 +129,8 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return passwordField;
     }
 
-    protected void showPassword(PasswordField passwordField, TextField textfield) {
+    protected void showPassword(PasswordField passwordField,
+                                TextField textfield) {
         passwordField.setDisable(true);
         passwordField.setVisible(false);
         textfield.setText(passwordField.getText());
@@ -125,7 +138,8 @@ public class ViewBuilder implements Builder<AnchorPane> {
         textfield.setDisable(true);
     }
 
-    protected void hidePassword(PasswordField passwordField, TextField textField) {
+    protected void hidePassword(PasswordField passwordField,
+                                TextField textField) {
         passwordField.setDisable(false);
         passwordField.setVisible(true);
         textField.setText("");
@@ -156,14 +170,16 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
     /**
-     * Creates a button displaying text at a specified location with a specified width.
+     * Creates a button displaying text at a specified location with a specified
+     *  width.
      * @param content The text to be displayed in the button.
      * @param x The horizontal position of the upper left corner of the button.
      * @param y The vertical position of the upper left corner of the button.
      * @param width The horizontal size of the button, regardless of content.
      * @return The created button.
      */
-    protected Button obsysButton(String content, double x, double y, double width) {
+    protected Button obsysButton(String content,
+                                 double x, double y, double width) {
         Button button = obsysButton(content, x, y);
         button.setPrefWidth(width);
 
@@ -177,7 +193,8 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return button;
     }
 
-    protected Button obsysButton(Image content, double x, double y, String css) {
+    protected Button obsysButton(Image content, double x, double y,
+                                 String css) {
         Button button = obsysButton(content, x, y);
         button.getStyleClass().add(css);
 
@@ -185,16 +202,18 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
     /**
-     * Creates a button with both textual content and graphical content. The default setting is that the graphic is
-     * displayed left of the text.
+     * Creates a button with both textual content and graphical content. The
+     * default setting is that the graphic is displayed left of the text.
      * @param content The text to be displayed in the button.
      * @param x The horizontal position of the upper left corner of the button.
      * @param y The vertical position of the upper left corner of the button.
      * @param width The preferred width of the button, regardless of content.
      * @param graphic The icon or image to be displayed in the button.
-     * @return A graphical/textual button at a specified location within the window.
+     * @return A graphical/textual button at a specified location within the
+     * window.
      */
-    protected Button obsysButton(String content, double x, double y, double width, Image graphic) {
+    protected Button obsysButton(
+            String content, double x, double y, double width, Image graphic) {
         Button button = obsysButton(content, x, y, width);
         ImageView icon = new ImageView(graphic);
         icon.setFitHeight(25);
@@ -206,14 +225,16 @@ public class ViewBuilder implements Builder<AnchorPane> {
 
 
     /**
-     * Creates a rounded node panel background for app controls. CSS styling is default set to 'panel'.
+     * Creates a rounded node panel background for app controls. CSS styling is
+     * default set to 'panel'.
      * @param x the horizontal position of the upper left corner
      * @param y the vertical position of the upper left corner
      * @param width width of the panel
      * @param height height of the panel
      * @return a formatted and positioned rectangle
      */
-    protected Rectangle obsysPanel(double x, double y, double width, double height) {
+    protected Rectangle obsysPanel(
+            double x, double y, double width, double height) {
         Rectangle panel = new Rectangle(x, y, width, height);
         panel.getStyleClass().add("panel");
 
@@ -236,14 +257,16 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
     /**
-     * Creates a hyperlink at a specified location within the window with specific css class.
+     * Creates a hyperlink at a specified location within the window with
+     * specific css class.
      * @param content The text to be displayed in the link.
      * @param x The horizontal position of the upper left corner of the link.
      * @param y The vertical position of the upper left corner of the link.
      * @param css The style class to be applied to the link.
      * @return A hyperlink at a specified location within the window.
      */
-    protected Hyperlink obsysLink(String content, double x, double y, String css) {
+    protected Hyperlink obsysLink(
+            String content, double x, double y, String css) {
 
         Hyperlink link = obsysLink(content, x, y);
         link.getStyleClass().add(css);
@@ -255,11 +278,14 @@ public class ViewBuilder implements Builder<AnchorPane> {
     public AnchorPane build() {
         AnchorPane window = new AnchorPane();
         window.getStylesheets().add(
-                Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
+                Objects.requireNonNull(
+                        getClass().getResource(
+                                "/css/application.css")).toExternalForm());
         return window;
     }
 
-    protected ScrollPane obsysScrollPane(double x, double y, double width, double height) {
+    protected ScrollPane obsysScrollPane(
+            double x, double y, double width, double height) {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setLayoutX(x);
         scrollPane.setLayoutY(y);
@@ -271,7 +297,8 @@ public class ViewBuilder implements Builder<AnchorPane> {
         return scrollPane;
     }
 
-    protected ComboBox<LocalDate> obsysDateCombo(ArrayList<LocalDate> choices, double x, double y, double width) {
+    protected ComboBox<LocalDate> obsysDateCombo(
+            ArrayList<LocalDate> choices, double x, double y, double width) {
         ComboBox<LocalDate> comboBox = new ComboBox<>();
         comboBox.setLayoutX(x);
         comboBox.setLayoutY(y);
@@ -282,7 +309,8 @@ public class ViewBuilder implements Builder<AnchorPane> {
     }
 
 
-    protected ComboBox<String> obsysStringCombo(ArrayList<String> choices, double x, double y, double width) {
+    protected ComboBox<String> obsysStringCombo(
+            ArrayList<String> choices, double x, double y, double width) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setLayoutX(x);
         comboBox.setLayoutY(y);

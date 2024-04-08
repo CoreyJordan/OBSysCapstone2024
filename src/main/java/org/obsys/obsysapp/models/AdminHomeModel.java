@@ -1,5 +1,7 @@
 package org.obsys.obsysapp.models;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -13,25 +15,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminHomeModel {
-    private StringProperty username;
-    private LocalDate currentDate = LocalDate.now();
-    private StringProperty accountNumber = new SimpleStringProperty("");
-    private StringProperty searchFirstName = new SimpleStringProperty("");
-    private StringProperty searchLastName = new SimpleStringProperty("");
-    private StringProperty foundFirstName = new SimpleStringProperty("");
-    private StringProperty foundLastName = new SimpleStringProperty("");
-    private StringProperty searchError = new SimpleStringProperty("");
-    private StringProperty accountStatus = new SimpleStringProperty("");
-    private StringProperty address = new SimpleStringProperty("");
-    private StringProperty phone = new SimpleStringProperty("");
-    private StringProperty email = new SimpleStringProperty("");
-    private final ArrayList<StringProperty> textFields = new ArrayList<>(List.of(accountNumber, searchFirstName,
-            searchLastName, foundFirstName, foundLastName, searchError, accountStatus, address, phone, email));
+    private final StringProperty username;
+    private final LocalDate currentDate = LocalDate.now();
+    private final StringProperty accountNumber = new SimpleStringProperty("");
+    private final StringProperty searchFirstName = new SimpleStringProperty("");
+    private final StringProperty searchLastName = new SimpleStringProperty("");
+    private final StringProperty foundFirstName = new SimpleStringProperty("");
+    private final StringProperty foundLastName = new SimpleStringProperty("");
+    private final StringProperty searchError = new SimpleStringProperty("");
+    private final StringProperty accountStatus = new SimpleStringProperty("");
+    private final StringProperty address = new SimpleStringProperty("");
+    private final StringProperty phone = new SimpleStringProperty("");
+    private final StringProperty email = new SimpleStringProperty("");
+    private final ArrayList<StringProperty> textFields = new ArrayList<>(
+            List.of(accountNumber, searchFirstName, searchLastName,
+                    foundFirstName, foundLastName, searchError, accountStatus,
+                    address, phone, email));
+    private final ObservableList<String> acctDescriptions =
+            FXCollections.observableArrayList();
+    private final BooleanProperty actionPanelDisabled =
+            new SimpleBooleanProperty(true);
     private ArrayList<Payee> accounts = new ArrayList<>();
-    private final ObservableList<String> acctDescriptions = FXCollections.observableArrayList();
     private int selectedAccount = 0;
     private AccountModel accountModel = new AccountModel();
-    private int foundPersonId;
+    private int foundPersonId = 0;
 
 
     public AdminHomeModel(String username) {
@@ -40,7 +47,8 @@ public class AdminHomeModel {
 
 
     public StringProperty dateTimeProperty() {
-        return new SimpleStringProperty(currentDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+        return new SimpleStringProperty(
+                currentDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
     }
 
     public String getUsername() {
@@ -153,7 +161,10 @@ public class AdminHomeModel {
         setPhone(customer.getPhone());
         setEmail(customer.getEmail());
         setAddress(String.format("%s\n%s, %s\n%s",
-                customer.getStreetAddress(), customer.getCity(), customer.getState(), customer.getPostalCode()));
+                customer.getStreetAddress(),
+                customer.getCity(),
+                customer.getState(),
+                customer.getPostalCode()));
         foundPersonId = customer.getPersonId();
     }
 
@@ -162,6 +173,7 @@ public class AdminHomeModel {
     }
 
     public void getAccountDescriptions() {
+        acctDescriptions.clear();
         for (Payee p : accounts) {
             acctDescriptions.add(p.getDescription());
         }
@@ -175,7 +187,7 @@ public class AdminHomeModel {
         acctDescriptions.clear();
     }
 
-    public void setSelectedAccount(String selectedDescription) {
+    public void setSelectedAccountDescription(String selectedDescription) {
         for (Payee p : accounts) {
             if (p.getDescription().equals(selectedDescription)) {
                 selectedAccount = p.getPayeeNumber();
@@ -187,11 +199,23 @@ public class AdminHomeModel {
         return selectedAccount;
     }
 
+    public void setSelectedAccount(int selectedAccount) {
+        this.selectedAccount = selectedAccount;
+    }
+
     public AccountModel getAccountModel() {
         return accountModel;
     }
 
     public void setAccountModel(AccountModel accountModel) {
         this.accountModel = accountModel;
+    }
+
+    public BooleanProperty actionPanelDisabledProperty() {
+        return actionPanelDisabled;
+    }
+
+    public void setActionPanelDisabled(boolean actionPanelDisabled) {
+        this.actionPanelDisabled.set(actionPanelDisabled);
     }
 }

@@ -36,15 +36,21 @@ public class HomeController {
             accounts = acctDao.readAccountsByPersonId(conn, user.getPersonId());
             for (Account acct : accounts) {
                 if (acct.getType().equals("LN")) {
-                    acct.setPaymentAmt(acctDao.readPaymentDateByAcctNum(conn, acct.getAcctNum()));
+                    acct.setPaymentAmt(acctDao.readPaymentDateByAcctNum(
+                            conn, acct.getAcctNum()));
                 }
             }
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
+            ErrorController eCtrl = new ErrorController(stage, e.getMessage());
+            stage.setScene(new Scene(eCtrl.getView()));
         }
 
         accountsModel = new AccountsModel(accounts);
-        viewBuilder = new HomeView(user, accountsModel, this::logout, this::navigate);
+        viewBuilder = new HomeView(
+                user,
+                accountsModel,
+                this::logout,
+                this::navigate);
     }
 
     private void logout() {
@@ -60,11 +66,24 @@ public class HomeController {
         try (Connection conn = ObsysDbConnection.openDBConn()) {
             int acctNum = accountsModel.getTargetAccountNumber();
 
-            AccountModel accountModel = acctDao.readFullAccountDetails(conn, acctNum);
-            accountModel.setHistory(transactDao.readTransactionHistory(conn, acctNum));
-            stage.setScene(new Scene(new AccountController(stage, accountModel, user).getView()));
+            AccountModel accountModel = acctDao.readFullAccountDetails(
+                    conn, acctNum);
+            accountModel.setHistory(transactDao.readTransactionHistory(
+                    conn, acctNum));
+
+            AccountController acctCtrl = new AccountController(
+                    stage,
+                    accountModel,
+                    user
+            );
+            stage.setScene(new Scene(acctCtrl.getView()));
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
 
     }

@@ -80,4 +80,36 @@ public class PersonDAO {
             return new Person(personId, lastName, firstName, address, city, state, postal, phone, email);
         }
     }
+
+    /**
+     * Adds a new person to the Obsys database. Upon successful insertion, it will return a freshly generated personID
+     * of the new insertion.
+     * @param conn stable Obsys DB connection
+     * @param person object containing customer info, null for username and password
+     * @return the personID of the newly created customer
+     * @throws SQLException possible db failures
+     */
+    public int insertNewPerson(Connection conn, Person person) throws SQLException {
+        int personId = 0;
+        try (PreparedStatement statement = conn.prepareStatement("""
+                INSERT INTO dbo.Person
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, NULL, NULL);
+                SELECT IDENT_CURRENT('Person') AS PersonId;
+                    """)) {
+            statement.setString(1, person.getLastName());
+            statement.setString(2, person.getFirstName());
+            statement.setString(3, person.getStreetAddress());
+            statement.setString(4, person.getCity());
+            statement.setString(5, person.getState());
+            statement.setString(6, person.getPostalCode());
+            statement.setString(7, person.getPhone());
+            statement.setString(8, person.getEmail());
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                personId = resultSet.getInt("PersonId");
+            }
+            return personId;
+        }
+    }
 }

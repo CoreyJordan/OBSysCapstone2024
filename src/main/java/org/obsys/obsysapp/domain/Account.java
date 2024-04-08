@@ -4,14 +4,21 @@ import java.time.LocalDate;
 
 public class Account {
     private final String type;
-    private final int acctNum;
+    private int acctNum;
     private final String status;
     private final double balance;
     private final LocalDate paymentDate;
     private double paymentAmt;
     private double interestDue;
+    private int term;
+    private int personId;
+    private double intRate;
 
-    public Account(String type, int acctNum, String status, double balance, LocalDate paymentDate) {
+    public Account(String type,
+                   int acctNum,
+                   String status,
+                   double balance,
+                   LocalDate paymentDate) {
         this.type = type;
         this.acctNum = acctNum;
         this.status = status;
@@ -20,13 +27,23 @@ public class Account {
         paymentAmt = -1;
     }
 
-    public Account(String type, int acctNum, String status, double balance, LocalDate paymentDate, double paymentAmt) {
+    public Account(String type,
+                   int acctNum,
+                   String status,
+                   double balance,
+                   LocalDate paymentDate,
+                   double paymentAmt) {
         this(type, acctNum, status, balance, paymentDate);
         this.paymentAmt = paymentAmt;
     }
 
-    public Account(String type, int acctNum, String status, double balance, LocalDate dateOpened,
-                   double installment, double interestDue) {
+    public Account(String type,
+                   int acctNum,
+                   String status,
+                   double balance,
+                   LocalDate dateOpened,
+                   double installment,
+                   double interestDue) {
         this(type, acctNum, status, balance, dateOpened, installment);
         this.interestDue = interestDue;
     }
@@ -61,5 +78,33 @@ public class Account {
 
     public double getInterestDue() {
         return interestDue;
+    }
+
+    public int getTerm() {
+        return term;
+    }
+
+    public void setTerm(int term) {
+        this.term = term;
+    }
+
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
+    }
+
+    public double getIntRate() {
+        return intRate;
+    }
+
+    public void setIntRate(double intRate) {
+        this.intRate = intRate;
+    }
+
+    public void setAcctNum(int acctNum) {
+        this.acctNum = acctNum;
     }
 }

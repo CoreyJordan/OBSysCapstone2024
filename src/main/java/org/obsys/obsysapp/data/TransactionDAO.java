@@ -8,16 +8,18 @@ import java.util.ArrayList;
 
 public class TransactionDAO {
     /**
-     * Returns the complete transaction history of an account. For older accounts, this may return excessive results.
-     * Payees are converted into descriptions for meaningful user data. Transfer/Payment accounts will need to be
-     * formatted at the class level.
+     * Returns the complete transaction history of an account. For older
+     * accounts, this may return excessive results. Payees are converted into
+     * descriptions for meaningful user data. Transfer/Payment accounts will
+     * need to be formatted at the class level.
      *
      * @param conn    stable connection to the Obsys DB
      * @param acctNum target account
      * @return all transactions associated with the account
      * @throws SQLException possible database failure
      */
-    public ArrayList<Transaction> readTransactionHistory(Connection conn, int acctNum) throws SQLException {
+    public ArrayList<Transaction> readTransactionHistory(
+            Connection conn, int acctNum) throws SQLException {
         ArrayList<Transaction> history = new ArrayList<>();
 
         try (PreparedStatement statement = conn.prepareStatement("""
@@ -46,8 +48,9 @@ public class TransactionDAO {
     }
 
     /**
-     * Returns a single month transaction history of an account. Payees are converted into descriptions for meaningful
-     * user data. Transfer/Payment accounts will need to be formatted at the class level.
+     * Returns a single month transaction history of an account. Payees are
+     * converted into descriptions for meaningful user data. Transfer/Payment
+     * accounts will need to be formatted at the class level.
      *
      * @param conn    stable connection to the Obsys DB
      * @param date    target month
@@ -55,7 +58,8 @@ public class TransactionDAO {
      * @return all transactions associated with the account
      * @throws SQLException possible database failure
      */
-    public ArrayList<Transaction> readTransactionsByMonth(Connection conn, LocalDate date, int acctNum) throws SQLException {
+    public ArrayList<Transaction> readTransactionsByMonth(
+            Connection conn, LocalDate date, int acctNum) throws SQLException {
         ArrayList<Transaction> transactions = new ArrayList<>();
 
         try (PreparedStatement statement = conn.prepareStatement("""
@@ -87,16 +91,19 @@ public class TransactionDAO {
     }
 
     /**
-     * Inserts a deposit or withdrawal transaction into the DB. Needs to be run alongside an account balance update.
+     * Inserts a deposit or withdrawal transaction into the DB. Needs to be run
+     * alongside an account balance update.
      *
      * @param conn        stable connection to the Obsys DB
      * @param transaction deposit/withdrawal
      * @return number of rows affected
      * @throws SQLException possible database failure
      */
-    public int insertTransaction(Connection conn, Transaction transaction) throws SQLException {
+    public int insertTransaction(
+            Connection conn, Transaction transaction) throws SQLException {
         try (PreparedStatement statement = conn.prepareStatement("""
-                INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, Payee, Balance)
+                INSERT INTO AccountActivity (TransactionType, TransactionAmt,
+                    TransactionDate, AccountId, Payee, Balance)
                 VALUES(?,?,?,?,?,?);
                     """)) {
             statement.setString(1, transaction.getType());
@@ -111,17 +118,21 @@ public class TransactionDAO {
     }
 
     /**
-     * Inserts a transfer transaction into the DB. Two transfers queries are to be run in conjunction. One to deposit
-     * into the target account and one to withdraw from the source account. Needs to be run alongside an account balance update.
+     * Inserts a transfer transaction into the DB. Two transfers queries are to
+     * be run in conjunction. One to deposit into the target account and one to
+     * withdraw from the source account. Needs to be run alongside an account
+     * balance update.
      *
      * @param conn        stable connection to the Obsys DB
      * @param transaction transfer deposit / transfer withdrawal
      * @return number of rows affected
      * @throws SQLException possible database failure
      */
-    public int insertTransfer(Connection conn, Transaction transaction) throws SQLException {
+    public int insertTransfer(
+            Connection conn, Transaction transaction) throws SQLException {
         try (PreparedStatement statement = conn.prepareStatement("""
-                INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, TransferTo, Balance)
+                INSERT INTO AccountActivity (TransactionType, TransactionAmt,
+                    TransactionDate, AccountId, TransferTo, Balance)
                 VALUES(?,?,?,?,?,?);
                     """)) {
             statement.setString(1, transaction.getType());
@@ -136,8 +147,9 @@ public class TransactionDAO {
     }
 
     /**
-     * Returns the TransactionId of the last transaction inserted into the database. This method MUST be called
-     * immediately after the transaction is inserted to prevent grabbing a later transaction.
+     * Returns the TransactionId of the last transaction inserted into the
+     * database. This method MUST be called immediately after the transaction is
+     *  inserted to prevent grabbing a later transaction.
      * @param conn stable Obsys DB connection
      * @return int TransactionId
      * @throws SQLException possible database failures
@@ -154,9 +166,12 @@ public class TransactionDAO {
         return 0;
     }
 
-    public int insertPayment(Connection conn, Transaction payment) throws SQLException{
+    public int insertPayment(
+            Connection conn, Transaction payment) throws SQLException{
         try (PreparedStatement statement = conn.prepareStatement("""
-                INSERT INTO AccountActivity (TransactionType, TransactionAmt, TransactionDate, AccountId, TransferTo, ToPrincipal, ToInterest, Balance)
+                INSERT INTO AccountActivity (TransactionType, TransactionAmt,
+                    TransactionDate, AccountId, TransferTo, ToPrincipal,
+                    ToInterest, Balance)
                 VALUES (?,?,?,?,?,?,?,?)
                     """)) {
             statement.setString(1, payment.getType());

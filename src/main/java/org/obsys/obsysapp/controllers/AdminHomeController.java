@@ -11,6 +11,7 @@ import org.obsys.obsysapp.domain.Payee;
 import org.obsys.obsysapp.domain.Person;
 import org.obsys.obsysapp.models.AccountModel;
 import org.obsys.obsysapp.models.AdminHomeModel;
+import org.obsys.obsysapp.models.NewAccountModel;
 import org.obsys.obsysapp.models.TransactionModel;
 import org.obsys.obsysapp.utils.AccountValidator;
 import org.obsys.obsysapp.views.AdminHomeView;
@@ -26,13 +27,23 @@ public class AdminHomeController {
     private AdminHomeModel adminModel;
     private AccountModel accountModel;
     private final Login login;
+    private Person customer;
 
-    public AdminHomeController(Stage stage, AdminHomeModel adminModel, Login login) {
+    public AdminHomeController(Stage stage,
+                               AdminHomeModel adminModel,
+                               Login login) {
         this.stage = stage;
         this.adminModel = adminModel;
         this.login = login;
-        viewBuilder = new AdminHomeView(adminModel, this::logout, this::clearForm, this::selectAccount,
-                this::searchByName, this::openAccount, this::closeAccount, this::goToTransactions, this::searchByAcct);
+        viewBuilder = new AdminHomeView(adminModel,
+                this::logout,
+                this::clearForm,
+                this::selectAccount,
+                this::searchByName,
+                this::openAccount,
+                this::closeAccount,
+                this::goToTransactions,
+                this::searchByAcct);
     }
 
     public Region getView() {
@@ -51,6 +62,8 @@ public class AdminHomeController {
         }
         adminModel.setSearchError("");
         adminModel.clearAcctDescriptions();
+        adminModel.setSelectedAccount(0);
+        adminModel.setActionPanelDisabled(true);
     }
 
     private void selectAccount() {
@@ -59,6 +72,9 @@ public class AdminHomeController {
             adminModel.setAccountModel(accountModel);
 
             accountModel.setHistory(new TransactionDAO().readTransactionHistory(conn, adminModel.getSelectedAccount()));
+            if (accountModel.getAcctNum() != 0) {
+                adminModel.setActionPanelDisabled(false);
+            }
         } catch (SQLException e) {
             stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
         }
@@ -68,7 +84,8 @@ public class AdminHomeController {
         adminModel.setAccountNumber("");
         String firstName = adminModel.getSearchFirstName();
         String lastName = adminModel.getSearchLastName();
-        AccountValidator nameValidator = new AccountValidator("1111111111", firstName, lastName);
+        AccountValidator nameValidator = new AccountValidator(
+                "1111111111", firstName, lastName);
 
         if (!nameValidator.okToSearch()) {
             adminModel.setSearchError("Invalid name entry");
@@ -77,7 +94,8 @@ public class AdminHomeController {
 
         adminModel.setSearchError("");
         try (Connection conn = ObsysDbConnection.openDBConn()) {
-            Person customer = new PersonDAO().readPersonByFullName(conn, firstName, lastName);
+            customer = new PersonDAO().readPersonByFullName(
+                    conn, firstName, lastName);
 
             if (customer.getPhone().isEmpty()) {
                 adminModel.setSearchError("Person not found");
@@ -85,10 +103,16 @@ public class AdminHomeController {
             }
 
             adminModel.setPerson(customer);
-            adminModel.setAccounts(new PayeeDAO().readAccountsByPersonId(conn, customer.getPersonId()));
+            adminModel.setAccounts(new PayeeDAO().readAccountsByPersonId(
+                    conn, customer.getPersonId()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
@@ -112,7 +136,7 @@ public class AdminHomeController {
                 return;
             }
 
-            Person customer = new PersonDAO().readPersonByPersonId(conn, personId);
+            customer = new PersonDAO().readPersonByPersonId(conn, personId);
             if (customer.getPhone().isEmpty()) {
                 adminModel.setSearchError("Person not found");
                 return;
@@ -128,10 +152,20 @@ public class AdminHomeController {
     }
 
     private void openAccount() {
-        // TODO code open account handler
+        Scene returnScene = new Scene(this.getView());
+        if (adminModel.getFoundPersonId() == 0) {
+            stage.setScene((new Scene(new NewAccountController(stage, new NewAccountModel(), returnScene).getView())));
+        } else {
+            NewAccountModel existingCustomer = new NewAccountModel(customer);
+            stage.setScene(new Scene(new NewAccountController(stage, existingCustomer, returnScene).getView()));
+        }
+
     }
 
     private void closeAccount() {
+        if (adminModel.getSelectedAccount() == 0) {
+            return;
+        }
         // TODO code close account handler
     }
 

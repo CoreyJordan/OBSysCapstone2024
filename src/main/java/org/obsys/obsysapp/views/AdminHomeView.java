@@ -95,7 +95,7 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
             case "LN" -> loanSummary();
             case "CH" -> checkingSummary();
             case "IC", "SV" -> savingsSummary();
-            default -> new ArrayList<>();
+            default -> checkingSummary();
         };
     }
 
@@ -162,11 +162,11 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
 
     private Node buildHistoryPane() {
         ScrollPane scrollPane = obsysScrollPane(230, 390, 460, 145);
+        scrollPane.getStyleClass().add("history");
         if (accountModel.getType().isEmpty()) {
             return scrollPane;
         }
 
-        scrollPane.getStyleClass().add("history");
         scrollPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
                 new CornerRadii(5), BorderWidths.DEFAULT)));
 
@@ -222,7 +222,13 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         hypLogout.setOnAction(evt -> logoutHandler.run());
 
         Hyperlink hypClear = obsysLink("Clear", 650, 54);
-        hypClear.setOnAction(evt -> clearFormHandler.run());
+        hypClear.setOnAction(evt -> {
+            clearFormHandler.run();
+            accountModel = new AccountModel();
+
+            adminWindow.getChildren().addAll(createAcctSummary());
+            adminWindow.getChildren().add(buildHistoryPane());
+        });
 
         Button btnSearchName = obsysButton("Search", 105, 320, 100);
         btnSearchName.setOnAction(evt -> {
@@ -240,27 +246,32 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         btnOpenAcct.setOnAction(evt -> openAccountHandler.run());
 
         Button btnCloseAcct = obsysButton("Close Account", 725, 165, 170);
+        btnCloseAcct.disableProperty().bind(adminModel.actionPanelDisabledProperty());
         btnCloseAcct.setOnAction(evt -> closeAccountHandler.run());
 
         Button btnDeposit = obsysButton("Deposit Funds", 725, 245, 170);
+        btnDeposit.disableProperty().bind(adminModel.actionPanelDisabledProperty());
         btnDeposit.setOnAction(evt -> {
             accountModel.setTransactionType("DP");
             transactionHandler.run();
         });
 
         Button btnWithdraw = obsysButton("Withdraw Funds", 725, 285, 170);
+        btnWithdraw.disableProperty().bind(adminModel.actionPanelDisabledProperty());
         btnWithdraw.setOnAction(evt -> {
             accountModel.setTransactionType("WD");
             transactionHandler.run();
         });
 
         Button btnTransfer = obsysButton("Transfer Funds", 725, 325, 170);
+        btnTransfer.disableProperty().bind(adminModel.actionPanelDisabledProperty());
         btnTransfer.setOnAction(evt -> {
             accountModel.setTransactionType("TF");
             transactionHandler.run();
         });
 
         Button btnPayment = obsysButton("Make a Payment", 725, 405, 170);
+        btnPayment.disableProperty().bind(adminModel.actionPanelDisabledProperty());
         btnPayment.setOnAction(evt -> {
             accountModel.setTransactionType("PY");
             transactionHandler.run();
@@ -332,7 +343,7 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         cmbAccount.setItems(adminModel.getAcctDescriptions());
         Label lblAccount = obsysLabel("ACCOUNT", 250, 208, "hint");
         cmbAccount.setOnAction(evt -> {
-            adminModel.setSelectedAccount(cmbAccount.getValue());
+            adminModel.setSelectedAccountDescription(cmbAccount.getValue());
             accountSelectionHandler.run();
             accountModel = adminModel.getAccountModel();
 
