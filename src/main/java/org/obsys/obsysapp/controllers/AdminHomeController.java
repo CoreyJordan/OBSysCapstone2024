@@ -53,7 +53,12 @@ public class AdminHomeController {
     private void logout() {
         adminModel = null;
 
-        stage.setScene(new Scene(new LoginController(stage, "dolphinExit.png", "Thank you!").getView()));
+        LoginController loginCtrl = new LoginController(
+                stage,
+                "dolphinExit.png",
+                "Thank you!"
+        );
+        stage.setScene(new Scene(loginCtrl.getView()));
     }
 
     private void clearForm() {
@@ -68,15 +73,23 @@ public class AdminHomeController {
 
     private void selectAccount() {
         try (Connection conn = ObsysDbConnection.openDBConn()){
-            accountModel = new AccountDAO().readFullAccountDetails(conn, adminModel.getSelectedAccount());
+            accountModel = new AccountDAO().readFullAccountDetails(
+                    conn, adminModel.getSelectedAccount());
             adminModel.setAccountModel(accountModel);
 
-            accountModel.setHistory(new TransactionDAO().readTransactionHistory(conn, adminModel.getSelectedAccount()));
+            accountModel.setHistory(new TransactionDAO().readTransactionHistory(
+                    conn, adminModel.getSelectedAccount()));
             if (accountModel.getAcctNum() != 0) {
                 adminModel.setActionPanelDisabled(false);
             }
+
         } catch (SQLException e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
@@ -120,7 +133,10 @@ public class AdminHomeController {
         adminModel.setSearchFirstName("");
         adminModel.setSearchLastName("");
         String searchNum = adminModel.getAccountNumber();
-        AccountValidator nameValidator = new AccountValidator(searchNum, "firstName", "lastName");
+        AccountValidator nameValidator = new AccountValidator(
+                searchNum,
+                "firstName",
+                "lastName");
 
         if (!nameValidator.okToSearch()) {
             adminModel.setSearchError("Invalid account number");
@@ -130,7 +146,8 @@ public class AdminHomeController {
         int accountNum = Integer.parseInt(searchNum);
         adminModel.setSearchError("");
         try (Connection conn = ObsysDbConnection.openDBConn()) {
-            int personId = new AccountDAO().readPersonIdByAccountNum(conn, accountNum);
+            int personId = new AccountDAO().readPersonIdByAccountNum(
+                    conn, accountNum);
             if (personId == 0) {
                 adminModel.setSearchError("Person not found");
                 return;
@@ -143,22 +160,37 @@ public class AdminHomeController {
             }
 
             adminModel.setPerson(customer);
-            adminModel.setAccounts(new PayeeDAO().readAccountsByPersonId(conn, personId));
+            adminModel.setAccounts(new PayeeDAO().readAccountsByPersonId(
+                    conn, personId));
             adminModel.getAccountDescriptions();
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
     private void openAccount() {
         Scene returnScene = new Scene(this.getView());
+        NewAccountController newAcctCtrl;
         if (adminModel.getFoundPersonId() == 0) {
-            stage.setScene((new Scene(new NewAccountController(stage, new NewAccountModel(), returnScene).getView())));
+            newAcctCtrl = new NewAccountController(
+                    stage,
+                    new NewAccountModel(),
+                    returnScene
+            );
         } else {
-            NewAccountModel existingCustomer = new NewAccountModel(customer);
-            stage.setScene(new Scene(new NewAccountController(stage, existingCustomer, returnScene).getView()));
+            newAcctCtrl = new NewAccountController(
+                    stage,
+                    new NewAccountModel(customer),
+                    returnScene
+            );
         }
+        stage.setScene((new Scene(newAcctCtrl.getView())));
 
     }
 
@@ -173,22 +205,44 @@ public class AdminHomeController {
         try (Connection conn = ObsysDbConnection.openDBConn()) {
             PayeeDAO payeeDao = new PayeeDAO();
 
-            ArrayList<Payee> payees = switch (accountModel.getTransactionType()) {
+            ArrayList<Payee> payees = switch (
+                    accountModel.getTransactionType()) {
                 case "TF", "PY" ->
-                        payeeDao.readAccountsByPersonId(conn, adminModel.getFoundPersonId(), accountModel.getAcctNum());
-                default -> payeeDao.readPayeesByAccount(conn, accountModel.getAcctNum());
+                        payeeDao.readAccountsByPersonId(
+                                conn,
+                                adminModel.getFoundPersonId(),
+                                accountModel.getAcctNum());
+                default -> payeeDao.readPayeesByAccount(
+                        conn, accountModel.getAcctNum());
             };
 
-            Account account = new Account(accountModel.getType(), accountModel.getAcctNum(), accountModel.getStatus(),
-                    accountModel.getBalance(), accountModel.getDateOpened(), accountModel.getInstallment(), accountModel.getInterestDue());
+            Account account = new Account(
+                    accountModel.getType(),
+                    accountModel.getAcctNum(),
+                    accountModel.getStatus(),
+                    accountModel.getBalance(),
+                    accountModel.getDateOpened(),
+                    accountModel.getInstallment(),
+                    accountModel.getInterestDue());
 
             TransactionModel transactionModel = new TransactionModel(
                     accountModel.getTransactionType(), account, payees
             );
 
-            stage.setScene(new Scene(new TransactionController(stage, this.getView(), transactionModel, login).getView()));
+            TransactionController transactCtrl = new TransactionController(
+                    stage,
+                    this.getView(),
+                    transactionModel,
+                    login
+            );
+            stage.setScene(new Scene(transactCtrl.getView()));
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 }

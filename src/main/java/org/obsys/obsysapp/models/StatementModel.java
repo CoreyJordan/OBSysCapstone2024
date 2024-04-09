@@ -2,17 +2,17 @@ package org.obsys.obsysapp.models;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.obsys.obsysapp.domain.*;
+import org.obsys.obsysapp.domain.Account;
+import org.obsys.obsysapp.domain.MonthlySummary;
+import org.obsys.obsysapp.domain.Person;
+import org.obsys.obsysapp.domain.Transaction;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class StatementModel {
-    private ArrayList<LocalDate> months = new ArrayList<>();
-    private boolean isValidMonth;
-    private Person person;
-    private Account account;
+    private final Person person;
+    private final Account account;
     private LocalDate selectedMonth = LocalDate.MIN;
     private MonthlySummary summary;
 
@@ -21,12 +21,14 @@ public class StatementModel {
         this.account = account;
     }
 
-    public StatementModel(Person person, Account account, MonthlySummary summary, LocalDate selectedMonth) {
+    public StatementModel(Person person,
+                          Account account,
+                          MonthlySummary summary,
+                          LocalDate selectedMonth) {
         this(person, account);
         this.summary = summary;
         this.selectedMonth = selectedMonth;
     }
-
 
 
     private static String getPayeeDescription(Transaction t) {
@@ -58,13 +60,15 @@ public class StatementModel {
     }
 
     public StringProperty stmtDateProperty() {
-        return new SimpleStringProperty(selectedMonth.format(DateTimeFormatter.ofPattern("MMM dd, yyyy")));
+        return new SimpleStringProperty(
+                selectedMonth.format(
+                        DateTimeFormatter.ofPattern("MMM dd, yyyy")));
     }
 
     public StringProperty stmtPeriodProperty() {
         String period = String.format("%s to %s",
                 getStartDate(),
-                geteEndDate()
+                getEndDate()
         );
         return new SimpleStringProperty(period);
     }
@@ -76,19 +80,33 @@ public class StatementModel {
                 .format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 
-    private String geteEndDate() {
-        return selectedMonth.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+    private String getEndDate() {
+        return selectedMonth.format(
+                DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 
     public StringProperty summaryProperty() {
         return new SimpleStringProperty(String.format(
-                "%-40s %,12.2f \n%-40s %,12.2f \n%-40s %,12.2f \n%-40s %,12.2f \n%-40s %,12.2f \n%-40s %,12.2f \n",
-                "BEGINNING BALANCE - " + getStartDate(), summary.getBalanceBegin(),
-                "CREDITS", summary.getCredits(),
-                "DEBITS", Math.abs(summary.getDebits()),
-                "INTEREST PAYMENTS", summary.getInterestPaid(),
-                "FEES", summary.getFees(),
-                "ENDING BALANCE - " + geteEndDate(), summary.getBalanceEnd()
+                """
+                        %-40s %,12.2f\s
+                        %-40s %,12.2f\s
+                        %-40s %,12.2f\s
+                        %-40s %,12.2f\s
+                        %-40s %,12.2f\s
+                        %-40s %,12.2f\s
+                        """,
+                "BEGINNING BALANCE - " + getStartDate(),
+                summary.getBalanceBegin(),
+                "CREDITS",
+                summary.getCredits(),
+                "DEBITS",
+                Math.abs(summary.getDebits()),
+                "INTEREST PAYMENTS",
+                summary.getInterestPaid(),
+                "FEES",
+                summary.getFees(),
+                "ENDING BALANCE - " + getEndDate(),
+                summary.getBalanceEnd()
         ));
     }
 
@@ -98,9 +116,11 @@ public class StatementModel {
         String credit;
         String debit;
 
-        String transactionList = String.format("%-9s %-20s %9s %9s %9s\n", "Date", "Description", "Credit", "Debit", "Balance");
+        StringBuilder transactionList = new StringBuilder(
+                String.format("%-9s %-20s %9s %9s %9s\n",
+                        "Date", "Description", "Credit", "Debit", "Balance"));
         for (Transaction t : summary.getTransactions()) {
-            date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
+            date = DateTimeFormatter.ofPattern("MM/dd/yy").format(t.getDate());
             description = getPayeeDescription(t);
 
             if (t.getAmount() > 0) {
@@ -111,15 +131,12 @@ public class StatementModel {
                 credit = "-";
             }
 
-            transactionList += String.format("%-9s %-20s %9s %9s %9s\n", date, description, credit, debit, t.getBalance());
+            transactionList.append(
+                    String.format("%-9s %-20s %9s %9s %9s\n",
+                            date, description, credit, debit, t.getBalance()));
         }
 
-        return new SimpleStringProperty(transactionList);
-    }
-
-    // GETTERS
-    public ArrayList<LocalDate> getMonths() {
-        return months;
+        return new SimpleStringProperty(transactionList.toString());
     }
 
     public String getNameAndAddress() {
@@ -132,29 +149,5 @@ public class StatementModel {
                 person.getPostalCode());
     }
 
-    public Login getLogin() {
-        return person.getLogin();
-    }
-
-    public LocalDate getSelectedMonth() {
-        return selectedMonth;
-    }
-
-    public boolean isValidMonth() {
-        return isValidMonth;
-    }
-
-    // SETTERS
-    public void setMonths(ArrayList<LocalDate> months) {
-        this.months = months;
-    }
-
-    public void setValidMonth(boolean validMonth) {
-        isValidMonth = validMonth;
-    }
-
-    public void setSelectedPeriod(LocalDate selectedPeriod) {
-        this.selectedMonth = selectedPeriod;
-    }
 
 }

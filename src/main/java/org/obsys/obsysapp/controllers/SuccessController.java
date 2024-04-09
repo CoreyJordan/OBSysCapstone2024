@@ -20,11 +20,16 @@ public class SuccessController {
     private final SuccessModel successModel;
     private final Login login;
 
-    public SuccessController(Stage stage, SuccessModel successModel, Login login) {
+    public SuccessController(Stage stage,
+                             SuccessModel successModel,
+                             Login login) {
         this.stage = stage;
         this.successModel = successModel;
         this.login = login;
-        viewBuilder = new SuccessView(successModel, this::logout, this::goBack);
+        viewBuilder = new SuccessView(
+                successModel,
+                this::logout,
+                this::goBack);
     }
 
     private void logout() {
@@ -38,11 +43,24 @@ public class SuccessController {
             AccountDAO accountDao = new AccountDAO();
             TransactionDAO transactDao = new TransactionDAO();
 
-            AccountModel accountModel = accountDao.readFullAccountDetails(conn, acctNum);
-            accountModel.setHistory(transactDao.readTransactionHistory(conn, acctNum));
-            stage.setScene(new Scene(new AccountController(stage, accountModel, login).getView()));
+            AccountModel accountModel = accountDao.readFullAccountDetails(
+                    conn, acctNum);
+            accountModel.setHistory(transactDao.readTransactionHistory(
+                    conn, acctNum));
+
+            AccountController acctCtrl = new AccountController(
+                    stage,
+                    accountModel,
+                    login
+            );
+            stage.setScene(new Scene(acctCtrl.getView()));
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 

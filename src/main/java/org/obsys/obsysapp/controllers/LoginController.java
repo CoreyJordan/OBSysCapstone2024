@@ -27,17 +27,31 @@ public class LoginController {
         this.stage = stage;
         loginModel = new LoginModel();
         loginDao = new LoginDAO();
-        viewBuilder = new LoginView(loginModel, this::lookupLogin, this::openCreation, imgSource, bannerText);
+        viewBuilder = new LoginView(
+                loginModel,
+                this::lookupLogin,
+                this::openCreation,
+                imgSource,
+                bannerText);
     }
 
     private void navigateToHomePage(Login checkedLogin) {
         if (checkedLogin.isAdmin()) {
-            AdminHomeModel adminHomeModel = new AdminHomeModel(loginModel.getUsername());
-            stage.setScene(new Scene(new AdminHomeController(stage, adminHomeModel, checkedLogin).getView()));
+            AdminHomeModel adminHomeModel = new AdminHomeModel(
+                    loginModel.getUsername());
 
-            System.out.println("Loading Admin Home");
+            AdminHomeController homeCtrl = new AdminHomeController(
+                    stage,
+                    adminHomeModel,
+                    checkedLogin
+            );
+            stage.setScene(new Scene(homeCtrl.getView()));
         } else {
-            stage.setScene(new Scene(new HomeController(stage, checkedLogin).getView()));
+            HomeController homeCtrl = new HomeController(
+                    stage,
+                    checkedLogin
+            );
+            stage.setScene(new Scene(homeCtrl.getView()));
         }
     }
 
@@ -49,7 +63,8 @@ public class LoginController {
         if (loginInputIsInvalid()) return;
 
         try (Connection conn = ObsysDbConnection.openDBConn()) {
-            Login checkedLogin = loginDao.readPasswordByUsername(conn, loginModel.getUsername());
+            Login checkedLogin = loginDao.readPasswordByUsername(
+                    conn, loginModel.getUsername());
 
             if (loginMatchNotFound(checkedLogin)) return;
 
@@ -58,20 +73,28 @@ public class LoginController {
         } catch (SQLException e) {
             // Erase password from model for security.
             loginModel.setPassword("");
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
     private boolean loginMatchNotFound(Login checkedLogin) {
         if (!passwordsMatch(checkedLogin)) {
-            loginModel.setInvalidLogin("Username or password matches no record");
+            loginModel.setInvalidLogin(
+                    "Username or password matches no record");
             return true;
         }
         return false;
     }
 
     private boolean loginInputIsInvalid() {
-        LoginValidator validator = new LoginValidator(loginModel.getUsername(), loginModel.getPassword());
+        LoginValidator validator = new LoginValidator(
+                loginModel.getUsername(),
+                loginModel.getPassword());
         if (!validator.okToLogin()) {
             loginModel.setInvalidLogin("Invalid username and/or password");
             return true;

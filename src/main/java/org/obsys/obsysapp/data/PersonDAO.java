@@ -8,15 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PersonDAO {
-    public Person readPersonByPersonId(Connection conn, int personId) throws SQLException {
-        String lastName = "";
-        String firstName = "";
-        String address = "";
-        String city = "";
-        String state = "";
-        String postal = "";
-        String phone = "";
-        String email = "";
+    public Person readPersonByPersonId(
+            Connection conn, int personId) throws SQLException {
+        Person person = new Person();
 
         try (PreparedStatement statement = conn.prepareStatement("""
                 SELECT * FROM dbo.Person WHERE PersonId = ?;
@@ -25,22 +19,25 @@ public class PersonDAO {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                lastName = resultSet.getString("LastName");
-                firstName = resultSet.getString("FirstName");
-                address = resultSet.getString("PersonAddress");
-                city = resultSet.getString("City");
-                state = resultSet.getString("AddressState");
-                postal = resultSet.getString("Postal");
-                phone = resultSet.getString("Phone");
-                email = resultSet.getString("Email");
+                person = new Person(
+                        personId,
+                        resultSet.getString("LastName"),
+                        resultSet.getString("FirstName"),
+                        resultSet.getString("PersonAddress"),
+                        resultSet.getString("City"),
+                        resultSet.getString("AddressState"),
+                        resultSet.getString("Postal"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Email"));
             }
         }
 
-        return new Person(personId, lastName, firstName, address, city, state, postal, phone, email);
+        return person;
     }
 
     /**
-     * Searches the database for a match based on both first and last name. If multiple found will return only one.
+     * Searches the database for a match based on both first and last name. If
+     * multiple found will return only one.
      *
      * @param conn      stable Obsys DB connection
      * @param firstName first name
@@ -48,17 +45,15 @@ public class PersonDAO {
      * @return a person's detailed information
      * @throws SQLException possible db failures
      */
-    public Person readPersonByFullName(Connection conn, String firstName, String lastName) throws SQLException {
-        int personId = 0;
-        String address = "";
-        String city = "";
-        String state = "";
-        String postal = "";
-        String phone = "";
-        String email = "";
+    public Person readPersonByFullName(
+            Connection conn,
+            String firstName,
+            String lastName) throws SQLException {
+        Person person = new Person();
 
         try (PreparedStatement statement = conn.prepareStatement("""
-                SELECT PersonId, PersonAddress, City, AddressState, Postal, Phone, Email
+                SELECT PersonId, PersonAddress, City, AddressState, Postal,
+                    Phone, Email
                 FROM dbo.Person
                 WHERE FirstName = ?
                 AND LastName = ?
@@ -68,28 +63,34 @@ public class PersonDAO {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                personId = resultSet.getInt("PersonId");
-                address = resultSet.getString("PersonAddress");
-                city = resultSet.getString("City");
-                state = resultSet.getString("AddressState");
-                postal = resultSet.getString("Postal");
-                phone = resultSet.getString("Phone");
-                email = resultSet.getString("Email");
+                person = new Person(
+                        resultSet.getInt("PersonId"),
+                        lastName,
+                        firstName,
+                        resultSet.getString("PersonAddress"),
+                        resultSet.getString("City"),
+                        resultSet.getString("AddressState"),
+                        resultSet.getString("Postal"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Email"));
             }
 
-            return new Person(personId, lastName, firstName, address, city, state, postal, phone, email);
+            return person;
         }
     }
 
     /**
-     * Adds a new person to the Obsys database. Upon successful insertion, it will return a freshly generated personID
-     * of the new insertion.
-     * @param conn stable Obsys DB connection
-     * @param person object containing customer info, null for username and password
+     * Adds a new person to the Obsys database. Upon successful insertion, it
+     * will return a freshly generated personID  of the new insertion.
+     *
+     * @param conn   stable Obsys DB connection
+     * @param person object containing customer info, null for username and
+     *               password
      * @return the personID of the newly created customer
      * @throws SQLException possible db failures
      */
-    public int insertNewPerson(Connection conn, Person person) throws SQLException {
+    public int insertNewPerson(
+            Connection conn, Person person) throws SQLException {
         int personId = 0;
         try (PreparedStatement statement = conn.prepareStatement("""
                 INSERT INTO dbo.Person

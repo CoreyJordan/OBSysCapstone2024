@@ -1,16 +1,15 @@
 package org.obsys.obsysapp.domain;
 
 public class Person {
-    private int personId;
     private final String lastName;
     private final String firstName;
     private final String streetAddress;
     private final String city;
     private final String state;
     private final String postalCode;
+    private int personId;
     private String phone;
     private String email;
-    private Login login;
 
     public Person() {
         personId = 0;
@@ -24,7 +23,12 @@ public class Person {
         email = "";
     }
 
-    public Person(String lastName, String firstName, String streetAddress, String city, String state, String postalCode) {
+    public Person(String lastName,
+                  String firstName,
+                  String streetAddress,
+                  String city,
+                  String state,
+                  String postalCode) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.streetAddress = streetAddress;
@@ -33,15 +37,26 @@ public class Person {
         this.postalCode = postalCode;
     }
 
-    public Person(int personId, String lastName, String firstName, String streetAddress, String city, String state,
-                  String postalCode, Login login) {
+    public Person(int personId,
+                  String lastName,
+                  String firstName,
+                  String streetAddress,
+                  String city,
+                  String state,
+                  String postalCode) {
         this(lastName, firstName, streetAddress, city, state, postalCode);
         this.personId = personId;
-        this.login = login;
     }
 
-    public Person(int personId, String lastName, String firstName, String streetAddress, String city, String state,
-                  String postalCode, String phone, String email) {
+    public Person(int personId,
+                  String lastName,
+                  String firstName,
+                  String streetAddress,
+                  String city,
+                  String state,
+                  String postalCode,
+                  String phone,
+                  String email) {
         this(lastName, firstName, streetAddress, city, state, postalCode);
         this.personId = personId;
         this.phone = phone;
@@ -74,10 +89,6 @@ public class Person {
 
     public String getPostalCode() {
         return postalCode;
-    }
-
-    public Login getLogin() {
-        return login;
     }
 
     public String getPhone() {

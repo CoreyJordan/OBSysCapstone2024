@@ -31,7 +31,11 @@ public class AcctCreationController {
         loginModel = new LoginModel();
         loginDao = new LoginDAO();
         viewBuilder = new AcctCreationView(
-                creationModel, loginModel, this::goBack, this::findAccount, this::createLogin);
+                creationModel,
+                loginModel,
+                this::goBack,
+                this::findAccount,
+                this::createLogin);
     }
 
     public Region getView() {
@@ -49,7 +53,10 @@ public class AcctCreationController {
 
         try (Connection conn = ObsysDbConnection.openDBConn()) {
             foundPerson = loginDao.readPersonByNameAndAccount(
-                    conn, creationModel.getAcctNum(), creationModel.getFirstName(), creationModel.getLastName());
+                    conn,
+                    creationModel.getAcctNum(),
+                    creationModel.getFirstName(),
+                    creationModel.getLastName());
 
             if (notFound(foundPerson)) return;
             if (accountAlreadyExists(foundPerson)) return;
@@ -57,7 +64,12 @@ public class AcctCreationController {
             enableRegistration();
 
         } catch (SQLException e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
@@ -71,16 +83,29 @@ public class AcctCreationController {
             if (usernameUnavailable(conn)) return;
 
             int rowsUpdated = loginDao.insertLogin(
-                    conn, foundPerson.getPersonId(), loginModel.getUsername(), loginModel.getPassword());
+                    conn,
+                    foundPerson.getPersonId(),
+                    loginModel.getUsername(),
+                    loginModel.getPassword());
 
             if (rowsUpdated == 0) {
-                throw new SQLException("There was an error linking the account.");
+                throw new SQLException(
+                        "There was an error linking the account.");
             }
 
-            stage.setScene(new Scene(new LoginController(
-                    stage, "dolphinLogin.png", "Success!").getView()));
+            LoginController loginCtrl = new LoginController(
+                    stage,
+                    "dolphinLogin.png", "Success!"
+            );
+            stage.setScene(new Scene(loginCtrl.getView()));
+
         } catch (SQLException e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
@@ -94,7 +119,9 @@ public class AcctCreationController {
 
     private boolean searchInputInvalid() {
         AccountValidator acctValidator = new AccountValidator(
-                creationModel.getAcctNum(), creationModel.getFirstName(), creationModel.getLastName());
+                creationModel.getAcctNum(),
+                creationModel.getFirstName(),
+                creationModel.getLastName());
 
         if (!acctValidator.okToSearch()) {
             promptUser(acctValidator);
@@ -105,7 +132,8 @@ public class AcctCreationController {
 
     private boolean accountAlreadyExists(Login foundPerson) {
         if (foundPerson.getUsername() != null) {
-            creationModel.setNotFound("There is already a username associated with this account");
+            creationModel.setNotFound(
+                    "There is already a username associated with this account");
             return true;
         }
         return false;
@@ -113,7 +141,8 @@ public class AcctCreationController {
 
     private boolean notFound(Login foundPerson) {
         if (foundPerson.getPersonId() == 0) {
-            creationModel.setNotFound("No account found with that name and/or account number");
+            creationModel.setNotFound(
+                    "No account found with that name and/or account number");
             return true;
         }
         return false;
@@ -150,15 +179,19 @@ public class AcctCreationController {
     }
 
     private boolean loginInputIsInvalid() {
-        LoginValidator validator = new LoginValidator(loginModel.getUsername(), loginModel.getPassword());
+        LoginValidator validator = new LoginValidator(
+                loginModel.getUsername(),
+                loginModel.getPassword());
         boolean loginIsInvalid = false;
         if (!validator.usernameIsValid()) {
-            loginModel.setInvalidUsername("Username cannot contain spaces or symbols");
+            loginModel.setInvalidUsername(
+                    "Username cannot contain spaces or symbols");
             loginIsInvalid = true;
         }
 
         if (!validator.passwordIsValid()) {
-            loginModel.setInvalidPassword("Password does not meet requirements");
+            loginModel.setInvalidPassword(
+                    "Password does not meet requirements");
             loginIsInvalid = true;
         }
         return loginIsInvalid;

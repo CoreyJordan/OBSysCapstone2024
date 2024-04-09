@@ -42,9 +42,10 @@ public class PayeeDAO {
     }
 
     /**
-     * Reads basic account information from the database and creates a list of found accounts. Used to populate
-     * combo boxes in the transfer/loan screens. Excludes the currently selected account. Does not return loan accounts
-     * as they cannot be transacted.
+     * Reads basic account information from the database and creates a list of
+     * found accounts. Used to populate combo boxes in the transfer/loan
+     * screens. Excludes the currently selected account. Does not return loan
+     * accounts as they cannot be transacted.
      *
      * @param conn       stable connection to the Obsys DB
      * @param personId   owner of accounts list
@@ -52,7 +53,8 @@ public class PayeeDAO {
      * @return ArrayList of basic account information
      * @throws SQLException possible database failures
      */
-    public ArrayList<Payee> readAccountsByPersonId(Connection conn, int personId, int accountNum) throws SQLException {
+    public ArrayList<Payee> readAccountsByPersonId(
+            Connection conn, int personId, int accountNum) throws SQLException {
         ArrayList<Payee> payees = new ArrayList<>();
 
         try (PreparedStatement statement = conn.prepareStatement("""
@@ -70,16 +72,20 @@ public class PayeeDAO {
             while (resultSet.next()) {
                 payees.add(new Payee(
                         resultSet.getInt("AccountId"),
-                        resultSet.getString("AccountDescription") + " ..." +
-                                String.valueOf(resultSet.getInt("AccountId")).substring(6) +
-                                String.format(" $%,.2f", resultSet.getDouble("Balance")
+                        resultSet.getString("AccountDescription") +
+                                " ..." +
+                                String.valueOf(resultSet.getInt(
+                                                "AccountId")).substring(6) +
+                                String.format(" $%,.2f",
+                                        resultSet.getDouble("Balance")
                                 )));
             }
         }
         return payees;
     }
 
-    public ArrayList<Payee> readAccountsByPersonId(Connection conn, int personId) throws SQLException {
+    public ArrayList<Payee> readAccountsByPersonId(
+            Connection conn, int personId) throws SQLException {
         ArrayList<Payee> payees = new ArrayList<>();
 
         try (PreparedStatement statement = conn.prepareStatement("""
@@ -95,7 +101,8 @@ public class PayeeDAO {
                 payees.add(new Payee(
                         resultSet.getInt("AccountId"),
                         resultSet.getString("AccountDescription") + " ..." +
-                                String.valueOf(resultSet.getInt("AccountId")).substring(6)
+                                String.valueOf(resultSet.getInt(
+                                        "AccountId")).substring(6)
                                 ));
             }
         }
@@ -103,14 +110,17 @@ public class PayeeDAO {
     }
 
     /**
-     * Inserts a new payee into the database. Will first verify the payee does not already exist. The database does not
-     * enforce uniqueness on description, however this initial search will prevent identical, but not similar insertions.
+     * Inserts a new payee into the database. Will first verify the payee does
+     * not already exist. The database does not enforce uniqueness on
+     * description, however this initial search will prevent identical, but not
+     * similar insertions.
      *
      * @param conn             stable connection to the Obsys DB
      * @param transactionPayee payee description to be inserted
      * @throws SQLException possible database failures
      */
-    public void insertNewPayee(Connection conn, String transactionPayee) throws SQLException {
+    public void insertNewPayee(
+            Connection conn, String transactionPayee) throws SQLException {
         if (readPayeeIdByDescription(conn, transactionPayee) != 0) {
             return;
         }
@@ -126,15 +136,17 @@ public class PayeeDAO {
     }
 
     /**
-     * Searches the database for a matching payee description. The database does not enforce uniqueness on descriptions
-     * but this query will only return 1 identical result. Will return 0 if not found.
+     * Searches the database for a matching payee description. The database does
+     *  not enforce uniqueness on descriptions but this query will only return
+     *  1 identical result. Will return 0 if not found.
      *
      * @param conn             stable connection to the Obsys DB
      * @param transactionPayee payee description to be searched
      * @return the payeeId corresponding to a found description, 0 if not found
      * @throws SQLException possible database failures
      */
-    public int readPayeeIdByDescription(Connection conn, String transactionPayee) throws SQLException {
+    public int readPayeeIdByDescription(
+            Connection conn, String transactionPayee) throws SQLException {
         try (PreparedStatement statement = conn.prepareStatement("""
                 SELECT PayeeId
                 FROM dbo.Payee

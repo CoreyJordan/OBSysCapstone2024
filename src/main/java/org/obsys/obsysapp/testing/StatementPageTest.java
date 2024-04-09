@@ -12,11 +12,19 @@ import org.obsys.obsysapp.models.StatementModel;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 public class StatementPageTest extends Application {
     public static void main(String[] args) {
         launch();
+    }
+
+    private static Login getLogin() {
+        return new Login(
+                "lainaTest",
+                "Adm!n1",
+                false,
+                1111111149
+        );
     }
 
     @Override
@@ -26,29 +34,29 @@ public class StatementPageTest extends Application {
             stage.getIcons().add(new Image("/obsysIcon.png"));
             stage.setResizable(false);
 
-            stage.setScene(new Scene(
-                    new StatementController(stage, createSampleStatementModel(), getSampleChecking(), getLogin()).getView()));
+            stage.setScene(new Scene(new StatementController(
+                    stage,
+                    createSampleStatementModel(),
+                    getSampleChecking(),
+                    getLogin()).getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
         stage.show();
     }
 
     private StatementModel createSampleStatementModel() {
-        StatementModel stmtModel = new StatementModel(createSamplePerson(),
+        return new StatementModel(
+                createSamplePerson(),
                 createSampleCheckingAccount(),
                 createSampleCheckingSummary(),
                 LocalDate.of(2024, 2, 21)
-                );
-        stmtModel.setMonths(new ArrayList<>(List.of(
-                LocalDate.of(2024, 3, 21),
-                LocalDate.of(2024, 2, 21),
-                LocalDate.of(2024, 1, 21),
-                LocalDate.of(2023, 12, 21),
-                LocalDate.of(2023, 11, 21)
-        )));
-        return stmtModel;
+        );
     }
 
     private Account createSampleCheckingAccount() {
@@ -57,7 +65,7 @@ public class StatementPageTest extends Application {
                 1111111111,
                 "OP",
                 1241.53,
-                LocalDate.of(2023,2,21)
+                LocalDate.of(2023, 2, 21)
         );
     }
 
@@ -66,14 +74,21 @@ public class StatementPageTest extends Application {
     }
 
     private ArrayList<Transaction> sampleCheckingTransactions() {
-        return new ArrayList<>(){{
-            add(new Transaction("DP", 535.34, LocalDate.of(2024,2,4), "Sample", 752.25));
-            add(new Transaction("WD", 695.34, LocalDate.of(2024,2,5), "Sample", 56.91));
-            add(new Transaction("DP", 456.45, LocalDate.of(2024,2,6), "Sample", 513.36));
-            add(new Transaction("DP", 25.56, LocalDate.of(2024,2,7), "Sample", 538.92));
-            add(new Transaction("DP", 658.56, LocalDate.of(2024,2,8), "Sample", 1197.48));
-            add(new Transaction("WD", 654.21, LocalDate.of(2024,2,9), "Sample", 543.27));
-            add(new Transaction("DP", 25.25, LocalDate.of(2024,2,10), "Sample", 568.52));
+        return new ArrayList<>() {{
+            add(new Transaction(
+                    "DP", 535.34, LocalDate.of(2024, 2, 4), "Sample", 752.25));
+            add(new Transaction(
+                    "WD", 695.34, LocalDate.of(2024, 2, 5), "Sample", 56.91));
+            add(new Transaction(
+                    "DP", 456.45, LocalDate.of(2024, 2, 6), "Sample", 513.36));
+            add(new Transaction(
+                    "DP", 25.56, LocalDate.of(2024, 2, 7), "Sample", 538.92));
+            add(new Transaction(
+                    "DP", 658.56, LocalDate.of(2024, 2, 8), "Sample", 1197.48));
+            add(new Transaction(
+                    "WD", 654.21, LocalDate.of(2024, 2, 9), "Sample", 543.27));
+            add(new Transaction(
+                    "DP", 25.25, LocalDate.of(2024, 2, 10), "Sample", 568.52));
 
         }};
     }
@@ -86,17 +101,7 @@ public class StatementPageTest extends Application {
                 "044 Waywood Street",
                 "Cheyenne",
                 "WY",
-                "82007",
-                getLogin());
-    }
-
-    private static Login getLogin() {
-        return new Login(
-                "lainaTest",
-                "Adm!n1",
-                false,
-                1111111149
-        );
+                "82007");
     }
 
     private AccountModel getSampleChecking() {

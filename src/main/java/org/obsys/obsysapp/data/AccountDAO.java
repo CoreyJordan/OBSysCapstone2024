@@ -128,7 +128,8 @@ public class AccountDAO {
      * a transaction query in order to maintain data integrity.
      *
      * @param conn      stable database connection
-     * @param amount    dollar amount by which the account balance will be modified
+     * @param amount    dollar amount by which the account balance will be
+     *                  modified
      * @param accountId target account to be updated
      * @return number of rows affected
      * @throws SQLException possible database update failure

@@ -15,11 +15,19 @@ public class StatementController {
     private final AccountModel acctModel;
     private final Login login;
 
-    public StatementController(Stage stage, StatementModel stmtModel, AccountModel acctModel, Login login) {
+    public StatementController(Stage stage,
+                               StatementModel stmtModel,
+                               AccountModel acctModel,
+                               Login login) {
         this.stage = stage;
         this.acctModel = acctModel;
         this.login = login;
-        viewBuilder = new StatementView(stmtModel, this::logout, this::goBack, stage);
+        viewBuilder = new StatementView(
+                stmtModel,
+                this::logout,
+                this::goBack,
+                stage
+        );
     }
 
     public Region getView() {
@@ -32,7 +40,12 @@ public class StatementController {
     }
 
     private void goBack() {
-        stage.setScene(new Scene(new AccountController(stage, acctModel, login).getView()));
+        AccountController acctCtrl = new AccountController(
+                stage,
+                acctModel,
+                login
+        );
+        stage.setScene(new Scene(acctCtrl.getView()));
     }
 
 }

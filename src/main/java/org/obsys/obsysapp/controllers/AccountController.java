@@ -26,7 +26,9 @@ public class AccountController {
     private AccountModel acctModel;
     private Login login;
 
-    public AccountController(Stage stage, AccountModel acctModel, Login login) {
+    public AccountController(Stage stage,
+                             AccountModel acctModel,
+                             Login login) {
         this.stage = stage;
         this.acctModel = acctModel;
         viewBuilder = new AccountView(acctModel, this::goHome, this::logout,
@@ -37,18 +39,39 @@ public class AccountController {
     private void goToStatement() {
         try (Connection conn = ObsysDbConnection.openDBConn()) {
             StatementModel stmtModel = new StatementModel(
-                    new PersonDAO().readPersonByPersonId(conn, login.getPersonId()),
-                    new Account(acctModel.getType(), acctModel.getAcctNum(), acctModel.getStatus(),
-                            acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment()),
-                    new MonthlySummary(new TransactionDAO().readTransactionsByMonth(
-                            conn, acctModel.getSelectedMonth(), acctModel.getAcctNum())),
+                    new PersonDAO().readPersonByPersonId(
+                            conn, login.getPersonId()),
+                    new Account(
+                            acctModel.getType(),
+                            acctModel.getAcctNum(),
+                            acctModel.getStatus(),
+                            acctModel.getBalance(),
+                            acctModel.getDateOpened(),
+                            acctModel.getInstallment()),
+                    new MonthlySummary(
+                            new TransactionDAO().readTransactionsByMonth(
+                                    conn,
+                                    acctModel.getSelectedMonth(),
+                                    acctModel.getAcctNum())),
                     acctModel.getSelectedMonth()
             );
 
-            stage.setScene(new Scene(new StatementController(stage, stmtModel, acctModel, login).getView()));
+            StatementController stmtCtrl = new StatementController(
+                    stage,
+                    stmtModel,
+                    acctModel,
+                    login
+            );
+
+            stage.setScene(new Scene(stmtCtrl.getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
@@ -57,20 +80,45 @@ public class AccountController {
             PayeeDAO payeeDao = new PayeeDAO();
 
             ArrayList<Payee> payees = switch (acctModel.getTransactionType()) {
-                case "TF", "PY" -> payeeDao.readAccountsByPersonId(conn, login.getPersonId(), acctModel.getAcctNum());
-                default -> payeeDao.readPayeesByAccount(conn, acctModel.getAcctNum());
+                case "TF", "PY" -> payeeDao.readAccountsByPersonId(
+                        conn,
+                        login.getPersonId(),
+                        acctModel.getAcctNum());
+                default -> payeeDao.readPayeesByAccount(
+                        conn,
+                        acctModel.getAcctNum());
             };
 
-            Account account = new Account(acctModel.getType(), acctModel.getAcctNum(), acctModel.getStatus(),
-                    acctModel.getBalance(), acctModel.getDateOpened(), acctModel.getInstallment(), acctModel.getInterestDue());
-
-            TransactionModel transactionModel = new TransactionModel(
-                    acctModel.getTransactionType(), account, payees
+            Account account = new Account(
+                    acctModel.getType(),
+                    acctModel.getAcctNum(),
+                    acctModel.getStatus(),
+                    acctModel.getBalance(),
+                    acctModel.getDateOpened(),
+                    acctModel.getInstallment(),
+                    acctModel.getInterestDue()
             );
 
-            stage.setScene(new Scene(new TransactionController(stage, this.getView(), transactionModel, login).getView()));
+            TransactionModel transactionModel = new TransactionModel(
+                    acctModel.getTransactionType(),
+                    account,
+                    payees
+            );
+
+            TransactionController transactCtrl = new TransactionController(
+                    stage,
+                    this.getView(),
+                    transactionModel,
+                    login
+            );
+            stage.setScene(new Scene(transactCtrl.getView()));
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 

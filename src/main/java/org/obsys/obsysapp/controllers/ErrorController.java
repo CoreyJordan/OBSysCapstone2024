@@ -15,13 +15,21 @@ public class ErrorController {
     public ErrorController(Stage stage, String error, Region previousPage) {
         this.previousPage = previousPage;
         this.stage = stage;
-        viewBuilder = new ErrorView(new ErrorModel(error), this::exitApp, this::logout, this::goBack);
+        viewBuilder = new ErrorView(
+                new ErrorModel(error),
+                this::exitApp,
+                this::logout,
+                this::goBack);
     }
 
     public ErrorController(Stage stage, String error) {
         this.previousPage = null;
         this.stage = stage;
-        viewBuilder = new ErrorView(new ErrorModel(error), this::exitApp, this::logout, this::goBack);
+        viewBuilder = new ErrorView(
+                new ErrorModel(error),
+                this::exitApp,
+                this::logout,
+                this::goBack);
     }
 
     public Region getView() {
@@ -36,7 +44,10 @@ public class ErrorController {
     }
 
     private void logout() {
-        LoginController login = new LoginController(stage, "dolphinExit.png", "Thank you!");
+        LoginController login = new LoginController(
+                stage,
+                "dolphinExit.png",
+                "Thank you!");
         stage.setScene(new Scene(login.getView()));
     }
 

@@ -29,12 +29,20 @@ public class TransactionController {
     private final PayeeDAO payeeDao = new PayeeDAO();
     private final Login login;
 
-    public TransactionController(Stage stage, Region accountView, TransactionModel transactionModel, Login login) {
+    public TransactionController(Stage stage,
+                                 Region accountView,
+                                 TransactionModel transactionModel,
+                                 Login login) {
         this.stage = stage;
         this.transactionModel = transactionModel;
         this.accountView = accountView;
         this.login = login;
-        view = new TransactionView(transactionModel, this::logout, this::goBack, this::transact);
+        view = new TransactionView(
+                transactionModel,
+                this::logout,
+                this::goBack,
+                this::transact
+        );
     }
 
     public Region getView() {
@@ -58,15 +66,22 @@ public class TransactionController {
             transactionModel.setAmountError("Enter a dollar amount");
             return;
         }
-        double amount = Double.parseDouble(transactionModel.getTransactionAmount());
+        double amount = Double.parseDouble(
+                transactionModel.getTransactionAmount());
         if (amount <= 0) {
             transactionModel.setAmountError("Amount must be greater than 0");
             return;
         }
 
-        // Create objects for standard deposits and withdrawals. Transfers and payments will create their own objects.
-        Transaction transaction = new Transaction(transactionModel.getTransactionType(), amount,
-                transactionModel.getTransactionDate(), transactionModel.getTransactionPayee());
+        // Create objects for standard deposits and withdrawals. Transfers and
+        // payments will create their own objects.
+        Transaction transaction = new Transaction(
+                transactionModel.getTransactionType(),
+                amount,
+                transactionModel.getTransactionDate(),
+                transactionModel.getTransactionPayee()
+        );
+
         double accountBalance = transactionModel.getAccount().getBalance();
         transaction.setAccountId(transactionModel.getAccount().getAcctNum());
 
@@ -85,20 +100,30 @@ public class TransactionController {
             }
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage(), this.getView()).getView()));
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
         }
     }
 
-    private void setPayeeId(Transaction transaction, Connection conn) throws SQLException {
+    private void setPayeeId(Transaction transaction,
+                            Connection conn) throws SQLException {
         if (matchPayeeId() != 0) {
             transaction.setPayeeId(matchPayeeId());
         } else {
-            payeeDao.insertNewPayee(conn, transactionModel.getTransactionPayee());
-            transaction.setPayeeId(payeeDao.readPayeeIdByDescription(conn, transactionModel.getTransactionPayee()));
+            payeeDao.insertNewPayee(
+                    conn, transactionModel.getTransactionPayee());
+            transaction.setPayeeId(payeeDao.readPayeeIdByDescription(
+                    conn, transactionModel.getTransactionPayee()));
         }
     }
 
-    private void depositFunds(Connection conn, Transaction deposit, double acctBalance) throws SQLException {
+    private void depositFunds(Connection conn,
+                              Transaction deposit,
+                              double acctBalance) throws SQLException {
         if (transactionModel.getTransactionPayee().isEmpty()) {
             transactionModel.setPayeeError("Select payee or insert new payee");
             return;
@@ -106,18 +131,33 @@ public class TransactionController {
 
         deposit.setBalanceResult(acctBalance + deposit.getAmount());
         if (transactionDAO.insertTransaction(conn, deposit) != 1 ||
-                accountDao.updateBalance(conn, deposit.getAmount(), deposit.getAccountId()) != 1) {
-            String depositFailed = "Unable to deposit funds. Please contact your bank representative to resolve.";
+                accountDao.updateBalance(
+                        conn,
+                        deposit.getAmount(),
+                        deposit.getAccountId()
+                ) != 1) {
+            String depositFailed = "Unable to deposit funds. " +
+                    "Please contact your bank representative to resolve.";
             throw new SQLException(depositFailed);
         }
 
         deposit.setReferenceId(transactionDAO.readLastTransactionId(conn));
 
-        stage.setScene(new Scene(new SuccessController(
-                stage, new SuccessModel(deposit, transactionModel.getAccount()), login).getView()));
+        SuccessModel successModel = new SuccessModel(
+                deposit,
+                transactionModel.getAccount()
+        );
+
+        SuccessController successCtrl = new SuccessController(
+                stage,
+                successModel,
+                login
+        );
+        stage.setScene(new Scene(successCtrl.getView()));
     }
 
-    private void makePayment(Connection conn, double amount) throws SQLException {
+    private void makePayment(Connection conn,
+                             double amount) throws SQLException {
         if (transactionModel.getTransactionPayee().isEmpty()) {
             transactionModel.setPayeeError("Select a source account");
             return;
@@ -136,40 +176,75 @@ public class TransactionController {
 
         double toInterest = transactionModel.getAccount().getInterestDue();
         double toPrincipal = amount - toInterest;
-        double loanBalanceResult = transactionModel.getAccount().getBalance() - toPrincipal;
-        double sourceBalanceResult = accountDao.readAcctBalanceById(conn, matchPayeeId()) - amount;
+        double balance = transactionModel.getAccount().getBalance();
+        double loanBalanceResult = balance - toPrincipal;
+        double sourceBalanceResult = accountDao.readAcctBalanceById(
+                conn, matchPayeeId()) - amount;
 
-        Transaction payment = new Transaction(type, amount, date, matchPayeeId(), payeeDescription,
-                toPrincipal, toInterest, loanBalanceResult);
+        Transaction payment = new Transaction(
+                type,
+                amount,
+                date,
+                matchPayeeId(),
+                payeeDescription,
+                toPrincipal,
+                toInterest,
+                loanBalanceResult
+        );
         payment.setAccountId(acctNum);
 
         if (transactionDAO.insertPayment(conn, payment) != 1 ||
-        accountDao.updateBalance(conn, toPrincipal * -1, acctNum) != 1 ||
-        accountDao.updateInterestBalance(conn, toInterest, acctNum) != 1) {
+                accountDao.updateBalance(
+                        conn, toPrincipal * -1, acctNum) != 1 ||
+                accountDao.updateInterestBalance(
+                        conn, toInterest, acctNum) != 1) {
 
-            String paymentFailed = "Unable to make payment. Please contact your bank representative to resolve.";
+            String paymentFailed = "Unable to make payment. Please contact " +
+                    "your bank representative to resolve.";
             throw new SQLException(paymentFailed);
         }
         payment.setReferenceId(transactionDAO.readLastTransactionId(conn));
 
-        Transaction sourceWithdrawal = new Transaction(type, amount * -1, date, matchPayeeId(), acctNum);
+        Transaction sourceWithdrawal = new Transaction(
+                type,
+                amount * -1,
+                date, matchPayeeId(),
+                acctNum
+        );
         sourceWithdrawal.setBalanceResult(sourceBalanceResult);
 
         if (transactionDAO.insertTransfer(conn, sourceWithdrawal) != 1 ||
-                accountDao.updateBalance(conn, sourceWithdrawal.getAmount(), matchPayeeId()) != 1) {
+                accountDao.updateBalance(
+                        conn, sourceWithdrawal.getAmount(),
+                        matchPayeeId()) != 1) {
 
-            String paymentFailed = "Unable to make payment. Please contact your bank representative to resolve.";
+            String paymentFailed = "Unable to make payment. Please contact " +
+                    "your bank representative to resolve.";
             throw new SQLException(paymentFailed);
         }
 
-        stage.setScene(new Scene(new SuccessController(
-                stage, new SuccessModel(payment, transactionModel.getAccount()), login).getView()));
+        SuccessModel successModel = new SuccessModel(
+                payment,
+                transactionModel.getAccount()
+        );
+
+        SuccessController successCtrl = new SuccessController(
+                stage,
+                successModel,
+                login
+        );
+
+        stage.setScene(new Scene(successCtrl.getView()));
 
     }
 
-    private void transferFunds(Connection conn, Transaction withdrawTransfer) throws SQLException {
+    private void transferFunds(
+            Connection conn,
+            Transaction withdrawTransfer) throws SQLException {
+
         if (transactionModel.getTransactionPayee().isEmpty()) {
-            transactionModel.setPayeeError("Select an account to transfer from");
+            transactionModel.setPayeeError(
+                    "Select an account to transfer from");
             return;
         }
 
@@ -182,34 +257,73 @@ public class TransactionController {
 
         String payee = withdrawTransfer.getPayee();
 
-        withdrawTransfer = new Transaction(withdrawTransfer.getType(), withdrawTransfer.getAmount() * -1,
-                withdrawTransfer.getDate(), transactionModel.getAccount().getAcctNum(), matchPayeeId());
-        withdrawTransfer.setBalanceResult(withdrawAcctBalance + withdrawTransfer.getAmount());
+        withdrawTransfer = new Transaction(
+                withdrawTransfer.getType(),
+                withdrawTransfer.getAmount() * -1,
+                withdrawTransfer.getDate(),
+                transactionModel.getAccount().getAcctNum(),
+                matchPayeeId()
+        );
+        withdrawTransfer.setBalanceResult(
+                withdrawAcctBalance + withdrawTransfer.getAmount());
         withdrawTransfer.setPayee(payee);
 
-        Transaction depositTransfer = new Transaction(withdrawTransfer.getType(),
-                withdrawTransfer.getAmount() * -1, withdrawTransfer.getDate(), matchPayeeId(),
-                transactionModel.getAccount().getAcctNum());
-        double depositAcctBalance = accountDao.readAcctBalanceById(conn, depositTransfer.getAccountId());
-        depositTransfer.setBalanceResult(depositAcctBalance + depositTransfer.getAmount());
+        Transaction depositTransfer = new Transaction(
+                withdrawTransfer.getType(),
+                withdrawTransfer.getAmount() * -1,
+                withdrawTransfer.getDate(),
+                matchPayeeId(),
+                transactionModel.getAccount().getAcctNum()
+        );
+
+        double depositAcctBalance = accountDao.readAcctBalanceById(
+                conn, depositTransfer.getAccountId());
+
+        depositTransfer.setBalanceResult(
+                depositAcctBalance + depositTransfer.getAmount());
 
 
-        // Perform the deposit side first in order to ensure that the last transaction performed is the withdrawal side
-        // in order to retrieve the correct reference ID
+        // Perform the deposit side first in order to ensure that the last
+        // transaction performed is the withdrawal side in order to retrieve
+        // the correct reference ID
         if (transactionDAO.insertTransfer(conn, depositTransfer) != 1 ||
-                accountDao.updateBalance(conn, depositTransfer.getAmount(), depositTransfer.getAccountId()) != 1 ||
+
+                accountDao.updateBalance(
+                        conn,
+                        depositTransfer.getAmount(),
+                        depositTransfer.getAccountId()) != 1 ||
+
                 transactionDAO.insertTransfer(conn, withdrawTransfer) != 1 ||
-                accountDao.updateBalance(conn, withdrawTransfer.getAmount(), withdrawTransfer.getAccountId()) != 1) {
-            String transferFailed = "Unable to transfer funds. Please contact your bank representative to resolve.";
+
+                accountDao.updateBalance(
+                        conn,
+                        withdrawTransfer.getAmount(),
+                        withdrawTransfer.getAccountId()) != 1) {
+            String transferFailed = "Unable to transfer funds. Please contact" +
+                    " your bank representative to resolve.";
             throw new SQLException(transferFailed);
         }
 
-        withdrawTransfer.setReferenceId(transactionDAO.readLastTransactionId(conn));
-        stage.setScene(new Scene(new SuccessController(
-                stage, new SuccessModel(withdrawTransfer, transactionModel.getAccount()), login).getView()));
+        withdrawTransfer.setReferenceId(
+                transactionDAO.readLastTransactionId(conn));
+
+        SuccessModel successModel = new SuccessModel(
+                withdrawTransfer,
+                transactionModel.getAccount()
+        );
+
+        SuccessController successCtrl = new SuccessController(
+                stage,
+                successModel,
+                login
+        );
+
+        stage.setScene(new Scene(successCtrl.getView()));
     }
 
-    private void withdrawFunds(Connection conn, Transaction withdrawal, double acctBalance) throws SQLException {
+    private void withdrawFunds(Connection conn,
+                               Transaction withdrawal,
+                               double acctBalance) throws SQLException {
         if (transactionModel.getTransactionPayee().isEmpty()) {
             transactionModel.setPayeeError("Select payer or insert new payer");
             return;
@@ -223,14 +337,29 @@ public class TransactionController {
         withdrawal.setAmount(withdrawal.getAmount() * -1);
         withdrawal.setBalanceResult(acctBalance + withdrawal.getAmount());
         if (transactionDAO.insertTransaction(conn, withdrawal) != 1 ||
-                accountDao.updateBalance(conn, withdrawal.getAmount(), withdrawal.getAccountId()) != 1) {
-            String transferFailed = "Unable to transfer funds. Please contact your bank representative to resolve.";
+                accountDao.updateBalance(
+                        conn,
+                        withdrawal.getAmount(),
+                        withdrawal.getAccountId()) != 1) {
+            String transferFailed = "Unable to transfer funds. Please contact" +
+                    " your bank representative to resolve.";
             throw new SQLException(transferFailed);
         }
 
         withdrawal.setReferenceId(transactionDAO.readLastTransactionId(conn));
-        stage.setScene(new Scene(new SuccessController(
-                stage, new SuccessModel(withdrawal, transactionModel.getAccount()), login).getView()));
+
+        SuccessModel successModel = new SuccessModel(
+                withdrawal,
+                transactionModel.getAccount()
+        );
+
+        SuccessController successCtrl = new SuccessController(
+                stage,
+                successModel,
+                login
+        );
+
+        stage.setScene(new Scene(successCtrl.getView()));
     }
 
     private void clearErrors() {
@@ -241,7 +370,8 @@ public class TransactionController {
     private int matchPayeeId() {
 
         for (Payee p : transactionModel.getPayees()) {
-            if (p.getDescription().equals(transactionModel.getTransactionPayee())) {
+            if (p.getDescription().equals(
+                    transactionModel.getTransactionPayee())) {
                 return p.getPayeeNumber();
             }
         }
