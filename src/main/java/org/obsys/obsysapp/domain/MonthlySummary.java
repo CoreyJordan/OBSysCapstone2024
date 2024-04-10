@@ -7,9 +7,7 @@ public class MonthlySummary {
     private final double balanceBegin;
     private final double balanceEnd;
     private final double credits;
-    private double debits;
-    private double interestPaid;
-    private double fees = 0;    // No fees in transactions at this time
+    private final double debits;
 
     private final ArrayList<Transaction> transactions;
 
@@ -17,7 +15,8 @@ public class MonthlySummary {
     public MonthlySummary(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
         this.transactions.sort(Comparator.comparing(Transaction::getDate));
-        balanceBegin = this.transactions.getFirst().getBalance() - this.transactions.getFirst().getAmount();
+        double balance = this.transactions.getFirst().getBalance();
+        balanceBegin = balance - this.transactions.getFirst().getAmount();
         balanceEnd = this.transactions.getLast().getBalance();
         credits = calculateCredits(this.transactions);
         debits = calculateDebits(this.transactions);
@@ -41,11 +40,12 @@ public class MonthlySummary {
     }
 
     public double getInterestPaid() {
-        return interestPaid;
+        return 0;
     }
 
     public double getFees() {
-        return fees;
+        // No fees in transactions at this time
+        return 0;
     }
 
     public ArrayList<Transaction> getTransactions() {

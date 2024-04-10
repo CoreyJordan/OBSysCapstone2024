@@ -83,7 +83,8 @@ public class AccountModel {
     }
 
     public StringProperty acctNumProperty() {
-        return new SimpleStringProperty("..." + String.valueOf(acctNum).substring(6));
+        return new SimpleStringProperty(
+                "..." + String.valueOf(acctNum).substring(6));
     }
 
     public StringProperty balanceProperty() {
@@ -115,7 +116,8 @@ public class AccountModel {
                 transactionsTotal += t.getAmount();
             }
         }
-        return new SimpleStringProperty(String.format("$%,.2f", balance - transactionsTotal));
+        return new SimpleStringProperty(
+                String.format("$%,.2f", balance - transactionsTotal));
     }
 
     public String getPostedBalance() {
@@ -136,7 +138,8 @@ public class AccountModel {
                 transactionsTotal += t.getAmount();
             }
         }
-        return new SimpleStringProperty(String.format("$%,.2f", transactionsTotal));
+        return new SimpleStringProperty(
+                String.format("$%,.2f", transactionsTotal));
     }
 
     public String getPendingDebits() {
@@ -159,7 +162,8 @@ public class AccountModel {
             }
 
         }
-        return new SimpleStringProperty(String.format("$%,.2f", transactionsTotal));
+        return new SimpleStringProperty(
+                String.format("$%,.2f", transactionsTotal));
     }
 
     public String getPendingCredits() {
@@ -192,7 +196,8 @@ public class AccountModel {
 
     }
 
-    private void formatTransactions(ArrayList<String> transactions, Transaction t) {
+    private void formatTransactions(ArrayList<String> transactions,
+                                    Transaction t) {
         String date;
         String description;
         String credit;
@@ -208,13 +213,15 @@ public class AccountModel {
             credit = "-";
         }
 
-        transactions.add(String.format("%-9s %-20s %9s %9s \n", date, description, credit, debit));
+        transactions.add(String.format("%-9s %-20s %9s %9s \n",
+                date, description, credit, debit));
     }
 
     /***
      * Sends transaction beyond a week old to 1 month.
-     * Rather than limit the query to 1 month, we parse it out here. This allows us to get full history details such as
-     * total interest accrued without having to run 2 separate queries.
+     * Rather than limit the query to 1 month, we parse it out here. This allows
+     *  us to get full history details such as total interest accrued without
+     *  having to run 2 separate queries.
      * @return a list of transactions from 7 to 30 days old
      */
     public ArrayList<String> getPostedTransactions() {
@@ -235,8 +242,10 @@ public class AccountModel {
 
         for (Transaction t : history) {
             if (t.getDate().isAfter(LocalDate.now().minusWeeks(1))) {
-                date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
-                payments.add(String.format("%-30s $%,-10.2f", date, t.getAmount()));
+                date = t.getDate().format(
+                        DateTimeFormatter.ofPattern("MM/dd/yy"));
+                payments.add(
+                        String.format("%-30s $%,-10.2f", date, t.getAmount()));
             }
         }
         return payments;
@@ -250,19 +259,26 @@ public class AccountModel {
             if (t.getDate().isBefore(LocalDate.now().minusDays(6)) &&
                     t.getDate().isAfter(LocalDate.now().minusMonths(6))) {
                 date = t.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yy"));
-                payments.add(String.format("%-10s $%,-11.2f $%,-11.2f $%,-11.2f",
-                        date, Math.abs(t.getAmount()), t.getAmtToPrincipal(), t.getAmtToInterest()));
+                payments.add(
+                        String.format("%-10s $%,-11.2f $%,-11.2f $%,-11.2f",
+                                date,
+                                Math.abs(t.getAmount()),
+                                t.getAmtToPrincipal(),
+                                t.getAmtToInterest()));
             }
         }
         return payments;
     }
 
     public StringProperty dateOpenedProperty() {
-        return new SimpleStringProperty(dateOpened.format(DateTimeFormatter.ofPattern("MM/dd/yy")));
+        return new SimpleStringProperty(
+                dateOpened.format(DateTimeFormatter.ofPattern("MM/dd/yy")));
     }
 
     public StringProperty maturityProperty() {
-        return new SimpleStringProperty(dateOpened.plusMonths(term).format(DateTimeFormatter.ofPattern("MM/dd/yy")));
+        return new SimpleStringProperty(
+                dateOpened.plusMonths(term).format(
+                        DateTimeFormatter.ofPattern("MM/dd/yy")));
     }
 
     public StringProperty remainingPaymentsCountProperty() {
@@ -275,7 +291,8 @@ public class AccountModel {
     }
 
     private LocalDate getCurrentDueDate() {
-        LocalDate currentDueDate = dateOpened.withMonth(LocalDate.now().getMonthValue());
+        LocalDate currentDueDate = dateOpened.withMonth(
+                LocalDate.now().getMonthValue());
         currentDueDate = currentDueDate.withYear(LocalDate.now().getYear());
 
         if (currentDueDate.isBefore(LocalDate.now())) {
@@ -285,7 +302,8 @@ public class AccountModel {
     }
 
     public StringProperty dueDateProperty() {
-        return new SimpleStringProperty(getCurrentDueDate().format(DateTimeFormatter.ofPattern("MM/dd/yy")));
+        return new SimpleStringProperty(getCurrentDueDate().format(
+                DateTimeFormatter.ofPattern("MM/dd/yy")));
     }
 
     public StringProperty interestRateProperty() {
@@ -295,7 +313,8 @@ public class AccountModel {
     public StringProperty interestPaymentsProperty() {
         double totalPaid = 0;
         for (Transaction t : history) {
-            if (t.getType().equals("DP") && t.getPayee().equals("Interest Payment")) {
+            if (t.getType().equals("DP") &&
+                    t.getPayee().equals("Interest Payment")) {
                 totalPaid += t.getAmount();
             }
         }
@@ -303,11 +322,13 @@ public class AccountModel {
     }
 
     public StringProperty paidInterestProperty() {
-        return new SimpleStringProperty(String.format("$%,.2f", interestRecieved));
+        return new SimpleStringProperty(
+                String.format("$%,.2f", interestRecieved));
     }
 
     public StringProperty paidPrincipalProperty() {
-        return new SimpleStringProperty(String.format("$%,.2f", loanAmt - balance));
+        return new SimpleStringProperty(
+                String.format("$%,.2f", loanAmt - balance));
     }
 
     public StringProperty installmentProperty() {
@@ -366,7 +387,8 @@ public class AccountModel {
         }
 
         history.sort(Comparator.comparing(Transaction::getDate));
-        long numberOfMonths = ChronoUnit.MONTHS.between(dateOpened, history.getLast().getDate());
+        long numberOfMonths = ChronoUnit.MONTHS.between(
+                dateOpened, history.getLast().getDate());
 
         for (int i = 0; i < numberOfMonths; i++) {
             if (dateOpened.plusMonths(i + 1).isBefore(LocalDate.now())) {

@@ -35,12 +35,14 @@ public class AccountsModel {
             case "IC" -> "Checking+";
             case "LN" -> "Loan";
             case "SV" -> "Saving";
-            default -> throw new IllegalStateException("Unexpected value: " + accounts.get(i).getType());
+            default -> throw new IllegalStateException(
+                    "Unexpected value: " + accounts.get(i).getType());
         });
     }
 
     public StringProperty getAccountNumLast4(int i) {
-        String acctNum = "..." + String.valueOf(accounts.get(i).getAcctNum()).substring(6);
+        String acctNum = "..." +
+                String.valueOf(accounts.get(i).getAcctNum()).substring(6);
         return new SimpleStringProperty(acctNum);
     }
 
@@ -71,8 +73,8 @@ public class AccountsModel {
     }
 
     /**
-     * Produces the next pay date for an upcoming loan payment. Does not return year. Payment date is based directly
-     * from date the account was opened.
+     * Produces the next pay date for an upcoming loan payment. Does not return
+     * year. Payment date is based directly from date the account was opened.
      * @param i the index of the loan account within the list
      * @return the next day and month for payments due
      */
@@ -87,7 +89,8 @@ public class AccountsModel {
                 month++;
             }
 
-            LocalDate next = LocalDate.of(LocalDate.now().getYear(), month, dayDue);
+            LocalDate next = LocalDate.of(
+                    LocalDate.now().getYear(), month, dayDue);
             paymentDate += next.format(DateTimeFormatter.ofPattern("MM/dd"));
             return new SimpleStringProperty(paymentDate);
         }
@@ -97,7 +100,8 @@ public class AccountsModel {
     public StringProperty amountDueProperty(int i) {
         if (accounts.get(i).getPaymentAmt() != -1) {
             String amountDue = "Amount due: ";
-            amountDue += String.format("$%,.2f", accounts.get(i).getPaymentAmt());
+            amountDue += String.format(
+                    "$%,.2f", accounts.get(i).getPaymentAmt());
             return new SimpleStringProperty(amountDue);
         }
         return new SimpleStringProperty("");

@@ -370,9 +370,9 @@ public class TransactionController {
     private int matchPayeeId() {
 
         for (Payee p : transactionModel.getPayees()) {
-            if (p.getDescription().equals(
+            if (p.description().equals(
                     transactionModel.getTransactionPayee())) {
-                return p.getPayeeNumber();
+                return p.payeeNumber();
             }
         }
         return 0;

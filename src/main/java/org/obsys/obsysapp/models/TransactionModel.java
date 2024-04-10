@@ -12,17 +12,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TransactionModel {
-    private final String transactionType; // Types currently include: DP, WD, TF, PY, RC
+    private final String transactionType;
     private final Account account;
     private final ArrayList<Payee> payees;
-    private final StringProperty transactionPayee = new SimpleStringProperty("");
-    private final StringProperty transactionAmount = new SimpleStringProperty("0.00");
-    private final ObjectProperty<LocalDate> transactionDate = new SimpleObjectProperty<>(LocalDate.now());
+    private final StringProperty transactionPayee =
+            new SimpleStringProperty("");
+    private final StringProperty transactionAmount =
+            new SimpleStringProperty("0.00");
+    private final ObjectProperty<LocalDate> transactionDate =
+            new SimpleObjectProperty<>(LocalDate.now());
     private final StringProperty payeeError = new SimpleStringProperty("");
     private final StringProperty amountError = new SimpleStringProperty("");
 
 
-    public TransactionModel(String transactionType, Account account, ArrayList<Payee> payees) {
+    public TransactionModel(String transactionType,
+                            Account account,
+                            ArrayList<Payee> payees) {
         this.transactionType = transactionType;
         this.account = account;
         this.payees = payees;
@@ -44,12 +49,14 @@ public class TransactionModel {
             case "IC" -> "Checking+";
             case "LN" -> "Loan";
             case "SV" -> "Saving";
-            default -> throw new IllegalStateException("Unexpected value: " + account.getType());
+            default -> throw new IllegalStateException("Unexpected value: " +
+                    account.getType());
         });
     }
 
     public StringProperty accountNumProperty() {
-        String acctNum = "..." + String.valueOf(account.getAcctNum()).substring(6);
+        String acctNum = "..." + String.valueOf(
+                account.getAcctNum()).substring(6);
         return new SimpleStringProperty(acctNum);
     }
 
@@ -85,7 +92,8 @@ public class TransactionModel {
                 month++;
             }
 
-            LocalDate next = LocalDate.of(LocalDate.now().getYear(), month, dayDue);
+            LocalDate next = LocalDate.of(
+                    LocalDate.now().getYear(), month, dayDue);
             paymentDate += next.format(DateTimeFormatter.ofPattern("MM/dd"));
             return new SimpleStringProperty(paymentDate);
         }
@@ -148,7 +156,7 @@ public class TransactionModel {
         }
 
         for (Payee p : payees) {
-            payeeDescriptions.add(p.getDescription());
+            payeeDescriptions.add(p.description());
         }
         return payeeDescriptions;
     }

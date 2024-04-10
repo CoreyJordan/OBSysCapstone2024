@@ -18,31 +18,60 @@ public class SuccessModel {
 
     public SimpleStringProperty fieldsProperty() {
         return new SimpleStringProperty(switch (transaction.getType()) {
-            case "TF" -> "Account:\nType:\nAmount\nTo Account:\nBalance Pending:\nDate\nRef. #:";
-            case "PY" -> "Account:\nType:\nAmount\nBalance:\nDate\nRef. #:";
-            default -> "Account:\nType:\nAmount\nPayee:\nBalance Pending:\nDate\nRef. #:";
+            case "TF" -> """
+                    Account:
+                    Type:
+                    Amount
+                    To Account:
+                    Balance Pending:
+                    Date
+                    Ref. #:""";
+            case "PY" -> """
+                    Account:
+                    Type:
+                    Amount
+                    Balance:
+                    Date
+                    Ref. #:""";
+            default -> """
+                    Account:
+                    Type:
+                    Amount
+                    Payee:
+                    Balance Pending:
+                    Date
+                    Ref. #:""";
         });
     }
 
     public SimpleStringProperty detailsProperty() {
         if (transaction.getType().equals("PY")) {
-            return new SimpleStringProperty(String.format("%s \n%s \n%s \n%s \n%s \n%s \n\n",
-                    getAccountName() + " .." + String.valueOf(account.getAcctNum()).substring(6),
-                    formatTransactionType(),
-                    String.format("$%,.2f", Math.abs(transaction.getAmount())),
-                    String.format("$%,.2f", transaction.getBalance()),
-                    transaction.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")),
-                    transaction.getReferenceId()));
+            return new SimpleStringProperty(
+                    String.format("%s \n%s \n%s \n%s \n%s \n%s \n\n",
+                            getAccountName() + " .." + String.valueOf(
+                                    account.getAcctNum()).substring(6),
+                            formatTransactionType(),
+                            String.format("$%,.2f",
+                                    Math.abs(transaction.getAmount())),
+                            String.format("$%,.2f",
+                                    transaction.getBalance()),
+                            transaction.getDate().format(
+                                    DateTimeFormatter.ofPattern("MM/dd/yyyy")),
+                            transaction.getReferenceId()));
         }
 
-        return new SimpleStringProperty(String.format("%s \n%s \n%s \n%s \n%s \n%s \n%s \n\n",
-                    getAccountName() + " .." + String.valueOf(account.getAcctNum()).substring(6),
-                    formatTransactionType(),
-                    String.format("$%,.2f", Math.abs(transaction.getAmount())),
-                    truncatePayee(transaction.getPayee()),
-                    String.format("$%,.2f", transaction.getBalance()),
-                    transaction.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")),
-                    transaction.getReferenceId()));
+        return new SimpleStringProperty(
+                String.format("%s \n%s \n%s \n%s \n%s \n%s \n%s \n\n",
+                        getAccountName() + " .." + String.valueOf(
+                                account.getAcctNum()).substring(6),
+                        formatTransactionType(),
+                        String.format("$%,.2f",
+                                Math.abs(transaction.getAmount())),
+                        truncatePayee(transaction.getPayee()),
+                        String.format("$%,.2f", transaction.getBalance()),
+                        transaction.getDate().format(
+                                DateTimeFormatter.ofPattern("MM/dd/yyyy")),
+                        transaction.getReferenceId()));
     }
 
     private String truncatePayee(String payee) {

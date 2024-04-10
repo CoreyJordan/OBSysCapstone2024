@@ -175,7 +175,7 @@ public class AdminHomeModel {
     public void getAccountDescriptions() {
         acctDescriptions.clear();
         for (Payee p : accounts) {
-            acctDescriptions.add(p.getDescription());
+            acctDescriptions.add(p.description());
         }
     }
 
@@ -189,8 +189,8 @@ public class AdminHomeModel {
 
     public void setSelectedAccountDescription(String selectedDescription) {
         for (Payee p : accounts) {
-            if (p.getDescription().equals(selectedDescription)) {
-                selectedAccount = p.getPayeeNumber();
+            if (p.description().equals(selectedDescription)) {
+                selectedAccount = p.payeeNumber();
             }
         }
     }

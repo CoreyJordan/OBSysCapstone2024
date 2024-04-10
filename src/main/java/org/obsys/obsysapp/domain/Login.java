@@ -6,7 +6,10 @@ public class Login {
     boolean isAdmin;
     private final int personId;
 
-    public Login(String username, String password, boolean isAdmin, int personId) {
+    public Login(String username,
+                 String password,
+                 boolean isAdmin,
+                 int personId) {
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;

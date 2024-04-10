@@ -15,15 +15,23 @@ public class Transaction {
     private double balanceResult;
     private int referenceId;
 
-    public Transaction(String type, double amount, LocalDate date, String payee) {
+    public Transaction(String type,
+                       double amount,
+                       LocalDate date,
+                       String payee) {
         this.type = type;
         this.amount = amount;
         this.date = date;
         this.payee = payee;
     }
 
-    public Transaction(String type, double amount, LocalDate date,
-                       int transferToAcctId, String payee, double amtToPrincipal, double amtToInterest) {
+    public Transaction(String type,
+                       double amount,
+                       LocalDate date,
+                       int transferToAcctId,
+                       String payee,
+                       double amtToPrincipal,
+                       double amtToInterest) {
         this(type, amount, date, payee);
         this.transferToAcctId = transferToAcctId;
         this.amtToPrincipal = amtToPrincipal;
@@ -31,7 +39,11 @@ public class Transaction {
     }
 
     // Transfer Constructor
-    public Transaction(String type, double amount, LocalDate date, int accountId, int transferToAcctId) {
+    public Transaction(String type,
+                       double amount,
+                       LocalDate date,
+                       int accountId,
+                       int transferToAcctId) {
         this.type = type;
         this.amount = amount;
         this.date = date;
@@ -39,14 +51,25 @@ public class Transaction {
         this.transferToAcctId = transferToAcctId;
     }
 
-    public Transaction(String type, double amount, LocalDate date, String payee, double balanceResult) {
+    public Transaction(String type,
+                       double amount,
+                       LocalDate date,
+                       String payee,
+                       double balanceResult) {
         this(type, amount, date, payee);
         this.balanceResult = balanceResult;
     }
 
-    public Transaction(String type, double amount, LocalDate date, int transferToAcctId, String payee,
-                       double amtToPrincipal, double amtToInterest, double balanceResult) {
-        this(type, amount, date, transferToAcctId, payee, amtToPrincipal, amtToInterest);
+    public Transaction(String type,
+                       double amount,
+                       LocalDate date,
+                       int transferToAcctId,
+                       String payee,
+                       double amtToPrincipal,
+                       double amtToInterest,
+                       double balanceResult) {
+        this(type, amount, date, transferToAcctId, payee, amtToPrincipal,
+                amtToInterest);
         this.balanceResult = balanceResult;
     }
 

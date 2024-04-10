@@ -10,8 +10,10 @@ public class CreationModel {
     private final StringProperty firstNameWarning = new SimpleStringProperty("");
     private final StringProperty lastNameWarning = new SimpleStringProperty("");
     private final StringProperty notFound = new SimpleStringProperty("");
-    private final BooleanProperty registrationDisabled = new SimpleBooleanProperty(true);
-    private final BooleanProperty passwordDisable = new SimpleBooleanProperty(true);
+    private final BooleanProperty registrationDisabled =
+            new SimpleBooleanProperty(true);
+    private final BooleanProperty passwordDisable =
+            new SimpleBooleanProperty(true);
 
 
     public BooleanProperty registrationDisabledProperty() {
