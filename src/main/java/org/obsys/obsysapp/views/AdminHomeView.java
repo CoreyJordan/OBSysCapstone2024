@@ -167,21 +167,26 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
             return scrollPane;
         }
 
-        scrollPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
-                new CornerRadii(5), BorderWidths.DEFAULT)));
+        scrollPane.setBorder(new Border(new BorderStroke(
+                Color.BLACK,
+                BorderStrokeStyle.SOLID,
+                new CornerRadii(5),
+                BorderWidths.DEFAULT)));
 
         VBox historyBox = new VBox();
         historyBox.setPrefWidth(440);
         scrollPane.setContent(historyBox);
 
-        historyBox.getChildren().addAll(accountModel.getType().equals("LN") ? loanHistory() : accountHistory());
+        historyBox.getChildren().addAll(accountModel.getType().equals("LN") ?
+                loanHistory() : accountHistory());
 
         return scrollPane;
     }
 
     private ArrayList<Node> loanHistory() {
         String headerScheduled = String.format("%-30s %-10s", "Date", "Amount");
-        String headerPosted = String.format("%-10s %-12s %-12s %-12s", "Date", "Amount", "Principal", "Interest");
+        String headerPosted = String.format("%-10s %-12s %-12s %-12s",
+                "Date", "Amount", "Principal", "Interest");
 
         return new ArrayList<>() {{
             add(obsysLabel("Scheduled Payments", 0, 0));
@@ -199,7 +204,8 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> accountHistory() {
-        String header = String.format("%-9s %-20s %9s %9s \n", "Date", "Description", "Credit", "Debit");
+        String header = String.format("%-9s %-20s %9s %9s \n",
+                "Date", "Description", "Credit", "Debit");
 
         return new ArrayList<>() {{
             add(obsysLabel("Pending Transactions", 0, 0));
@@ -246,39 +252,53 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         btnOpenAcct.setOnAction(evt -> openAccountHandler.run());
 
         Button btnCloseAcct = obsysButton("Close Account", 725, 165, 170);
-        btnCloseAcct.disableProperty().bind(adminModel.actionPanelDisabledProperty());
+        btnCloseAcct.disableProperty().bind(
+                adminModel.actionPanelDisabledProperty());
         btnCloseAcct.setOnAction(evt -> closeAccountHandler.run());
 
         Button btnDeposit = obsysButton("Deposit Funds", 725, 245, 170);
-        btnDeposit.disableProperty().bind(adminModel.actionPanelDisabledProperty());
+        btnDeposit.disableProperty().bind(
+                adminModel.actionPanelDisabledProperty());
         btnDeposit.setOnAction(evt -> {
             accountModel.setTransactionType("DP");
             transactionHandler.run();
         });
 
         Button btnWithdraw = obsysButton("Withdraw Funds", 725, 285, 170);
-        btnWithdraw.disableProperty().bind(adminModel.actionPanelDisabledProperty());
+        btnWithdraw.disableProperty().bind(
+                adminModel.actionPanelDisabledProperty());
         btnWithdraw.setOnAction(evt -> {
             accountModel.setTransactionType("WD");
             transactionHandler.run();
         });
 
         Button btnTransfer = obsysButton("Transfer Funds", 725, 325, 170);
-        btnTransfer.disableProperty().bind(adminModel.actionPanelDisabledProperty());
+        btnTransfer.disableProperty().bind(
+                adminModel.actionPanelDisabledProperty());
         btnTransfer.setOnAction(evt -> {
             accountModel.setTransactionType("TF");
             transactionHandler.run();
         });
 
         Button btnPayment = obsysButton("Make a Payment", 725, 405, 170);
-        btnPayment.disableProperty().bind(adminModel.actionPanelDisabledProperty());
+        btnPayment.disableProperty().bind(
+                adminModel.actionPanelDisabledProperty());
         btnPayment.setOnAction(evt -> {
             accountModel.setTransactionType("PY");
             transactionHandler.run();
         });
 
-        return new ArrayList<>(List.of(hypLogout, hypClear, btnSearchName, btnOpenAcct, btnCloseAcct, btnDeposit,
-                btnWithdraw, btnTransfer, btnPayment, btnSearchByAcct));
+        return new ArrayList<>(List.of(
+                hypLogout,
+                hypClear,
+                btnSearchName,
+                btnOpenAcct,
+                btnCloseAcct,
+                btnDeposit,
+                btnWithdraw,
+                btnTransfer,
+                btnPayment,
+                btnSearchByAcct));
     }
 
     @Override
@@ -292,17 +312,26 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
     private ArrayList<Node> createLookupFields() {
         TextField txtAcctNum = obsysTextField(15, 120, 190);
         Label lblAcctNum = obsysLabel("ACCOUNT NUMBER", 35, 122, "hint");
-        txtAcctNum.textProperty().bindBidirectional(adminModel.accountNumberProperty());
+        txtAcctNum.textProperty().bindBidirectional(
+                adminModel.accountNumberProperty());
 
         TextField txtLastName = obsysTextField(15, 230, 190);
         Label lblLastName = obsysLabel("LAST NAME", 35, 232, "hint");
-        txtLastName.textProperty().bindBidirectional(adminModel.searchLastNameProperty());
+        txtLastName.textProperty().bindBidirectional(
+                adminModel.searchLastNameProperty());
 
         TextField txtFirstName = obsysTextField(15, 275, 190);
         Label lblFirstName = obsysLabel("FIRST NAME", 35, 277, "hint");
-        txtFirstName.textProperty().bindBidirectional(adminModel.searchFirstNameProperty());
+        txtFirstName.textProperty().bindBidirectional(
+                adminModel.searchFirstNameProperty());
 
-        return new ArrayList<>(List.of(txtAcctNum, lblAcctNum, txtLastName, lblLastName, txtFirstName, lblFirstName));
+        return new ArrayList<>(List.of(
+                txtAcctNum,
+                lblAcctNum,
+                txtLastName,
+                lblLastName,
+                txtFirstName,
+                lblFirstName));
     }
 
     private ArrayList<Node> createInfoFields() {
@@ -332,14 +361,24 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         Label lblEmail = obsysLabel("EMAIL", 250, 252, "hint");
         txtEmail.textProperty().bind(adminModel.emailProperty());
 
-        return new ArrayList<>(List.of(txtFirstName, lblFirstName, txtLastName, lblLastName, txtAddress, lblAddress,
-                txtPhone, lblPhone, txtEmail, lblEmail)) {{
+        return new ArrayList<>(List.of(
+                txtFirstName,
+                lblFirstName,
+                txtLastName,
+                lblLastName,
+                txtAddress,
+                lblAddress,
+                txtPhone,
+                lblPhone,
+                txtEmail,
+                lblEmail)) {{
             addAll(createAccountCombo());
         }};
     }
 
     private ArrayList<Node> createAccountCombo() {
-        ComboBox<String> cmbAccount = obsysStringCombo(new ArrayList<>(), 230, 206, 218);
+        ComboBox<String> cmbAccount = obsysStringCombo(
+                new ArrayList<>(), 230, 206, 218);
         cmbAccount.setItems(adminModel.getAcctDescriptions());
         Label lblAccount = obsysLabel("ACCOUNT", 250, 208, "hint");
         cmbAccount.setOnAction(evt -> {

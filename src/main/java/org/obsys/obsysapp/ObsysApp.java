@@ -20,10 +20,12 @@ public class ObsysApp extends Application {
             stage.setResizable(false);
 
             stage.setScene(new Scene(
-                    new LoginController(stage, "dolphinLogin.png", "Welcome").getView()));
+                    new LoginController(
+                            stage, "dolphinLogin.png", "Welcome").getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
+            stage.setScene(new Scene(
+                    new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }

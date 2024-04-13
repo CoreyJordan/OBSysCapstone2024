@@ -18,7 +18,10 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
     private final Runnable logoutHandler;
     private final Runnable returnHandler;
 
-    public ErrorView(ErrorModel errorModel, Runnable exitHandler, Runnable logoutHandler, Runnable returnHandler) {
+    public ErrorView(ErrorModel errorModel,
+                     Runnable exitHandler,
+                     Runnable logoutHandler,
+                     Runnable returnHandler) {
         error = errorModel;
         this.exitHandler = exitHandler;
         this.logoutHandler = logoutHandler;
@@ -40,7 +43,8 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
         Hyperlink hypLogout = obsysLink("Logout", 830, 5);
         hypLogout.setOnAction(evt -> logoutHandler.run());
 
-        Button btnBack = obsysButton("Back", 210, 400, 200, new Image("back.png"));
+        Image imgBack = new Image("back.png");
+        Button btnBack = obsysButton("Back", 210, 400, 200, imgBack);
         btnBack.setOnAction(evt -> returnHandler.run());
 
         Button btnClose = obsysButton("Close Program", 210, 450, 200);
@@ -61,9 +65,11 @@ public class ErrorView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> createLabels() {
-        String prompt = "An unexpected error has occurred. Please return to the previous page or exit the application";
+        String prompt = "An unexpected error has occurred. Please return to " +
+                "the previous page or exit the application";
         return new ArrayList<>(){{
-            add(obsysLabel("Oops! Something went wrong!", 300, 50, 600, "banner"));
+            add(obsysLabel("Oops! Something went wrong!",
+                    300, 50, 600, "banner"));
             add(obsysLabel(prompt, 190, 285, 270));
             add(obsysLabel(error.getError(), 460, 280, 400));
         }};

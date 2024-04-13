@@ -23,7 +23,10 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
     private final Runnable returnHandler;
     private final Stage stage;
 
-    public StatementView(StatementModel stmtModel, Runnable logoutHandler, Runnable returnHandler, Stage stage) {
+    public StatementView(StatementModel stmtModel,
+                         Runnable logoutHandler,
+                         Runnable returnHandler,
+                         Stage stage) {
         this.stmtModel = stmtModel;
         this.logoutHandler = logoutHandler;
         this.returnHandler = returnHandler;
@@ -47,19 +50,22 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> loadImages() {
-        return new ArrayList<>(List.of(obsysImage("dolphinLogoBlue.png", 35, 50, 170, 140)));
+        return new ArrayList<>(List.of(
+                obsysImage("dolphinLogoBlue.png", 35, 50, 170, 140)));
     }
 
     @Override
     public ArrayList<Node> createLabels() {
         String prompt = "Select a month and Open Statement to view that statement.\n" +
                 "Press Print to print a copy or save it to file.";
-        return new ArrayList<>(List.of(obsysLabel("Statement", 210, 10, "banner"),
+        return new ArrayList<>(List.of(
+                obsysLabel("Statement", 210, 10, "banner"),
                 obsysLabel(prompt, 620, 55, 300, "hint")));
     }
 
     public ArrayList<Node> createButtons(Node printableNode) {
-        Button btnBack = obsysButton("Back", 10, 10, 100, new Image("back.png"));
+        Button btnBack = obsysButton(
+                "Back", 10, 10, 100, new Image("back.png"));
         btnBack.setOnAction(evt -> returnHandler.run());
 
         Hyperlink hypLogout = obsysLink("Logout", 830, 5);
@@ -103,16 +109,18 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
         Label lblStmtPeriod = obsysLabel("Month to Month", 200, 253);
         lblStmtPeriod.textProperty().bind(stmtModel.stmtPeriodProperty());
 
-        return new ArrayList<>(List.of(lblAcctNum, lblStmtDate, lblStmtPeriod)) {{
-            add(obsysImage("dolphinLogoBlue.png", 10, 20, 200, 180));
-            add(obsysLabel("OBSys Banking", 220, 50, "header3"));
-            add(obsysLabel("1234 Street St.\nOuter Banks, NC 27959", 220, 100));
-            add(obsysLabel("STATEMENT OF ACCOUNT", 430, 165));
-            add(obsysLabel(stmtPeriod, 10, 210, "right-aligned"));
-            add(obsysLabel(nameAndAddress, 10, 320));
-            add(createMonthlySummary());
-            add(createTransactionsTable());
-        }};
+        return new ArrayList<>(List.of(
+                lblAcctNum,
+                lblStmtDate,
+                lblStmtPeriod,
+                obsysImage("dolphinLogoBlue.png", 10, 20, 200, 180),
+                obsysLabel("OBSys Banking", 220, 50, "header3"),
+                obsysLabel("1234 Street St.\nOuter Banks, NC 27959", 220, 100),
+                obsysLabel("STATEMENT OF ACCOUNT", 430, 165),
+                obsysLabel(stmtPeriod, 10, 210, "right-aligned"),
+                obsysLabel(nameAndAddress, 10, 320),
+                createMonthlySummary(),
+                createTransactionsTable()));
     }
 
     private Node createMonthlySummary() {
@@ -146,9 +154,13 @@ public class StatementView extends ViewBuilder implements IObsysBuilder {
 
     private void print(Node node) {
         PrinterJob job = PrinterJob.createPrinterJob();
-        PageLayout layout = job.getPrinter().createPageLayout(Paper.NA_LETTER, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
+        PageLayout layout = job.getPrinter().createPageLayout(
+                Paper.NA_LETTER,
+                PageOrientation.PORTRAIT,
+                Printer.MarginType.DEFAULT);
 
-        double ratio = layout.getPrintableHeight() / node.getBoundsInParent().getHeight() * .60;
+        double ratio = layout.getPrintableHeight() /
+                node.getBoundsInParent().getHeight() * .60;
         Scale scale = new Scale(ratio, ratio);
         node.getTransforms().add(scale);
 

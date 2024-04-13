@@ -17,7 +17,9 @@ public class TransactionView extends ViewBuilder implements IObsysBuilder {
     private final Runnable returnHandler;
     private final Runnable transactionHandler;
 
-    public TransactionView(TransactionModel transactionModel, Runnable logoutHandler, Runnable returnHandler,
+    public TransactionView(TransactionModel transactionModel,
+                           Runnable logoutHandler,
+                           Runnable returnHandler,
                            Runnable transactionHandler) {
         this.transactionModel = transactionModel;
         this.logoutHandler = logoutHandler;
@@ -58,15 +60,21 @@ public class TransactionView extends ViewBuilder implements IObsysBuilder {
     @Override
     public ArrayList<Node> createLabels() {
         Label lblBanner = obsysLabel("Deposit Funds", 270, 75, "sub-header");
-        lblBanner.textProperty().bind(transactionModel.transactionTypeProperty());
+        lblBanner.textProperty().bind(
+                transactionModel.transactionTypeProperty());
 
         Label lblPayeeError = obsysLabel("", 625, 295, 270, "warning");
-        lblPayeeError.textProperty().bind(transactionModel.payeeErrorProperty());
+        lblPayeeError.textProperty().bind(
+                transactionModel.payeeErrorProperty());
 
         Label lblAmountError = obsysLabel("", 625, 345, 270, "warning");
-        lblAmountError.textProperty().bind(transactionModel.amountErrorProperty());
+        lblAmountError.textProperty().bind(
+                transactionModel.amountErrorProperty());
 
-        return new ArrayList<>(List.of(lblBanner, lblPayeeError, lblAmountError)) {{
+        return new ArrayList<>(List.of(
+                lblBanner,
+                lblPayeeError,
+                lblAmountError)) {{
             addAll(addAcctLabels());
         }};
     }
@@ -90,19 +98,22 @@ public class TransactionView extends ViewBuilder implements IObsysBuilder {
     public ArrayList<Node> createTextFields() {
         TextField txtAmount = obsysTextField(405, 340, 200);
         txtAmount.setAlignment(Pos.CENTER_RIGHT);
-        txtAmount.textProperty().bindBidirectional(transactionModel.transactionAmountProperty());
+        txtAmount.textProperty().bindBidirectional(
+                transactionModel.transactionAmountProperty());
         txtAmount.setOnMouseClicked(evt -> txtAmount.selectAll());
 
         // Force the user into currency entries
         Pattern pattern = Pattern.compile("\\d*|\\d+\\.\\d{0,2}");
         TextFormatter<Object> formatter = new TextFormatter<>(change ->
-                pattern.matcher(change.getControlNewText()).matches() ? change : null);
+                pattern.matcher(
+                        change.getControlNewText()).matches() ? change : null);
         txtAmount.setTextFormatter(formatter);
 
         Label lblAmount = obsysLabel("AMOUNT", 425, 342, "hint");
 
         DatePicker dtpDate = obsysDatePicker(465, 395, 140);
-        dtpDate.valueProperty().bindBidirectional(transactionModel.transactionDateProperty());
+        dtpDate.valueProperty().bindBidirectional(
+                transactionModel.transactionDateProperty());
         // Force user to pick date, safe input
         dtpDate.setEditable(false);
         Label lblDate = obsysLabel("DATE", 485, 397, "hint");
@@ -127,10 +138,12 @@ public class TransactionView extends ViewBuilder implements IObsysBuilder {
         lblBalance.setAlignment(Pos.CENTER_RIGHT);
 
         Label lblBalanceType = obsysLabel("TYPE", 705, 210, 175, "hint");
-        lblBalanceType.textProperty().bind(transactionModel.balanceTypeProperty());
+        lblBalanceType.textProperty().bind(
+                transactionModel.balanceTypeProperty());
         lblBalanceType.setAlignment(Pos.CENTER_RIGHT);
 
-        Label lblStatus = obsysLabel("This account is status", 540, 170, "panel-warning");
+        Label lblStatus = obsysLabel(
+                "This account is status", 540, 170, "panel-warning");
         lblStatus.textProperty().bind(transactionModel.statusProperty());
 
         Label lblPaymentDate = obsysLabel("", 540, 200);
@@ -140,20 +153,30 @@ public class TransactionView extends ViewBuilder implements IObsysBuilder {
         lblAmountDue.textProperty().bind(transactionModel.amountDueProperty());
 
         return new ArrayList<>(List.of(
-                lblAcctName, lblAcctNum, lblBalance, lblBalanceType, lblStatus, lblPaymentDate, lblAmountDue));
+                lblAcctName,
+                lblAcctNum,
+                lblBalance,
+                lblBalanceType,
+                lblStatus,
+                lblPaymentDate,
+                lblAmountDue));
     }
 
     private ArrayList<Node> createPayeeCombo() {
-        ComboBox<String> cmbPayee = obsysStringCombo(transactionModel.getPayeeDescriptions(), 285, 285, 320);
+        ComboBox<String> cmbPayee = obsysStringCombo(
+                transactionModel.getPayeeDescriptions(), 285, 285, 320);
         cmbPayee.setValue(transactionModel.getPayeeDescriptions().getFirst());
         if (cmbPayee.getValue().isEmpty()) {
             cmbPayee.setEditable(true);
         }
 
-        // This event ensures user cannot edit payees in the list from this selector.
-        cmbPayee.setOnAction(evt -> cmbPayee.setEditable(cmbPayee.getValue().isEmpty()));
+        // This event ensures user cannot edit payees in the list from this
+        // selector.
+        cmbPayee.setOnAction(evt ->
+                cmbPayee.setEditable(cmbPayee.getValue().isEmpty()));
 
-        cmbPayee.valueProperty().bindBidirectional(transactionModel.transactionPayeeProperty());
+        cmbPayee.valueProperty().bindBidirectional(
+                transactionModel.transactionPayeeProperty());
 
         Label lblPayeeType = obsysLabel("PAYER", 305, 287, "hint");
         lblPayeeType.textProperty().bind(transactionModel.payeeTypeProperty());

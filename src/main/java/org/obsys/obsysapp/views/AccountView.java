@@ -20,8 +20,11 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     private final Runnable transactionHandler;
     private final Runnable statementHandler;
 
-    public AccountView(AccountModel acctModel, Runnable returnHandler, Runnable logoutHandler,
-                       Runnable transactionHandler, Runnable statementHandler) {
+    public AccountView(AccountModel acctModel,
+                       Runnable returnHandler,
+                       Runnable logoutHandler,
+                       Runnable transactionHandler,
+                       Runnable statementHandler) {
         this.acctModel = acctModel;
         this.returnHandler = returnHandler;
         this.logoutHandler = logoutHandler;
@@ -87,8 +90,10 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> loanHistoryLabels() {
-        String headerScheduled = String.format("%-30s %-10s", "Date", "Amount");
-        String headerPosted = String.format("%-10s %-12s %-12s %-12s", "Date", "Amount", "Principal", "Interest");
+        String headerScheduled = String.format("%-30s %-10s",
+                "Date", "Amount");
+        String headerPosted = String.format("%-10s %-12s %-12s %-12s",
+                "Date", "Amount", "Principal", "Interest");
         return new ArrayList<>() {{
             add(obsysLabel("Scheduled Payments", 0, 0));
             add(obsysLabel(headerScheduled, 0, 0, "table"));
@@ -105,7 +110,8 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> historyLabels() {
-        String header = String.format("%-9s %-20s %9s %9s \n", "Date", "Description", "Credit", "Debit");
+        String header = String.format("%-9s %-20s %9s %9s \n",
+                "Date", "Description", "Credit", "Debit");
 
         return new ArrayList<>() {{
             add(obsysLabel("Pending Transactions", 0, 0));
@@ -140,7 +146,8 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> paymentDetailsSummary() {
-        Label lblFields = obsysLabel("Amount Due:\nDue Date:", 645, 380, "right-aligned");
+        Label lblFields = obsysLabel("Amount Due:\nDue Date:", 645, 380,
+                "right-aligned");
 
         Label lblAmtDue = obsysLabel("$###.##", 780, 380);
         lblAmtDue.textProperty().bind(acctModel.installmentProperty());
@@ -164,8 +171,13 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
         lblRate.textProperty().bind(acctModel.interestRateProperty());
 
         Label lblPaymentsLeft = obsysLabel("###", 220, 287.5);
-        lblPaymentsLeft.textProperty().bind(acctModel.remainingPaymentsCountProperty());
-        return new ArrayList<>(List.of(lblOpened, lblMature, lblRate, lblPaymentsLeft)) {{
+        lblPaymentsLeft.textProperty().bind(
+                acctModel.remainingPaymentsCountProperty());
+        return new ArrayList<>(List.of(
+                lblOpened,
+                lblMature,
+                lblRate,
+                lblPaymentsLeft)) {{
             add(obsysLabel(fields, 25, 220, "right-aligned"));
         }};
     }
@@ -204,22 +216,31 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> balanceSummaryLabels() {
-        String fields = "Posted Balance:\nPending Debits:\nPending Credits:\nAvailable Balance:";
+        String fields = """
+                Posted Balance:
+                Pending Debits:
+                Pending Credits:
+                Available Balance:""";
         Label lblFields = obsysLabel(fields, 300, 220, 250, "right-aligned");
 
-        Label lblPosted = obsysLabel("$#,###.##", 500, 220, 150, "right-aligned");
+        Label lblPosted = obsysLabel("", 500, 220, 150, "right-aligned");
         lblPosted.textProperty().bind(acctModel.postedBalanceProperty());
 
-        Label lblDebits = obsysLabel("$###.##", 500, 242.5, 150, "right-aligned");
+        Label lblDebits = obsysLabel("", 500, 242.5, 150, "right-aligned");
         lblDebits.textProperty().bind(acctModel.pendingDebitsProperty());
 
-        Label lblCredits = obsysLabel("$###.##", 500, 265, 150, "right-aligned");
+        Label lblCredits = obsysLabel("", 500, 265, 150, "right-aligned");
         lblCredits.textProperty().bind(acctModel.pendingCreditsProperty());
 
-        Label lblAvailable = obsysLabel("$###.##", 500, 287.5, 150, "right-aligned");
+        Label lblAvailable = obsysLabel("", 500, 287.5, 150, "right-aligned");
         lblAvailable.textProperty().bind(acctModel.balanceProperty());
 
-        return new ArrayList<>(List.of(lblFields, lblPosted, lblDebits, lblCredits, lblAvailable));
+        return new ArrayList<>(List.of(
+                lblFields,
+                lblPosted,
+                lblDebits,
+                lblCredits,
+                lblAvailable));
     }
 
     private ArrayList<Node> createAccountOverviewLabels() {
@@ -237,15 +258,21 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
         lblBalanceType.textProperty().bind(acctModel.balanceTypeProperty());
         lblBalanceType.setAlignment(Pos.CENTER_RIGHT);
 
-        Label lblStatus = obsysLabel("This account is status", 295, 100, "warning");
+        Label lblStatus = obsysLabel("", 295, 100, "warning");
         lblStatus.textProperty().bind(acctModel.statusProperty());
 
-        return new ArrayList<>(List.of(lblAcctName, lblAcctNum, lblBalance, lblBalanceType, lblStatus));
+        return new ArrayList<>(List.of(
+                lblAcctName,
+                lblAcctNum,
+                lblBalance,
+                lblBalanceType,
+                lblStatus));
     }
 
     @Override
     public ArrayList<Node> createButtons() {
-        Button btnBack = obsysButton("Home", 10, 10, 100, new Image("back.png"));
+        Image imgBack = new Image("back.png");
+        Button btnBack = obsysButton("Home", 10, 10, 100, imgBack);
         btnBack.setOnAction(evt -> returnHandler.run());
 
         Hyperlink hypLogout = obsysLink("Logout", 830, 5);
@@ -276,18 +303,23 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
         });
 
         return new ArrayList<>(List.of(btnBack, hypLogout)) {{
-            addAll(acctModel.getType().equals("LN") ? List.of(btnPay) : List.of(btnDeposit, btnWithdraw, btnTransfer));
+            addAll(acctModel.getType().equals("LN") ? List.of(btnPay) : List.of(
+                    btnDeposit,
+                    btnWithdraw,
+                    btnTransfer));
             addAll(createComboBox());
         }};
     }
 
     private ArrayList<Node> createComboBox() {
-        // Account page sufficiently displays payment history, rather than design a loan statement, we just escape.
+        // Account page sufficiently displays payment history, rather than
+        // design a loan statement, we just escape.
         if (acctModel.getType().equals("LN")) {
             return new ArrayList<>();
         }
 
-        ComboBox<LocalDate> cmbMonths = this.obsysDateCombo(acctModel.getMonths(), 655, 475, 200);
+        ComboBox<LocalDate> cmbMonths = this.obsysDateCombo(
+                acctModel.getMonths(), 655, 475, 200);
         cmbMonths.setOnAction(evt -> {
             acctModel.setSelectedMonth(cmbMonths.getValue());
             statementHandler.run();

@@ -18,8 +18,8 @@ public class LoginValidator extends ObsysValidator{
     }
 
     /**
-     * Checks the username against the business rules for valid usernames. This does NOT indicate the database contains
-     * the given username.
+     * Checks the username against the business rules for valid usernames. This
+     * does NOT indicate the database contains the given username.
      * @return True if username passes all checks.
      */
     public boolean passwordIsValid() {
@@ -34,8 +34,8 @@ public class LoginValidator extends ObsysValidator{
     }
 
     /**
-     * Checks the password against the business rules for valid passwords. This does NOT indicate the database contains
-     * the given password.
+     * Checks the password against the business rules for valid passwords. This
+     * does NOT indicate the database contains the given password.
      * @return True if password passes all checks.
      */
     public boolean usernameIsValid() {

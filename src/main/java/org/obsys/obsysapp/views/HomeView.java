@@ -20,7 +20,10 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
     private final Runnable logoutHandler;
     private final Runnable navigationHandler;
 
-    public HomeView(Login user, AccountsModel acctModel, Runnable logoutHandler, Runnable navigationHandler) {
+    public HomeView(Login user,
+                    AccountsModel acctModel,
+                    Runnable logoutHandler,
+                    Runnable navigationHandler) {
         this.user = user;
         this.accountsModel = acctModel;
         this.logoutHandler = logoutHandler;
@@ -64,9 +67,11 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> createLabels() {
-        String instructions = "Select an account to view more details or to perform transactions.";
+        String instructions = "Select an account to view more details or to " +
+                "perform transactions.";
         return new ArrayList<>(){{
-            add(obsysLabel("Welcome " + user.getUsername(), 20, 10, "sub-header"));
+            add(obsysLabel("Welcome " + user.getUsername(),
+                    20, 10, "sub-header"));
             add(obsysLabel("Accounts Home", 400, 50, "banner"));
             add(obsysLabel(instructions, 20, 140, 230));
         }};
@@ -97,7 +102,8 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
     }
 
     private ArrayList<Node> addAcctLabels(int i) {
-        Hyperlink hypAcctName = obsysLink("AcctType", 10, 10 + (i * 120), "sub-header");
+        Hyperlink hypAcctName = obsysLink("AcctType",
+                10, 10 + (i * 120), "sub-header");
         hypAcctName.textProperty().bind(accountsModel.getAccountType(i));
         hypAcctName.setOnAction(evt -> {
             accountsModel.setTargetAccountNumber(accountsModel.getAcctNum(i));
@@ -107,15 +113,19 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
         Label lblAcctNum = obsysLabel("....0000", 125, 75 + (i * 120));
         lblAcctNum.textProperty().bind(accountsModel.getAccountNumLast4(i));
 
-        Label lblBalance = obsysLabel("Amount of Balance", 440, 50 + (i * 120), 175);
+        Label lblBalance = obsysLabel("Amount of Balance",
+                440, 50 + (i * 120), 175);
         lblBalance.textProperty().bind(accountsModel.getBalance(i));
         lblBalance.setAlignment(Pos.CENTER_RIGHT);
 
-        Label lblBalanceType = obsysLabel("TYPE", 440, 70 + (i * 120), 175, "hint");
-        lblBalanceType.textProperty().bind(accountsModel.balanceTypeProperty(i));
+        Label lblBalanceType = obsysLabel("TYPE",
+                440, 70 + (i * 120), 175, "hint");
+        lblBalanceType.textProperty().bind(
+                accountsModel.balanceTypeProperty(i));
         lblBalanceType.setAlignment(Pos.CENTER_RIGHT);
 
-        Label lblStatus = obsysLabel("This account is status", 275, 30 + (i * 120), "panel-warning");
+        Label lblStatus = obsysLabel("This account is status",
+                275, 30 + (i * 120), "panel-warning");
         lblStatus.textProperty().bind(accountsModel.statusProperty(i));
 
         Label lblPaymentDate = obsysLabel("", 275, 60 + (i * 120));
@@ -125,6 +135,12 @@ public class HomeView extends ViewBuilder implements IObsysBuilder {
         lblAmountDue.textProperty().bind(accountsModel.amountDueProperty(i));
 
         return new ArrayList<>(List.of(
-                hypAcctName, lblAcctNum, lblBalance, lblBalanceType, lblStatus, lblPaymentDate, lblAmountDue));
+                hypAcctName,
+                lblAcctNum,
+                lblBalance,
+                lblBalanceType,
+                lblStatus,
+                lblPaymentDate,
+                lblAmountDue));
     }
 }

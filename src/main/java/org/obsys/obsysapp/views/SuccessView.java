@@ -17,7 +17,9 @@ public class SuccessView extends ViewBuilder implements IObsysBuilder {
     private final Runnable logoutHandler;
     private final Runnable returnHandler;
 
-    public SuccessView(SuccessModel successModel, Runnable logoutHandler, Runnable returnHandler) {
+    public SuccessView(SuccessModel successModel,
+                       Runnable logoutHandler,
+                       Runnable returnHandler) {
         this.successModel = successModel;
         this.logoutHandler = logoutHandler;
         this.returnHandler = returnHandler;
@@ -65,7 +67,8 @@ public class SuccessView extends ViewBuilder implements IObsysBuilder {
         Hyperlink hypLogout = obsysLink("Logout", 830, 5);
         hypLogout.setOnAction(evt -> logoutHandler.run());
 
-        Button btnBack = obsysButton("Return to Account", 650, 450, 200, new Image("back.png"));
+        Button btnBack = obsysButton(
+                "Return to Account", 650, 450, 200, new Image("back.png"));
         btnBack.setOnAction(evt -> returnHandler.run());
 
         return new ArrayList<>(List.of(hypLogout, btnBack));
