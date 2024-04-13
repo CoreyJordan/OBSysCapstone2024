@@ -279,24 +279,28 @@ public class AccountView extends ViewBuilder implements IObsysBuilder {
         hypLogout.setOnAction(evt -> logoutHandler.run());
 
         Button btnPay = obsysButton("Make a Payment", 655, 300, 200);
+        btnPay.disableProperty().bind(acctModel.accountInactiveProperty());
         btnPay.setOnAction(evt -> {
             acctModel.setTransactionType("PY");
             transactionHandler.run();
         });
 
         Button btnDeposit = obsysButton("Deposit Funds", 655, 300, 200);
+        btnDeposit.disableProperty().bind(acctModel.accountInactiveProperty());
         btnDeposit.setOnAction(evt -> {
             acctModel.setTransactionType("DP");
             transactionHandler.run();
         });
 
         Button btnWithdraw = obsysButton("Withdraw Funds", 655, 350, 200);
+        btnWithdraw.disableProperty().bind(acctModel.accountInactiveProperty());
         btnWithdraw.setOnAction(evt -> {
             acctModel.setTransactionType("WD");
             transactionHandler.run();
         });
 
         Button btnTransfer = obsysButton("Transfer Funds", 655, 400, 200);
+        btnTransfer.disableProperty().bind(acctModel.accountInactiveProperty());
         btnTransfer.setOnAction(evt -> {
             acctModel.setTransactionType("TF");
             transactionHandler.run();

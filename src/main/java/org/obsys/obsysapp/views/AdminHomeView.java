@@ -2,7 +2,6 @@ package org.obsys.obsysapp.views;
 
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -26,9 +25,14 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
     private final Runnable searchAcctHandler;
     private AnchorPane adminWindow;
 
-    public AdminHomeView(AdminHomeModel adminModel, Runnable logoutHandler,
-                         Runnable clearFormHandler, Runnable accountSelectionHandler, Runnable searchNameHandler,
-                         Runnable openAccountHandler, Runnable closeAccountHandler, Runnable transactionHandler,
+    public AdminHomeView(AdminHomeModel adminModel,
+                         Runnable logoutHandler,
+                         Runnable clearFormHandler,
+                         Runnable accountSelectionHandler,
+                         Runnable searchNameHandler,
+                         Runnable openAccountHandler,
+                         Runnable closeAccountHandler,
+                         Runnable transactionHandler,
                          Runnable searchAcctHandler) {
         this.adminModel = adminModel;
         this.logoutHandler = logoutHandler;
@@ -66,7 +70,8 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
 
     @Override
     public ArrayList<Node> loadImages() {
-        return new ArrayList<>(List.of(obsysImage("dolphinLogoTan.png", 20, 380, 190, 160)));
+        return new ArrayList<>(List.of(
+                obsysImage("dolphinLogoTan.png", 20, 380, 190, 160)));
     }
 
     @Override
@@ -74,13 +79,17 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         Label lblDateTime = obsysLabel("Month day, year - H:m AM", 30, 5);
         lblDateTime.textProperty().bind(adminModel.dateTimeProperty());
 
-        Label lblWelcome = obsysLabel("Welcome <username>!", 30, 20, "sub-header");
+        Label lblWelcome = obsysLabel(
+                "Welcome <username>!", 30, 20, "sub-header");
         lblWelcome.textProperty().bind(adminModel.usernameProperty());
 
         Label lblSearchError = obsysLabel("", 20, 365, 190, "panel-warning");
         lblSearchError.textProperty().bind(adminModel.searchErrorProperty());
 
-        return new ArrayList<>(List.of(lblDateTime, lblWelcome, lblSearchError)) {{
+        return new ArrayList<>(List.of(
+                lblDateTime,
+                lblWelcome,
+                lblSearchError)) {{
             add(obsysLabel("Account Lookup", 25, 80, "header4"));
             add(obsysLabel("Action Panel", 740, 80, "header4"));
             add(obsysLabel("By Account", 25, 110, "hint"));
@@ -95,7 +104,6 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
     private ArrayList<Node> createAcctSummary() {
         return switch (accountModel.getType()) {
             case "LN" -> loanSummary();
-            case "CH" -> checkingSummary();
             case "IC", "SV" -> savingsSummary();
             default -> checkingSummary();
         };
@@ -112,8 +120,10 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         double principal = accountModel.getPrincipalPaid();
         double interest = accountModel.getInterestPaid();
 
-        String loanDetails = String.format("%tD\n%tD\n%.2f\n%d\n%15s", opened, maturity, intRate, payments, "");
-        String loanBalances = String.format("$%,.2f\n$%,.2f\n$%,.2f\n%20s", loanAmt, principal, interest, "");
+        String loanDetails = String.format("%tD\n%tD\n%.2f\n%d\n%15s",
+                opened, maturity, intRate, payments, "");
+        String loanBalances = String.format("$%,.2f\n$%,.2f\n$%,.2f\n%20s",
+                loanAmt, principal, interest, "");
 
         String fields = "Opened:\nMaturity:\nAPR:\nRemain Pmts:";
         Label lblFields = obsysLabel(fields, 230, 300, "right-aligned");
@@ -137,7 +147,8 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         String debits = accountModel.getPendingDebits();
         String credits = accountModel.getPendingCredits();
         double available = accountModel.getBalance();
-        String amounts = String.format("%s\n%s\n%s\n$%,.2f\n%30s", posted, debits, credits, available, "");
+        String amounts = String.format("%s\n%s\n%s\n$%,.2f\n%30s",
+                posted, debits, credits, available, "");
 
         Label lblAmounts = obsysLabel(amounts, 530, 300, 150, "right-aligned");
 
@@ -151,7 +162,8 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         LocalDate opened = accountModel.getDateOpened();
         double intRate = accountModel.getInterestRate();
         double intReceived = accountModel.getInterestReceived();
-        String summary = String.format("%tD\n%.2f\n$%,.2f\n%15s", opened, intRate, intReceived, "");
+        String summary = String.format("%tD\n%.2f\n$%,.2f\n%15s",
+                opened, intRate, intReceived, "");
 
         Label lblSummary = obsysLabel(summary, 330, 300, "right-aligned");
 

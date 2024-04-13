@@ -1,9 +1,6 @@
 package org.obsys.obsysapp.models;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.obsys.obsysapp.domain.Transaction;
 
 import java.time.LocalDate;
@@ -28,6 +25,8 @@ public class AccountModel {
     private LocalDate selectedMonth;
     private ArrayList<Transaction> history = new ArrayList<>();
     private String transactionType;
+    private final BooleanProperty accountInactive =
+            new SimpleBooleanProperty(true);
 
     public AccountModel() {
         acctNum = 1000000000;
@@ -475,5 +474,11 @@ public class AccountModel {
         this.interestRecieved = interestRecieved;
     }
 
-
+    public BooleanProperty accountInactiveProperty() {
+        accountInactive.set(switch (status) {
+            case "CL", "SU" -> true;
+            default -> false;
+        });
+        return accountInactive;
+    }
 }

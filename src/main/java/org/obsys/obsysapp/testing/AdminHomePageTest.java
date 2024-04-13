@@ -24,11 +24,13 @@ public class AdminHomePageTest extends Application {
             Login login = new Login("admin", "Adm!n1", true, 1111122222);
             AdminHomeModel adminModel = new AdminHomeModel(login.getUsername());
 
-            stage.setScene(new Scene(new AdminHomeController(stage, adminModel, login).getView()));
+            stage.setScene(new Scene(
+                    new AdminHomeController(
+                            stage, adminModel, login).getView()));
 
         } catch (Exception e) {
-            stage.setScene(new Scene(new ErrorController(stage, e.getMessage()).getView()));
-            e.printStackTrace();
+            stage.setScene(new Scene(
+                    new ErrorController(stage, e.getMessage()).getView()));
         }
         stage.show();
     }
