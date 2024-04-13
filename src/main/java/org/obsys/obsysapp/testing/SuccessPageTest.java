@@ -27,9 +27,12 @@ public class SuccessPageTest extends Application {
 
             stage.setScene(new Scene(
                     new SuccessController(stage,
-                            new SuccessModel(sampleWithdrawal(), sampleChecking()), new Login(
-                            "test", "Adm!n1", false, 1111111111
-                    )).getView()));
+                            new SuccessModel(
+                                    sampleWithdrawal(),
+                                    sampleChecking()),
+                            new Login("test", "Adm!n1", false, 1111111111),
+                            false
+                    ).getView()));
 //                            new SuccessModel(sampleDeposit(), sampleChecking())).getView()));
 
         } catch (Exception e) {

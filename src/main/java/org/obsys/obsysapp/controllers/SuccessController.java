@@ -8,6 +8,7 @@ import org.obsys.obsysapp.data.ObsysDbConnection;
 import org.obsys.obsysapp.data.TransactionDAO;
 import org.obsys.obsysapp.domain.Login;
 import org.obsys.obsysapp.models.AccountModel;
+import org.obsys.obsysapp.models.AdminHomeModel;
 import org.obsys.obsysapp.models.SuccessModel;
 import org.obsys.obsysapp.views.SuccessView;
 import org.obsys.obsysapp.views.ViewBuilder;
@@ -19,13 +20,16 @@ public class SuccessController {
     private final ViewBuilder viewBuilder;
     private final SuccessModel successModel;
     private final Login login;
+    private final boolean isAdmin;
 
     public SuccessController(Stage stage,
                              SuccessModel successModel,
-                             Login login) {
+                             Login login,
+                             boolean isAdmin) {
         this.stage = stage;
         this.successModel = successModel;
         this.login = login;
+        this.isAdmin = isAdmin;
         viewBuilder = new SuccessView(
                 successModel,
                 this::logout,
@@ -38,6 +42,23 @@ public class SuccessController {
     }
 
     private void goBack() {
+        if (isAdmin) {
+            returnToAdminHome();
+        } else {
+            returnToUserAccount();
+        }
+
+    }
+
+    private void returnToAdminHome() {
+        // Currently returns to a blank admin home page. Will have to reenter
+        // user lookup.
+        stage.setScene(new Scene(new AdminHomeController(
+                stage, new AdminHomeModel(login.getUsername()), login
+        ).getView()));
+    }
+
+    private void returnToUserAccount() {
         try (Connection conn = ObsysDbConnection.openDBConn()) {
             int acctNum = successModel.getAccount().getAcctNum();
             AccountDAO accountDao = new AccountDAO();

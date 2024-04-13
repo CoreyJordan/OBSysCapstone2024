@@ -151,7 +151,8 @@ public class TransactionController {
         SuccessController successCtrl = new SuccessController(
                 stage,
                 successModel,
-                login
+                login,
+                login.isAdmin()
         );
         stage.setScene(new Scene(successCtrl.getView()));
     }
@@ -231,7 +232,8 @@ public class TransactionController {
         SuccessController successCtrl = new SuccessController(
                 stage,
                 successModel,
-                login
+                login,
+                login.isAdmin()
         );
 
         stage.setScene(new Scene(successCtrl.getView()));
@@ -315,7 +317,8 @@ public class TransactionController {
         SuccessController successCtrl = new SuccessController(
                 stage,
                 successModel,
-                login
+                login,
+                login.isAdmin()
         );
 
         stage.setScene(new Scene(successCtrl.getView()));
@@ -356,7 +359,8 @@ public class TransactionController {
         SuccessController successCtrl = new SuccessController(
                 stage,
                 successModel,
-                login
+                login,
+                login.isAdmin()
         );
 
         stage.setScene(new Scene(successCtrl.getView()));
