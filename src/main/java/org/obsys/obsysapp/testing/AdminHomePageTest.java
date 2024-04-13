@@ -21,7 +21,7 @@ public class AdminHomePageTest extends Application {
             stage.getIcons().add(new Image("/obsysIcon.png"));
             stage.setResizable(false);
 
-            Login login = new Login("Admin", "Adm!n1", true, 1111122222);
+            Login login = new Login("admin", "Adm!n1", true, 1111122222);
             AdminHomeModel adminModel = new AdminHomeModel(login.getUsername());
 
             stage.setScene(new Scene(new AdminHomeController(stage, adminModel, login).getView()));

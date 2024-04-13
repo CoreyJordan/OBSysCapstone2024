@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminHomeModel {
-    private final StringProperty username;
+    private final StringProperty username = new SimpleStringProperty("");
     private final LocalDate currentDate = LocalDate.now();
     private final StringProperty accountNumber = new SimpleStringProperty("");
     private final StringProperty searchFirstName = new SimpleStringProperty("");
@@ -23,18 +23,30 @@ public class AdminHomeModel {
     private final StringProperty foundFirstName = new SimpleStringProperty("");
     private final StringProperty foundLastName = new SimpleStringProperty("");
     private final StringProperty searchError = new SimpleStringProperty("");
-    private final StringProperty accountStatus = new SimpleStringProperty("");
+    private final StringProperty passwordError = new SimpleStringProperty("");
     private final StringProperty address = new SimpleStringProperty("");
     private final StringProperty phone = new SimpleStringProperty("");
     private final StringProperty email = new SimpleStringProperty("");
+    private final StringProperty password = new SimpleStringProperty("");
     private final ArrayList<StringProperty> textFields = new ArrayList<>(
-            List.of(accountNumber, searchFirstName, searchLastName,
-                    foundFirstName, foundLastName, searchError, accountStatus,
-                    address, phone, email));
+            List.of(accountNumber,
+                    searchFirstName,
+                    searchLastName,
+                    foundFirstName,
+                    foundLastName,
+                    searchError,
+                    address,
+                    phone,
+                    email,
+                    password));
     private final ObservableList<String> acctDescriptions =
             FXCollections.observableArrayList();
     private final BooleanProperty actionPanelDisabled =
             new SimpleBooleanProperty(true);
+    private final BooleanProperty closePanelVisible =
+            new SimpleBooleanProperty(false);
+    private final BooleanProperty confirmationVisible =
+            new SimpleBooleanProperty(false);
     private ArrayList<Payee> accounts = new ArrayList<>();
     private int selectedAccount = 0;
     private AccountModel accountModel = new AccountModel();
@@ -42,7 +54,7 @@ public class AdminHomeModel {
 
 
     public AdminHomeModel(String username) {
-        this.username = new SimpleStringProperty("Welcome " + username + "!");
+        this.username.set(username);
     }
 
 
@@ -60,7 +72,7 @@ public class AdminHomeModel {
     }
 
     public StringProperty usernameProperty() {
-        return username;
+        return new SimpleStringProperty("Welcome " + getUsername() + "!");
     }
 
     public String getAccountNumber() {
@@ -217,5 +229,41 @@ public class AdminHomeModel {
 
     public void setActionPanelDisabled(boolean actionPanelDisabled) {
         this.actionPanelDisabled.set(actionPanelDisabled);
+    }
+
+    public BooleanProperty closePanelVisibleProperty() {
+        return closePanelVisible;
+    }
+
+    public void setClosePanelVisible(boolean closePanelVisible) {
+        this.closePanelVisible.set(closePanelVisible);
+    }
+
+    public BooleanProperty confirmationVisibleProperty() {
+        return confirmationVisible;
+    }
+
+    public void setConfirmationVisible(boolean confirmationVisible) {
+        this.confirmationVisible.set(confirmationVisible);
+    }
+
+    public String getPassword() {
+        return password.get();
+    }
+
+    public StringProperty passwordProperty() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password.set(password);
+    }
+
+    public StringProperty passwordErrorProperty() {
+        return passwordError;
+    }
+
+    public void setPasswordError(String passwordError) {
+        this.passwordError.set(passwordError);
     }
 }

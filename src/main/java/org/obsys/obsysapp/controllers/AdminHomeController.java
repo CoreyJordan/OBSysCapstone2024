@@ -195,10 +195,42 @@ public class AdminHomeController {
     }
 
     private void closeAccount() {
+        adminModel.setPasswordError("");
+
         if (adminModel.getSelectedAccount() == 0) {
             return;
         }
+
+        if (adminModel.getPassword().isEmpty()) {
+            adminModel.setPasswordError("Enter password");
+            return;
+        }
         // TODO code close account handler
+        try (Connection conn = ObsysDbConnection.openDBConn()) {
+            Login checkedLogin = new LoginDAO().readPasswordByUsername(
+                    conn, adminModel.getUsername());
+
+            if (!adminModel.getPassword().equals(checkedLogin.getPassword())) {
+                adminModel.setPasswordError("Password does not match");
+                return;
+            }
+
+            if (new AccountDAO().updateAccountStatus(
+                    conn,
+                    adminModel.getSelectedAccount(),
+                    "CL") == 1) {
+                adminModel.setPasswordError("Account CLOSED");
+            }
+
+        } catch (SQLException e) {
+            ErrorController eCtrl = new ErrorController(
+                    stage,
+                    e.getMessage(),
+                    this.getView()
+            );
+            stage.setScene(new Scene(eCtrl.getView()));
+        }
+
     }
 
     private void goToTransactions() {

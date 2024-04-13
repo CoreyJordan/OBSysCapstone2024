@@ -282,4 +282,27 @@ public class AccountDAO {
             return statement.executeUpdate();
         }
     }
+
+    /**
+     * Updates the status of an existing account.
+     * @param conn stable db connection
+     * @param acctNum the account to be updated
+     * @param status the new status to be applied to the account
+     * @return the number of rows affected
+     * @throws SQLException possible database failures
+     */
+    public int updateAccountStatus(Connection conn,
+                                   int acctNum,
+                                   String status) throws SQLException {
+        try (PreparedStatement statement = conn.prepareStatement("""
+                UPDATE dbo.Account
+                SET AcctStatus = ?
+                WHERE AccountId = ?
+                    """)) {
+            statement.setString(1, status);
+            statement.setInt(2, acctNum);
+
+            return statement.executeUpdate();
+        }
+    }
 }

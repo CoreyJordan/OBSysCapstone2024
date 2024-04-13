@@ -4,6 +4,10 @@
     -fx-background-color: "#9A989C";
 }
 
+.anchor-pane {
+    -fx-background-color: "#9A989C";
+}
+
 .scroll-pane {
     -fx-background-color: "#9A989C";
     -fx-background: "#9A989C";

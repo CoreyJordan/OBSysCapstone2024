@@ -2,6 +2,7 @@ package org.obsys.obsysapp.views;
 
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -49,6 +50,7 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         adminWindow.getChildren().addAll(createLabels());
         adminWindow.getChildren().addAll(createButtons());
         adminWindow.getChildren().addAll(createTextFields());
+        adminWindow.getChildren().add(createClosePanel());
 
         return adminWindow;
     }
@@ -254,7 +256,7 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         Button btnCloseAcct = obsysButton("Close Account", 725, 165, 170);
         btnCloseAcct.disableProperty().bind(
                 adminModel.actionPanelDisabledProperty());
-        btnCloseAcct.setOnAction(evt -> closeAccountHandler.run());
+        btnCloseAcct.setOnAction(evt -> adminModel.setClosePanelVisible(true));
 
         Button btnDeposit = obsysButton("Deposit Funds", 725, 245, 170);
         btnDeposit.disableProperty().bind(
@@ -393,8 +395,86 @@ public class AdminHomeView extends ViewBuilder implements IObsysBuilder {
         return new ArrayList<>(List.of(cmbAccount, lblAccount));
     }
 
+    private Node createClosePanel() {
+        AnchorPane closePane = new AnchorPane();
+        closePane.getStyleClass().add("anchor-pane");
+        closePane.setPrefHeight(467);
+        closePane.setPrefWidth(202);
+        closePane.setLayoutX(709);
+        closePane.setLayoutY(74);
+
+        closePane.getChildren().addAll(createCloseControls());
+
+        closePane.visibleProperty().bind(
+                adminModel.closePanelVisibleProperty());
+
+        return closePane;
+    }
+
+    private ArrayList<Node> createCloseControls() {
+        Button btnClose = obsysButton("Close", 5, 200, 92);
+        btnClose.setOnAction(evt -> adminModel.setConfirmationVisible(true));
+
+        Button btnCancel = obsysButton("Cancel", 103, 200, 90);
+        btnCancel.setOnAction(evt -> {
+            adminModel.setClosePanelVisible(false);
+            adminModel.setConfirmationVisible(false);
+        });
+
+        Button btnConfirm = obsysButton("Confirm", 50, 380, 100);
+        btnConfirm.visibleProperty().bind(
+                adminModel.confirmationVisibleProperty());
+        btnConfirm.setOnAction(evt -> closeAccountHandler.run());
+
+        String prompt = "Ensure customer info and account is correct " +
+                "BEFORE confirming close.";
+
+        String confirm = "Are you sure? This action cannot be undone.";
+        Label lblConfirm = obsysLabel(confirm, 10, 250, 190, "panel-warning");
+
+        String password = "Re-enter admin password";
+        Label lblPassword = obsysLabel(password, 20, 320, 150, "hint");
+        lblPassword.visibleProperty().bind(
+                adminModel.confirmationVisibleProperty());
+
+        return new ArrayList<>(List.of(
+                obsysPanel(1, 190, 200, 275),
+                btnClose,
+                btnCancel,
+                obsysLabel(prompt, 1, 10, 200),
+                lblConfirm,
+                lblPassword,
+                btnConfirm)){{
+            addAll(buildPasswordField());
+        }};
+    }
+
     @Override
     public ArrayList<Node> buildPasswordField() {
-        return null;
+        PasswordField txtPassword = obsysPassword(10, 330);
+        txtPassword.setPrefWidth(180);
+        txtPassword.visibleProperty().bind(
+                adminModel.confirmationVisibleProperty()
+        );
+        txtPassword.textProperty().bindBidirectional(
+                adminModel.passwordProperty()
+        );
+
+        Label lblPassword = obsysLabel("PASSWORD", 30, 332, "hint");
+        lblPassword.visibleProperty().bind(
+                adminModel.confirmationVisibleProperty()
+        );
+
+        Label lblError = obsysLabel("", 10, 420, 180, "panel-warning");
+        lblError.visibleProperty().bind(
+                adminModel.confirmationVisibleProperty()
+        );
+        lblError.textProperty().bind(adminModel.passwordErrorProperty());
+
+        return new ArrayList<>(List.of(
+                txtPassword,
+                lblPassword,
+                lblError
+                ));
     }
 }
